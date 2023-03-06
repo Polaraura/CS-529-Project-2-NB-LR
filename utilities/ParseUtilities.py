@@ -16,6 +16,7 @@ from dask.distributed import Client, LocalCluster
 
 import zarr
 import h5py
+import pickle
 
 import sparse
 
@@ -102,7 +103,10 @@ def parse_data_training_bag_array_old(filename, output_filepath, chunksize=CHUNK
     #
     # print(f"{sparse_example.compute()}")
 
-    sparse_chunks.to_hdf5(output_filepath, "/x")
+    with open(output_filepath, 'wb') as output_file:
+        # FIXME: can't pickle the lazy object...
+        # pickle.dump(sparse_chunks, output_file)
+        pickle.dump(sparse_chunks.compute(), output_file)
 
     return sparse_chunks
 
@@ -175,22 +179,28 @@ if __name__ == "__main__":
     # print(f"local cluster: {local_cluster}")
     # print(f"client: {client}")
 
-    output_filename = f"output_array.hdf5"
+    output_filename = f"output_array.pkl"
     output_filepath = f"../resources/{output_filename}"
 
     output_chunk = (1, 61190)
     output_shape = (12000, 61190)
 
+    start = time.time()
+
     if os.path.exists(output_filepath):
-        output_file = h5py.File(output_filepath)
-        sparse_da_training = da.from_array(output_file["x"])
+        output_file = open(output_filepath, "rb")
+
+        # computed object...
+        sparse_da_training = pickle.load(output_file)
+        sparse_da_training = da.from_array(sparse_da_training)
+
+        print(f"{sparse_da_training}")
+        print(f"{sparse_da_training.compute()}")
     else:
         sparse_da_training = parse_data_training_bag_array_old(
-            f"../cs429529-project-2-topic-categorization/training_small.csv", output_filepath)
+            f"../cs429529-project-2-topic-categorization/training.csv", output_filepath)
 
     print(f"starting...")
-
-    start = time.time()
 
     # 100 rows - 2-3 seconds
     # sparse_da_training = parse_data_training_bag_array_old(
