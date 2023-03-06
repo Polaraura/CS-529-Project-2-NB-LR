@@ -191,6 +191,10 @@ if __name__ == "__main__":
         output_file = open(output_filepath, "rb")
 
         # computed object...
+        # IMPORTANT: chunk size is set to auto (default optional arg)
+        # initially read in row by row with chunk size (1, 61190) -- pretty slow
+        # auto set chunk size to (5792, 5792) -- much faster (AFTER .pkl file was created)
+        # see test computation below for timings comparison
         sparse_da_training = pickle.load(output_file)
         sparse_da_training = da.from_array(sparse_da_training)
 
@@ -219,7 +223,11 @@ if __name__ == "__main__":
     ##################################################
 
     print(f"test computation")
-    sparse_example = sparse_da_training.sum(axis=0)[0]
+
+    # timing comparison
+    # (1, 61190) - 5-6 s
+    # (5792, 5792) - 200-300 ms
+    sparse_example = sparse_da_training.sum(axis=0)[61190 - 1]
 
     print(f"{sparse_example.compute()}")
 
