@@ -15,6 +15,7 @@ from dask.diagnostics import ProgressBar
 from dask.distributed import Client, LocalCluster
 
 import zarr
+import h5py
 
 import sparse
 
@@ -59,7 +60,7 @@ def parse_data_training_bag(filename, chunksize=CHUNK_SIZE):
     return sparse_chunks
 
 
-def parse_data_training_bag_array_old(filename, zarr_details, chunksize=CHUNK_SIZE):
+def parse_data_training_bag_array_old(filename, output_filepath, chunksize=CHUNK_SIZE):
     # data = ddf.read_csv(filename, header=None)
 
     # only reads line by line...
@@ -101,7 +102,7 @@ def parse_data_training_bag_array_old(filename, zarr_details, chunksize=CHUNK_SI
     #
     # print(f"{sparse_example.compute()}")
 
-    sparse_chunks.to_zarr(zarr_details)
+    sparse_chunks.to_hdf5(output_filepath, "/x")
 
     return sparse_chunks
 
@@ -174,18 +175,18 @@ if __name__ == "__main__":
     # print(f"local cluster: {local_cluster}")
     # print(f"client: {client}")
 
-    output_filename = f"output_array.zarr"
+    output_filename = f"output_array.hdf5"
     output_filepath = f"../resources/{output_filename}"
 
     output_chunk = (1, 61190)
     output_shape = (12000, 61190)
 
     if os.path.exists(output_filepath):
-        sparse_da_training = da.from_zarr(output_filename, chunks=output_chunk)
+        output_file = h5py.File(output_filepath)
+        sparse_da_training = da.from_array(output_file["x"])
     else:
-        zarr_details = zarr.create(output_shape, chunks=output_chunk, dtype=int, fill_value=0, path=output_filepath)
         sparse_da_training = parse_data_training_bag_array_old(
-            f"../cs429529-project-2-topic-categorization/training_small.csv", zarr_details)
+            f"../cs429529-project-2-topic-categorization/training_small.csv", output_filepath)
 
     print(f"starting...")
 
