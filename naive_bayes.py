@@ -96,4 +96,6 @@ def main():
     print(class_matrix)
     print(class_matrix.shape)
 
-main()
+
+if __name__ == "__main__":
+    main()

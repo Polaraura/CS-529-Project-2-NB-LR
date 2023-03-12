@@ -3,6 +3,15 @@
 ### CS 529 - Intro to Machine Learning
 #### Mike Dinh, Connor Temple, John Tran
 
+### Requirements
+
+The code was run using `Python 3.9` with the following major packages:
+
+- `numpy`
+- `scipy`
+- `dask`
+- `sparse`
+
 ### Introduction
 
 The hardest part of this project was loading in the initial input data in a reasonable amount of time and within 
