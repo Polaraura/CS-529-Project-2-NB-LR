@@ -35,6 +35,18 @@ object was computed and stored into a pickle `.pkl` file as a byte stream that c
 original input 
 data again.
 
+#### Generating Initial Data
+
+In the code, there will be functions with the prefix `generate_` to generate the necessary data (e.g., input data 
+and delta matrix) using the `get_data_from_file()` function in `utilities.ParseUtilities` using the `DataFileEnum` 
+under `utilities.DataFile`. The saved data files will be stored under the `resources` folder with appropriate names 
+(see the `Constants.py` file for more information on the various filenames, filepaths, and constants used).
+
+For the various input data provided to us, we did not store the unzipped data in our `git` repo (data should be 
+stored under the 
+`cscs429529-project-2-topic-categorization` folder). So, please download all the data and create a folder with the 
+same name or use a custom folder name and edit the hardcoded output filepaths in the `Constants.py` file.
+
 ### Performance Notes
 
 - using the `pandas` library was not feasible this time since the `read_csv()` function tried to take in the input 

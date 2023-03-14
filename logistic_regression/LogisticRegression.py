@@ -179,7 +179,7 @@ class LogisticRegression:
         # FIXME: probability matrix doesn't have a fill value of 0...which conflicts with multiplication of other
         #  matrices with fill value of 0...
         # TODO: need to convert to dense matrix...
-        print(f"conversion of probability matrix to dense...")
+        # print(f"conversion of probability matrix to dense...")
         probability_Y_given_W_X_matrix = da.exp(probability_Y_given_W_X_matrix_no_exp)
         # probability_Y_given_W_X_matrix = probability_Y_given_W_X_matrix.map_blocks(sparse.COO)
 
@@ -211,6 +211,7 @@ class LogisticRegression:
         # W_matrix_intermediate = self.W_matrix.compute().todense()
         # self.W_matrix = da.from_array(W_matrix_intermediate).map_blocks(sparse.COO)
 
+        print(f"calculating W matrix...")
         self.W_matrix = self.W_matrix.persist()
         # self.W_matrix = self.W_matrix.compute()
 
