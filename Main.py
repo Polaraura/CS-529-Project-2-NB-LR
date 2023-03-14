@@ -42,7 +42,9 @@ if __name__ == "__main__":
 
     data_parameters = DataParameters(class_labels_dict)
 
-    hyperparameters = LogisticRegressionHyperparameters(0.01, 0.01, 5)
+    # tested learning rate = 0.01 and penalty term = 0.01 and the weights exploded...NaN popped up within a few
+    # iterations
+    hyperparameters = LogisticRegressionHyperparameters(0.001, 0.01, 50)
 
     # sparse_da_training = get_training_data()
     sparse_da_training = get_data_from_file(DataFileEnum.OUTPUT_ARRAY_TRAINING,
@@ -61,3 +63,4 @@ if __name__ == "__main__":
     test_prediction = test_logistic_regression.get_prediction(sparse_da_training[0, :])
 
     print(f"test prediction: {test_prediction}")
+    print(f"actual: {sparse_da_training[0, -1].compute()}")
