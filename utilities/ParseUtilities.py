@@ -8,8 +8,9 @@ import numpy as np
 import sparse
 from dask.diagnostics import ProgressBar
 
-from utilities.Constants import CHUNK_SIZE
-
+from Constants import CHUNK_SIZE
+from Constants import INPUT_FILEPATH_TRAINING, OUTPUT_FILEPATH_TRAINING, DELTA_MATRIX_FILEPATH
+from utilities.DataFile import DataFileEnum
 
 def parse_class_labels(input_filepath: str):
     class_labels_dict = {}
@@ -101,11 +102,54 @@ def load_da_array_pickle(output_filepath: str):
     """
 
     with open(output_filepath, 'rb') as output_file:
-        sparse_da_training = pickle.load(output_file)
-        sparse_da_training = da.from_array(sparse_da_training)
+        data_output = pickle.load(output_file)
+        data_output = da.from_array(data_output)
         # chunks=(12000, 1)
 
+    return data_output
+
+
+def get_training_data():
+    if os.path.exists(OUTPUT_FILEPATH_TRAINING):
+        sparse_da_training = load_da_array_pickle(OUTPUT_FILEPATH_TRAINING)
+
+        print(f"{sparse_da_training}")
+        print(f"{sparse_da_training.compute()}")
+
+        print(f"chunk size: {sparse_da_training.chunksize}")
+    else:
+        sparse_da_training = parse_data_training_array(
+            INPUT_FILEPATH_TRAINING, OUTPUT_FILEPATH_TRAINING)
+
+
+def generate_training_data():
+    sparse_da_training = parse_data_training_array(
+        INPUT_FILEPATH_TRAINING, OUTPUT_FILEPATH_TRAINING)
+
     return sparse_da_training
+
+
+def get_data_from_file(data_file_enum: DataFileEnum, generate_data_file_func):
+    # get output path depending on data file
+    if data_file_enum == DataFileEnum.DELTA_MATRIX:
+        output_filepath = DELTA_MATRIX_FILEPATH
+    elif data_file_enum == DataFileEnum.OUTPUT_ARRAY_TRAINING:
+        output_filepath = OUTPUT_FILEPATH_TRAINING
+    else:
+        raise ValueError("Invalid option for retrieving data file")
+
+    # either generate data or read data from file
+    if os.path.exists(output_filepath):
+        output_data = load_da_array_pickle(output_filepath)
+
+        print(f"{output_data}")
+        print(f"{output_data.compute()}")
+
+        print(f"chunk size: {output_data.chunksize}")
+    else:
+        output_data = generate_data_file_func()
+
+    return output_data
 
 
 if __name__ == "__main__":

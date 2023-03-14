@@ -1,0 +1,17 @@
+CHUNK_SIZE = 100
+
+DIR_UP = f"../"
+OUTPUT_DIR = f"resources/"
+
+INPUT_FILEPATH_TRAINING = f"cs429529-project-2-topic-categorization/training.csv"
+
+OUTPUT_FILENAME_TRAINING = f"output_array_training.pkl"
+OUTPUT_FILEPATH_TRAINING = f"{OUTPUT_DIR}{OUTPUT_FILENAME_TRAINING}"
+OUTPUT_CHUNK = (1, 61190)
+OUTPUT_SHAPE = (12000, 61190)
+
+CLASS_LABELS_FILENAME = f"newsgrouplabels.txt"
+CLASS_LABELS_FILEPATH = f"cs429529-project-2-topic-categorization/{CLASS_LABELS_FILENAME}"
+
+DELTA_MATRIX_FILENAME = f"delta_matrix.pkl"
+DELTA_MATRIX_FILEPATH = f"{OUTPUT_DIR}{DELTA_MATRIX_FILENAME}"
