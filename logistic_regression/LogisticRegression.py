@@ -14,6 +14,7 @@ from dask.diagnostics import ProgressBar
 
 from utilities.ParseUtilities import save_da_array_pickle, get_data_from_file
 from utilities.DataFile import DataFileEnum
+from utilities.ArrayUtilities import normalize_column_vector
 
 from Constants import DELTA_MATRIX_FILEPATH
 
@@ -150,9 +151,36 @@ class LogisticRegression:
         W_matrix = da.zeros((k, n + 1), dtype=int)
 
         # need to map to sparse (to hold sparse results...)
-        W_matrix = W_matrix.map_blocks(lambda x: sparse.COO(x, fill_value=0))
+
+        # FIXME: W won't be sparse after the 1st iteration...
+        # W_matrix = W_matrix.map_blocks(lambda x: sparse.COO(x, fill_value=0))
 
         return W_matrix
+
+    def compute_probability_matrix(self):
+        """
+        P(Y | W, X) ~ exp(W X^T)
+
+        Then fill in the last row with all 1s and normalize each column
+
+        :return:
+        """
+
+        # compute un-normalized probability matrix
+        probability_Y_given_W_X_matrix_no_exp = da.dot(self.W_matrix,
+                                                       da.transpose(self.X_matrix))
+        probability_Y_given_W_X_matrix = da.exp(probability_Y_given_W_X_matrix_no_exp)
+
+        # set last row to all 1s
+        probability_Y_given_W_X_matrix[-1, :] = 1
+
+        # normalize each column
+        normalized_probability_Y_given_W_X_matrix = da.apply_along_axis(normalize_column_vector,
+                                                             0,
+                                                             probability_Y_given_W_X_matrix)
+
+        return normalized_probability_Y_given_W_X_matrix
+
 
     def compute_gradient_descent_step(self):
         hyperparameters = self.hyperparameters
@@ -166,10 +194,14 @@ class LogisticRegression:
         # FIXME: matmal gives errors for sparse multiplication along chunks...except if the entire matrix is ONE BIG
         #  CHUNK
         # TODO: replace matmul with dot...
-        probability_Y_given_W_X_matrix_no_exp = da.dot(self.W_matrix,
-                                                       da.transpose(self.X_matrix))
+        # probability_Y_given_W_X_matrix_no_exp = da.dot(self.W_matrix,
+        #                                                da.transpose(self.X_matrix))
 
         # print(f"{da.transpose(self.X_matrix)}")
+
+        # FIXME
+        # print(f"type of prob: {type(probability_Y_given_W_X_matrix_no_exp)}")
+        # print(f"prob without exp: {probability_Y_given_W_X_matrix_no_exp[0][0:6].compute()}")
 
         # print(f"BEFORE EXP compute probability matrix...")
         # print(f"{self.W_matrix.compute()}")
@@ -180,8 +212,13 @@ class LogisticRegression:
         #  matrices with fill value of 0...
         # TODO: need to convert to dense matrix...
         # print(f"conversion of probability matrix to dense...")
-        probability_Y_given_W_X_matrix = da.exp(probability_Y_given_W_X_matrix_no_exp)
+        # probability_Y_given_W_X_matrix = da.exp(probability_Y_given_W_X_matrix_no_exp)
         # probability_Y_given_W_X_matrix = probability_Y_given_W_X_matrix.map_blocks(sparse.COO)
+
+        probability_Y_given_W_X_matrix = self.compute_probability_matrix()
+
+        # FIXME
+        # print(f"prob with exp: {probability_Y_given_W_X_matrix[0][0:6].compute()}")
 
         # print(f"probability matrix: {probability_Y_given_W_X_matrix}")
         # print(f"probability matrix: {probability_Y_given_W_X_matrix.compute()}")
@@ -194,6 +231,12 @@ class LogisticRegression:
                                 (da.dot((self.delta_matrix - probability_Y_given_W_X_matrix), self.X_matrix) -
                                  penalty_term * self.W_matrix)
         # intermediate_W_matrix = intermediate_W_matrix.map_blocks(lambda x: sparse.COO(x, fill_value=0.0), dtype=float)
+
+        # FIXME
+        # print(f"delta - P: {(self.delta_matrix - probability_Y_given_W_X_matrix)[0][0:6].compute()}")
+        # print(f"(delta - P)X: {da.dot((self.delta_matrix - probability_Y_given_W_X_matrix), self.X_matrix)[0][0:6].compute()}")
+        # print(f"lambda W: {(penalty_term * self.W_matrix)[0][0:6].compute()}")
+        # print(f"intermediate W: {intermediate_W_matrix[0][0:6].compute()}")
 
         # print(f"intermediate W: {intermediate_W_matrix.compute()}")
         # print(f"intermediate W dot: "
@@ -214,6 +257,10 @@ class LogisticRegression:
         print(f"calculating W matrix...")
         self.W_matrix = self.W_matrix.persist()
         # self.W_matrix = self.W_matrix.compute()
+
+        # FIXME
+        print(f"computing example values of W matrix...")
+        print(f"final W: {self.W_matrix[0][0:6].compute()}")
 
     def complete_training(self):
         print(f"Starting training...")
@@ -269,3 +316,7 @@ if __name__ == "__main__":
     b = b - 5
 
     print(f"{b.compute()}")
+
+    e = da.array(np.array([0, 0, 1, 2])).map_blocks(sparse.COO)
+    print(f"{da.exp(e).compute()}")
+    print(f"{da.exp(e).compute().todense()}")
