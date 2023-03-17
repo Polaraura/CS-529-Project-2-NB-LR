@@ -58,3 +58,11 @@ same name or use a custom folder name and edit the hardcoded output filepaths in
 - some array operations in `dask` are more efficient than others...like the `dot()` function compared to the `sum()` 
   function (e.g., to calculate the sum of a given row, it's about `2x` faster to do a dot product of a given column 
   with a vector of ones than just to call `sum()` on the same column of the array)
+
+- `da.dot()` should be used instead of `da.matmul()` because of dealing with chunks of sparse matrices 
+  (implementation of `da.matmul()` is **not** compatible with `COO` format used &mdash; gives a "squeeze error"; 
+  however, works if the `dask` `Array` is ONE BIG CHUNK and also sparse)
+
+- some calculations conflict if a mix of sparse and dense matrices are used in matrix operations (more specifically, 
+  subtraction as both matrices would need to be sparse and have the same fill value) -- had to save the weight 
+  matrix and delta matrix as a dense matrix 

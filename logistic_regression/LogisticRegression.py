@@ -169,7 +169,26 @@ class LogisticRegression:
         # compute un-normalized probability matrix
         probability_Y_given_W_X_matrix_no_exp = da.dot(self.W_matrix,
                                                        da.transpose(self.X_matrix))
+
+        # FIXME
+        # print(f"type of prob: {type(probability_Y_given_W_X_matrix_no_exp)}")
+        # print(f"prob without exp: {probability_Y_given_W_X_matrix_no_exp[0][0:6].compute()}")
+
+        # print(f"BEFORE EXP compute probability matrix...")
+        # print(f"{self.W_matrix.compute()}")
+        # print(f"{self.X_matrix.compute()}")
+        # probability_Y_given_W_X_matrix_no_exp.compute()
+
         probability_Y_given_W_X_matrix = da.exp(probability_Y_given_W_X_matrix_no_exp)
+
+        # FIXME
+        # print(f"prob with exp: {probability_Y_given_W_X_matrix[0][0:6].compute()}")
+
+        # print(f"probability matrix: {probability_Y_given_W_X_matrix}")
+        # print(f"probability matrix: {probability_Y_given_W_X_matrix.compute()}")
+
+        # print(f"compute probability matrix...")
+        # probability_Y_given_W_X_matrix.compute()
 
         # set last row to all 1s
         probability_Y_given_W_X_matrix[-1, :] = 1
@@ -191,23 +210,6 @@ class LogisticRegression:
         # print(f"delta matrix: {self.delta_matrix}")
         # print(f"X: matrix {self.X_matrix}")
 
-        # FIXME: matmal gives errors for sparse multiplication along chunks...except if the entire matrix is ONE BIG
-        #  CHUNK
-        # TODO: replace matmul with dot...
-        # probability_Y_given_W_X_matrix_no_exp = da.dot(self.W_matrix,
-        #                                                da.transpose(self.X_matrix))
-
-        # print(f"{da.transpose(self.X_matrix)}")
-
-        # FIXME
-        # print(f"type of prob: {type(probability_Y_given_W_X_matrix_no_exp)}")
-        # print(f"prob without exp: {probability_Y_given_W_X_matrix_no_exp[0][0:6].compute()}")
-
-        # print(f"BEFORE EXP compute probability matrix...")
-        # print(f"{self.W_matrix.compute()}")
-        # print(f"{self.X_matrix.compute()}")
-        # probability_Y_given_W_X_matrix_no_exp.compute()
-
         # FIXME: probability matrix doesn't have a fill value of 0...which conflicts with multiplication of other
         #  matrices with fill value of 0...
         # TODO: need to convert to dense matrix...
@@ -217,20 +219,10 @@ class LogisticRegression:
 
         probability_Y_given_W_X_matrix = self.compute_probability_matrix()
 
-        # FIXME
-        # print(f"prob with exp: {probability_Y_given_W_X_matrix[0][0:6].compute()}")
-
-        # print(f"probability matrix: {probability_Y_given_W_X_matrix}")
-        # print(f"probability matrix: {probability_Y_given_W_X_matrix.compute()}")
-
-        # print(f"compute probability matrix...")
-        # probability_Y_given_W_X_matrix.compute()
-
         # FIXME: for subtraction, also need to convert delta matrix to dense...
         intermediate_W_matrix = learning_rate * \
                                 (da.dot((self.delta_matrix - probability_Y_given_W_X_matrix), self.X_matrix) -
                                  penalty_term * self.W_matrix)
-        # intermediate_W_matrix = intermediate_W_matrix.map_blocks(lambda x: sparse.COO(x, fill_value=0.0), dtype=float)
 
         # FIXME
         # print(f"delta - P: {(self.delta_matrix - probability_Y_given_W_X_matrix)[0][0:6].compute()}")
@@ -249,10 +241,6 @@ class LogisticRegression:
 
         # compute computation after EACH iteration
         # TODO: maybe experiment so computation is completed after a few iterations...
-        # FIXME: RuntimeError: Cannot convert a sparse array to dense automatically. To manually densify,
-        #  use the todense method...
-        # W_matrix_intermediate = self.W_matrix.compute().todense()
-        # self.W_matrix = da.from_array(W_matrix_intermediate).map_blocks(sparse.COO)
 
         print(f"calculating W matrix...")
         self.W_matrix = self.W_matrix.persist()
