@@ -48,17 +48,26 @@ class LogisticRegression:
 
         self.class_vector = self.input_array[:, -1]
         self.delta_matrix = self.create_delta_matrix()
+
+        # print(f"example delta matrix columns")
+        # print(f"{self.delta_matrix[:, 0:20].compute()}")
+
         self.X_matrix = self.create_X_matrix()
+
+        # check stats of X matrix...
+        print(f"compute max X matrix...")
+        print(f"{da.max(self.X_matrix).compute()}")
+
         self.Y_vector = self.create_Y_vector()
         self.W_matrix = self.create_W_matrix()
 
     def generate_delta_matrix(self):
         """
-                Takes a while to construct the delta matrix because of the for loop...
+        Takes a while to construct the delta matrix because of the for loop...
 
-                TODO: save to file
-                :return:
-                """
+        TODO: save to file
+        :return:
+        """
 
         class_column = self.class_vector
         num_data_rows = len(class_column)
@@ -97,8 +106,8 @@ class LogisticRegression:
                 delta_matrix = delta_matrix.persist()
 
         # FIXME: rechunking doesn't change the chunksize...maybe too small
-        print(f"rechunk delta matrix...")
-        delta_matrix = delta_matrix.rechunk()
+        # print(f"rechunk delta matrix...")
+        # delta_matrix = delta_matrix.rechunk()
 
         # print(f"delta matrix before COO...")
         # delta_matrix.compute()
@@ -121,6 +130,8 @@ class LogisticRegression:
         X_matrix = da.zeros((m, n + 1), dtype=int)
 
         X_matrix[:, 0] = 1
+
+        print(f"computing X matrix...")
         X_matrix[:, 1:] = self.input_array[:, :-1].compute().todense()
 
         # FIXME: need to map to COO BEFORE referencing input_array below since it is already COO...
@@ -144,11 +155,20 @@ class LogisticRegression:
         """
         Initialize a weights matrix of zeros...
 
+        TODO: initialize to very SMALL weights, NOT zeros...
         :return:
         """
 
         k, n = self.k, self.n
-        W_matrix = da.zeros((k, n + 1), dtype=int)
+        # W_matrix = da.zeros((k, n + 1), dtype=int)
+
+        mu = 0
+        sigma = 0.005
+
+        # FIXME: for testing...
+        np.random.seed(42)
+
+        W_matrix = da.random.normal(mu, sigma, (k, n + 1))
 
         # need to map to sparse (to hold sparse results...)
 
@@ -156,6 +176,11 @@ class LogisticRegression:
         # W_matrix = W_matrix.map_blocks(lambda x: sparse.COO(x, fill_value=0))
 
         return W_matrix
+
+    def normalize_W_matrix(self):
+        self.W_matrix = da.apply_along_axis(normalize_column_vector,
+                                            0,
+                                            self.W_matrix)
 
     def compute_probability_matrix(self):
         """
@@ -166,9 +191,15 @@ class LogisticRegression:
         :return:
         """
 
+        print(f"computing max...")
+        print(f"max W matrix: {da.max(self.W_matrix).compute()}")
+
         # compute un-normalized probability matrix
         probability_Y_given_W_X_matrix_no_exp = da.dot(self.W_matrix,
                                                        da.transpose(self.X_matrix))
+
+        print(f"computing max...")
+        print(f"max no exp: {da.max(probability_Y_given_W_X_matrix_no_exp).compute()}")
 
         # FIXME
         # print(f"type of prob: {type(probability_Y_given_W_X_matrix_no_exp)}")
@@ -195,11 +226,13 @@ class LogisticRegression:
 
         # normalize each column
         normalized_probability_Y_given_W_X_matrix = da.apply_along_axis(normalize_column_vector,
-                                                             0,
-                                                             probability_Y_given_W_X_matrix)
+                                                                        0,
+                                                                        probability_Y_given_W_X_matrix)
+
+        print(f"computing max...")
+        print(f"max prob: {da.max(normalized_probability_Y_given_W_X_matrix).compute()}")
 
         return normalized_probability_Y_given_W_X_matrix
-
 
     def compute_gradient_descent_step(self):
         hyperparameters = self.hyperparameters
@@ -225,10 +258,12 @@ class LogisticRegression:
                                  penalty_term * self.W_matrix)
 
         # FIXME
-        # print(f"delta - P: {(self.delta_matrix - probability_Y_given_W_X_matrix)[0][0:6].compute()}")
-        # print(f"(delta - P)X: {da.dot((self.delta_matrix - probability_Y_given_W_X_matrix), self.X_matrix)[0][0:6].compute()}")
-        # print(f"lambda W: {(penalty_term * self.W_matrix)[0][0:6].compute()}")
-        # print(f"intermediate W: {intermediate_W_matrix[0][0:6].compute()}")
+        print(f"shape intermediate: {intermediate_W_matrix.shape}")
+        print(f"delta - P: {da.max(self.delta_matrix - probability_Y_given_W_X_matrix).compute()}")
+        print(f"(delta - P)X: "
+              f"{da.max(da.dot((self.delta_matrix - probability_Y_given_W_X_matrix), self.X_matrix)).compute()}")
+        print(f"lambda W: {da.max(penalty_term * self.W_matrix).compute()}")
+        print(f"intermediate W: {da.max(intermediate_W_matrix).compute()}")
 
         # print(f"intermediate W: {intermediate_W_matrix.compute()}")
         # print(f"intermediate W dot: "
@@ -244,11 +279,14 @@ class LogisticRegression:
 
         print(f"calculating W matrix...")
         self.W_matrix = self.W_matrix.persist()
-        # self.W_matrix = self.W_matrix.compute()
+        # self.W_matrix = da.from_array(self.W_matrix.compute())
+
+        # self.normalize_W_matrix()
 
         # FIXME
         print(f"computing example values of W matrix...")
-        print(f"final W: {self.W_matrix[0][0:6].compute()}")
+        print(f"final W shape: {self.W_matrix.shape}")
+        print(f"final W: {self.W_matrix[:][0:6].compute().T}")
 
     def complete_training(self):
         print(f"Starting training...")
