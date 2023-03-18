@@ -4,12 +4,15 @@ import time
 
 import dask.array as da
 import dask.bag as db
+
 import numpy as np
 import sparse
+
 from dask.diagnostics import ProgressBar
+from dask.distributed import Client, LocalCluster
 
 from Constants import CHUNK_SIZE
-from Constants import INPUT_FILEPATH_TRAINING, OUTPUT_FILEPATH_TRAINING, DELTA_MATRIX_FILEPATH
+from Constants import INPUT_FILEPATH_TRAINING, OUTPUT_FILEPATH_TRAINING, DELTA_MATRIX_FILEPATH, X_MATRIX_FILEPATH
 from utilities.DataFile import DataFileEnum
 
 def parse_class_labels(input_filepath: str):
@@ -135,6 +138,8 @@ def get_data_from_file(data_file_enum: DataFileEnum, generate_data_file_func):
         output_filepath = DELTA_MATRIX_FILEPATH
     elif data_file_enum == DataFileEnum.OUTPUT_ARRAY_TRAINING:
         output_filepath = OUTPUT_FILEPATH_TRAINING
+    elif data_file_enum == DataFileEnum.X_MATRIX:
+        output_filepath = X_MATRIX_FILEPATH
     else:
         raise ValueError("Invalid option for retrieving data file")
 
@@ -157,11 +162,11 @@ if __name__ == "__main__":
     pbar.register()  # global registration
 
     # introduce parallelism with multiple workers/threads...slower though and can't see the progress bar
-    # local_cluster = LocalCluster()
-    # client = Client(local_cluster)
-    #
-    # print(f"local cluster: {local_cluster}")
-    # print(f"client: {client}")
+    local_cluster = LocalCluster()
+    client = Client(local_cluster)
+
+    print(f"local cluster: {local_cluster}")
+    print(f"client: {client}")
 
     output_filename = f"output_array.pkl"
     output_filepath = f"../resources/{output_filename}"

@@ -17,6 +17,7 @@ from logistic_regression.LogisticRegression import \
 
 # utilities/helper imports
 from dask.diagnostics import ProgressBar
+from dask.distributed import Client, LocalCluster
 
 from utilities.ParseUtilities import \
     parse_class_labels, get_training_data, generate_training_data, get_data_from_file
@@ -36,6 +37,13 @@ if __name__ == "__main__":
     pbar = ProgressBar()
     pbar.register()  # global registration
 
+    # introduce parallelism with multiple workers/threads...slower though and can't see the progress bar
+    # local_cluster = LocalCluster()
+    # client = Client(local_cluster)
+    #
+    # print(f"local cluster: {local_cluster}")
+    # print(f"client: {client}")
+
     class_labels_dict = parse_class_labels(CLASS_LABELS_FILEPATH)
 
     print(f"class labels dict: {class_labels_dict}")
@@ -44,7 +52,7 @@ if __name__ == "__main__":
 
     # tested learning rate = 0.01 and penalty term = 0.01 and the weights exploded...NaN popped up within a few
     # iterations
-    hyperparameters = LogisticRegressionHyperparameters(0.001, 0.01, 10)
+    hyperparameters = LogisticRegressionHyperparameters(0.01, 0.001, 50)
 
     # sparse_da_training = get_training_data()
     sparse_da_training = get_data_from_file(DataFileEnum.OUTPUT_ARRAY_TRAINING,

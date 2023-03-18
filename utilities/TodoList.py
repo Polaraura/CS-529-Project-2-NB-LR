@@ -1,0 +1,3 @@
+# TODO: save weights matrix to file (load weights matrix from file on start)
+# TODO: save log of the prediction vector and other stats (every time program is run, every n iterations,...)
+# TODO: maybe run on Wheeler...

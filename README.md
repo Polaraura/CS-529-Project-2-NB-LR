@@ -47,6 +47,13 @@ stored under the
 `cscs429529-project-2-topic-categorization` folder). So, please download all the data and create a folder with the 
 same name or use a custom folder name and edit the hardcoded output filepaths in the `Constants.py` file.
 
+### Runtime
+
+- each iteration of the gradient descent took ~300ms after the first few initial iterations on local machine (~200ms 
+  to update the new weights matrix, ~100ms to normalize weights matrix)
+- normalization of weights matrix is needed to avoid values exploding in magnitude when taking the `exp()` when 
+  finding the probability matrix (i.e., `overflow error`)
+
 ### Performance Notes
 
 - using the `pandas` library was not feasible this time since the `read_csv()` function tried to take in the input 

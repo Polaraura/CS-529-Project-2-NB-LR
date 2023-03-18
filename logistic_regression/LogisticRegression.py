@@ -16,7 +16,7 @@ from utilities.ParseUtilities import save_da_array_pickle, get_data_from_file
 from utilities.DataFile import DataFileEnum
 from utilities.ArrayUtilities import normalize_column_vector
 
-from Constants import DELTA_MATRIX_FILEPATH
+from Constants import DELTA_MATRIX_FILEPATH, X_MATRIX_FILEPATH
 
 import sparse
 from math import exp
@@ -126,7 +126,14 @@ class LogisticRegression:
         return get_data_from_file(DataFileEnum.DELTA_MATRIX,
                                   self.generate_delta_matrix)
 
-    def create_X_matrix(self):
+    def generate_X_matrix(self):
+        """
+        First column is all 1s (for initial weights w_0 when finding the probability matrix)
+        Other columns are just values from the input data (excluding the class column)
+
+        :return:
+        """
+
         m, n = self.m, self.n
         X_matrix = da.zeros((m, n + 1), dtype=int)
 
@@ -145,7 +152,13 @@ class LogisticRegression:
         # print(f"X matrix: intermediate steps...")
         # X_matrix = X_matrix.persist()
 
+        save_da_array_pickle(X_matrix, X_MATRIX_FILEPATH)
+
         return X_matrix
+
+    def create_X_matrix(self):
+        return get_data_from_file(DataFileEnum.X_MATRIX,
+                                  self.generate_X_matrix)
 
     def create_Y_vector(self):
         Y_vector = self.class_vector
@@ -192,14 +205,14 @@ class LogisticRegression:
         #                                     1,
         #                                     self.W_matrix)\
 
-        print(f"total W matrix sum: {da.sum(da.abs(self.W_matrix)).compute()}")
-
-        print(f"W matrix max BEFORE: {da.max(self.W_matrix).compute()}")
+        # print(f"total W matrix sum: {da.sum(da.abs(self.W_matrix)).compute()}")
+        #
+        # print(f"W matrix max BEFORE: {da.max(self.W_matrix).compute()}")
 
         self.W_matrix = self.W_matrix / da.sum(da.abs(self.W_matrix))
         self.W_matrix = self.W_matrix.persist()
 
-        print(f"W matrix max AFTER: {da.max(self.W_matrix).compute()}")
+        # print(f"W matrix max AFTER: {da.max(self.W_matrix).compute()}")
 
     def compute_probability_matrix(self):
         """
@@ -210,15 +223,15 @@ class LogisticRegression:
         :return:
         """
 
-        print(f"computing max...")
-        print(f"max W matrix: {da.max(self.W_matrix).compute()}")
+        # print(f"computing max...")
+        # print(f"max W matrix: {da.max(self.W_matrix).compute()}")
 
         # compute un-normalized probability matrix
         probability_Y_given_W_X_matrix_no_exp = da.dot(self.W_matrix,
                                                        da.transpose(self.X_matrix))
 
-        print(f"computing max...")
-        print(f"max no exp: {da.max(probability_Y_given_W_X_matrix_no_exp).compute()}")
+        # print(f"computing max...")
+        # print(f"max no exp: {da.max(probability_Y_given_W_X_matrix_no_exp).compute()}")
 
         # FIXME
         # print(f"type of prob: {type(probability_Y_given_W_X_matrix_no_exp)}")
@@ -253,8 +266,8 @@ class LogisticRegression:
         # normalized_probability_Y_given_W_X_matrix = softmax(probability_Y_given_W_X_matrix.compute(), axis=0)
         # normalized_probability_Y_given_W_X_matrix = da.from_array(normalized_probability_Y_given_W_X_matrix)
 
-        print(f"computing max...")
-        print(f"max prob: {da.max(normalized_probability_Y_given_W_X_matrix).compute()}")
+        # print(f"computing max...")
+        # print(f"max prob: {da.max(normalized_probability_Y_given_W_X_matrix).compute()}")
 
         return normalized_probability_Y_given_W_X_matrix
 
@@ -305,12 +318,13 @@ class LogisticRegression:
         self.W_matrix = self.W_matrix.persist()
         # self.W_matrix = da.from_array(self.W_matrix.compute())
 
+        print(f"normalizing W matrix...")
         self.normalize_W_matrix()
 
         # FIXME
-        print(f"computing example values of W matrix...")
-        print(f"final W shape: {self.W_matrix.shape}")
-        print(f"final W: {self.W_matrix[:][0:6].compute().T}")
+        # print(f"computing example values of W matrix...")
+        # print(f"final W shape: {self.W_matrix.shape}")
+        # print(f"final W: {self.W_matrix[:][0:6].compute().T}")
 
     def complete_training(self):
         print(f"Starting training...")
