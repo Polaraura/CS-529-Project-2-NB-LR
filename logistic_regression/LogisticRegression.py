@@ -21,6 +21,7 @@ from Constants import DELTA_MATRIX_FILEPATH
 import sparse
 from math import exp
 import numpy as np
+from scipy.special import softmax
 
 
 # TODO: remember to call .compute() AFTER all the iterations are completed
@@ -160,15 +161,17 @@ class LogisticRegression:
         """
 
         k, n = self.k, self.n
-        # W_matrix = da.zeros((k, n + 1), dtype=int)
+        W_matrix = da.zeros((k, n + 1), dtype=int)
 
-        mu = 0
-        sigma = 0.005
-
-        # FIXME: for testing...
-        np.random.seed(42)
-
-        W_matrix = da.random.normal(mu, sigma, (k, n + 1))
+        # FIXME: random initialization of W matrix...
+        # mu = 0
+        # sigma = 0.005
+        #
+        # # FIXME: fixed seed for testing...
+        # np.random.seed(42)
+        # da.random.seed(42)
+        #
+        # W_matrix = da.random.normal(mu, sigma, (k, n + 1))
 
         # need to map to sparse (to hold sparse results...)
 
@@ -178,9 +181,25 @@ class LogisticRegression:
         return W_matrix
 
     def normalize_W_matrix(self):
-        self.W_matrix = da.apply_along_axis(normalize_column_vector,
-                                            0,
-                                            self.W_matrix)
+        """
+        TODO: need to normalize the ENTIRE W matrix, not just along the column
+        TODO: need to take abs first...
+
+        :return:
+        """
+
+        # self.W_matrix = da.apply_along_axis(normalize_column_vector,
+        #                                     1,
+        #                                     self.W_matrix)\
+
+        print(f"total W matrix sum: {da.sum(da.abs(self.W_matrix)).compute()}")
+
+        print(f"W matrix max BEFORE: {da.max(self.W_matrix).compute()}")
+
+        self.W_matrix = self.W_matrix / da.sum(da.abs(self.W_matrix))
+        self.W_matrix = self.W_matrix.persist()
+
+        print(f"W matrix max AFTER: {da.max(self.W_matrix).compute()}")
 
     def compute_probability_matrix(self):
         """
@@ -229,6 +248,11 @@ class LogisticRegression:
                                                                         0,
                                                                         probability_Y_given_W_X_matrix)
 
+        # FIXME: using softmax from scipy...similar results
+        # print(f"normalizing probability matrix...")
+        # normalized_probability_Y_given_W_X_matrix = softmax(probability_Y_given_W_X_matrix.compute(), axis=0)
+        # normalized_probability_Y_given_W_X_matrix = da.from_array(normalized_probability_Y_given_W_X_matrix)
+
         print(f"computing max...")
         print(f"max prob: {da.max(normalized_probability_Y_given_W_X_matrix).compute()}")
 
@@ -258,12 +282,12 @@ class LogisticRegression:
                                  penalty_term * self.W_matrix)
 
         # FIXME
-        print(f"shape intermediate: {intermediate_W_matrix.shape}")
-        print(f"delta - P: {da.max(self.delta_matrix - probability_Y_given_W_X_matrix).compute()}")
-        print(f"(delta - P)X: "
-              f"{da.max(da.dot((self.delta_matrix - probability_Y_given_W_X_matrix), self.X_matrix)).compute()}")
-        print(f"lambda W: {da.max(penalty_term * self.W_matrix).compute()}")
-        print(f"intermediate W: {da.max(intermediate_W_matrix).compute()}")
+        # print(f"shape intermediate: {intermediate_W_matrix.shape}")
+        # print(f"delta - P: {da.max(self.delta_matrix - probability_Y_given_W_X_matrix).compute()}")
+        # print(f"(delta - P)X: "
+        #       f"{da.max(da.dot((self.delta_matrix - probability_Y_given_W_X_matrix), self.X_matrix)).compute()}")
+        # print(f"lambda W: {da.max(penalty_term * self.W_matrix).compute()}")
+        # print(f"intermediate W: {da.max(intermediate_W_matrix).compute()}")
 
         # print(f"intermediate W: {intermediate_W_matrix.compute()}")
         # print(f"intermediate W dot: "
@@ -281,7 +305,7 @@ class LogisticRegression:
         self.W_matrix = self.W_matrix.persist()
         # self.W_matrix = da.from_array(self.W_matrix.compute())
 
-        # self.normalize_W_matrix()
+        self.normalize_W_matrix()
 
         # FIXME
         print(f"computing example values of W matrix...")
