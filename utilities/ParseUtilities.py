@@ -86,7 +86,7 @@ def save_da_array_pickle(array: da.array, output_filepath: str):
     """
 
     with open(output_filepath, 'wb') as output_file:
-        # FIXME: can't pickle the lazy object...
+        # cannot pickle the lazy object, need to compute first
         # pickle.dump(sparse_chunks, output_file)
         pickle.dump(array.compute(), output_file)
 
@@ -132,7 +132,18 @@ def generate_training_data():
     return sparse_da_training
 
 
-def get_data_from_file(data_file_enum: DataFileEnum, generate_data_file_func):
+def get_data_from_file(data_file_enum: DataFileEnum,
+                       generate_data_file_func,
+                       custom_filepath=None):
+    """
+    Generates or retrieves data stored in file (if already exists)
+
+    :param data_file_enum:
+    :param generate_data_file_func:
+    :param custom_filepath: used mainly for W matrix where filepath is determined at runtime
+    :return:
+    """
+
     # get output path depending on data file
     if data_file_enum == DataFileEnum.DELTA_MATRIX:
         output_filepath = DELTA_MATRIX_FILEPATH
@@ -140,19 +151,33 @@ def get_data_from_file(data_file_enum: DataFileEnum, generate_data_file_func):
         output_filepath = OUTPUT_FILEPATH_TRAINING
     elif data_file_enum == DataFileEnum.X_MATRIX:
         output_filepath = X_MATRIX_FILEPATH
+    elif data_file_enum == DataFileEnum.W_MATRIX:
+        output_filepath = custom_filepath
     else:
         raise ValueError("Invalid option for retrieving data file")
 
+    print(f"{data_file_enum}")
+    print(f"filepath: {output_filepath}")
+
     # either generate data or read data from file
     if os.path.exists(output_filepath):
+        print(f"LOADING...")
+
         output_data = load_da_array_pickle(output_filepath)
+
+        print(f"LOAD COMPLETE")
+        print(f"chunk size: {output_data.chunksize}")
 
         print(f"{output_data}")
         print(f"{output_data.compute()}")
-
-        print(f"chunk size: {output_data.chunksize}")
     else:
+        print(f"CREATING...")
+
         output_data = generate_data_file_func()
+
+        print(f"SAVE COMPLETE")
+        print(f"save location: {output_filepath}")
+        print(f"output data: {output_data}")
 
     return output_data
 

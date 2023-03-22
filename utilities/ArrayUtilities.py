@@ -6,12 +6,11 @@ def normalize_column_vector(column_vector):
     """
     Using np.sum() is much faster than da.sum()...and the column vector is passed in as a numpy array
 
-    FIXME: need to take the abs BEFORE getting the sum...
-
     :param column_vector:
     :return:
     """
 
+    # need to take the abs before taking the sum
     # vector_sum = da.sum(column_vector).compute()
     vector_sum = np.sum(np.abs(column_vector))
 

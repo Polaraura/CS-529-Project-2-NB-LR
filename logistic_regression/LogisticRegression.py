@@ -13,29 +13,48 @@ import dask.array as da
 from dask.diagnostics import ProgressBar
 
 from utilities.ParseUtilities import save_da_array_pickle, get_data_from_file
-from utilities.DataFile import DataFileEnum
+from utilities.DataFile import DataFileEnum, DataOptionEnum, WMatrixOptionEnum
 from utilities.ArrayUtilities import normalize_column_vector
 
-from Constants import DELTA_MATRIX_FILEPATH, X_MATRIX_FILEPATH
+from Constants import DELTA_MATRIX_FILEPATH, X_MATRIX_FILEPATH, W_MATRIX_FILENAME_WITHOUT_EXTENSION, \
+    W_MATRIX_FILENAME_EXTENSION, OUTPUT_DIR, DIR_UP, W_MATRIX_TOP_DIR, W_MATRIX_SUB_DIR_DICT, PATH_SEP
+
+from utilities.DebugFlags import LOGISTIC_REGRESSION_DELTA_DEBUG, LOGISTIC_REGRESSION_X_MATRIX_DEBUG, \
+    LOGISTIC_REGRESSION_NORMALIZE_W_MATRIX_DEBUG, LOGISTIC_REGRESSION_PROBABILITY_MATRIX_DEBUG, \
+    LOGISTIC_REGRESSION_GRADIENT_DESCENT_DEBUG, LOGISTIC_REGRESSION_TRAINING_DEBUG, \
+    LOGISTIC_REGRESSION_PREDICTION_DEBUG
 
 import sparse
 from math import exp
 import numpy as np
 from scipy.special import softmax
 
-
-# TODO: remember to call .compute() AFTER all the iterations are completed
+import time
+import glob
+import re
+import os
+from pathlib import Path
 
 
 class LogisticRegression:
     def __init__(self,
                  input_array_da: da.array,
                  data_parameters: DataParameters,
-                 hyperparameters: LogisticRegressionHyperparameters):
+                 hyperparameters: LogisticRegressionHyperparameters,
+                 normalize_W=True,
+                 normalize_X=False):
         # remove the index column
         self.input_array = input_array_da[:, 1:]
         self.data_parameters = data_parameters
         self.hyperparameters = hyperparameters
+        self.normalize_W = normalize_W
+        self.normalize_X = normalize_X
+
+        # set execution filepath of W matrix
+        self.output_dir = f"{OUTPUT_DIR}"
+        self.filepath_W_matrix = self.get_filepath_W_matrix(DataOptionEnum.LOAD)
+        self.filepath_W_matrix_normalization_string = None
+        self.W_matrix_parent_dir = None
 
         # number of rows is the number of examples
         # number of columns is the total number of attributes (except for the index column at the beginning and the
@@ -55,10 +74,6 @@ class LogisticRegression:
 
         self.X_matrix = self.create_X_matrix()
 
-        # check stats of X matrix...
-        print(f"compute max X matrix...")
-        print(f"{da.max(self.X_matrix).compute()}")
-
         self.Y_vector = self.create_Y_vector()
         self.W_matrix = self.create_W_matrix()
 
@@ -66,7 +81,6 @@ class LogisticRegression:
         """
         Takes a while to construct the delta matrix because of the for loop...
 
-        TODO: save to file
         :return:
         """
 
@@ -78,53 +92,43 @@ class LogisticRegression:
 
         index_class_column = da.arange(num_data_rows).map_blocks(lambda x: sparse.COO(x, fill_value=0))
 
-        print(f"class column: {class_column}")
-        print(f"{class_column.compute().todense() - 1}")
-        print(f"arange: {index_class_column}")
+        if LOGISTIC_REGRESSION_DELTA_DEBUG:
+            print(f"class column: {class_column}")
+            print(f"{class_column.compute().todense() - 1}")
+            print(f"arange: {index_class_column}")
 
-        # delta_matrix[enumerate(class_column)] = 1
-        # class_column.compute().todense()
-        # FIXME: need to subtract 1 for the class column (indexing starts at 0 instead of classification starting at 1)
+        # need to subtract 1 for the class column (indexing starts at 0 instead of classification starting at 1)
         delta_matrix_rows = class_column.compute().todense() - 1
         delta_matrix_columns = da.arange(num_data_rows).compute()
 
-        print(f"rows: {delta_matrix_rows}")
-        print(f"rows: {delta_matrix_rows.shape}")
-        print(f"columns: {delta_matrix_columns}")
-        print(f"columns: {delta_matrix_columns.shape}")
+        if LOGISTIC_REGRESSION_DELTA_DEBUG:
+            print(f"rows: {delta_matrix_rows}")
+            print(f"rows: {delta_matrix_rows.shape}")
+            print(f"columns: {delta_matrix_columns}")
+            print(f"columns: {delta_matrix_columns.shape}")
 
         # FIXME: dask Array CANNOT do lists as indexing in MORE THAN 1 dimension
         # delta_matrix[delta_matrix_rows, delta_matrix_columns] = 1
 
-        # TODO: implement as a standard for loop...
         for row_index, column_index in zip(delta_matrix_rows, delta_matrix_columns):
             delta_matrix[row_index, column_index] = 1
 
-            # FIXME: max recursion depth error if all calculations are saved at the end...
+            # max recursion depth error if all calculations are saved at the end...
             if (column_index + 1) % 100 == 0:
                 print(f"saving delta matrix after {column_index + 1} iterations...")
                 # delta_matrix = da.from_array(delta_matrix.compute())
                 delta_matrix = delta_matrix.persist()
 
-        # FIXME: rechunking doesn't change the chunksize...maybe too small
+        # rechunking doesn't change the chunksize...maybe too small
         # print(f"rechunk delta matrix...")
         # delta_matrix = delta_matrix.rechunk()
-
-        # print(f"delta matrix before COO...")
-        # delta_matrix.compute()
-
-        # FIXME: don't convert to sparse...
-        # delta_matrix = delta_matrix.map_blocks(lambda x: sparse.COO(x, fill_value=0))
-
-        print(f"delta matrix: {delta_matrix}")
 
         save_da_array_pickle(delta_matrix, DELTA_MATRIX_FILEPATH)
 
         return delta_matrix
 
     def create_delta_matrix(self):
-        return get_data_from_file(DataFileEnum.DELTA_MATRIX,
-                                  self.generate_delta_matrix)
+        return get_data_from_file(DataFileEnum.DELTA_MATRIX, self.generate_delta_matrix)
 
     def generate_X_matrix(self):
         """
@@ -139,80 +143,225 @@ class LogisticRegression:
 
         X_matrix[:, 0] = 1
 
-        print(f"computing X matrix...")
+        if LOGISTIC_REGRESSION_X_MATRIX_DEBUG:
+            print(f"computing X matrix...")
+
+        # FIXME: expensive operation...
         X_matrix[:, 1:] = self.input_array[:, :-1].compute().todense()
 
-        # FIXME: need to map to COO BEFORE referencing input_array below since it is already COO...
-        # FIXME: COO or sparse matrices in general doesn't support item assignment...
+        # COO or sparse matrices in general doesn't support item assignment...
         X_matrix = X_matrix.map_blocks(lambda x: sparse.COO(x, fill_value=0))
 
-        # print(f"input array: {self.input_array}")
-        # print(f"input array: {self.input_array.compute()}")
-        #
-        # print(f"X matrix: intermediate steps...")
-        # X_matrix = X_matrix.persist()
+        if LOGISTIC_REGRESSION_X_MATRIX_DEBUG:
+            print(f"input array: {self.input_array}")
+            print(f"input array: {self.input_array.compute()}")
+
+            # print(f"X matrix: intermediate steps...")
+            # X_matrix = X_matrix.persist()
 
         save_da_array_pickle(X_matrix, X_MATRIX_FILEPATH)
 
         return X_matrix
 
     def create_X_matrix(self):
-        return get_data_from_file(DataFileEnum.X_MATRIX,
-                                  self.generate_X_matrix)
+        X_matrix = get_data_from_file(DataFileEnum.X_MATRIX, self.generate_X_matrix)
+
+        if LOGISTIC_REGRESSION_X_MATRIX_DEBUG:
+            # check stats of X matrix...
+            print(f"compute max X matrix...")
+            print(f"{da.max(X_matrix).compute()}")
+
+        return X_matrix
 
     def create_Y_vector(self):
         Y_vector = self.class_vector
 
         return Y_vector
 
-    def create_W_matrix(self):
+    def get_W_matrix_sub_dir(self):
+        sub_dir = f""
+
+        if self.normalize_W or self.normalize_X:
+            if self.normalize_W and self.normalize_X:
+                sub_dir += f"{W_MATRIX_SUB_DIR_DICT[WMatrixOptionEnum.W_X_NORMALIZATION]}"
+            elif self.normalize_W:
+                sub_dir += f"{W_MATRIX_SUB_DIR_DICT[WMatrixOptionEnum.W_NORMALIZATION]}"
+            elif self.normalize_X:
+                sub_dir += f"{W_MATRIX_SUB_DIR_DICT[WMatrixOptionEnum.X_NORMALIZATION]}"
+        else:
+            sub_dir += f"{W_MATRIX_SUB_DIR_DICT[WMatrixOptionEnum.NO_NORMALIZATION]}"
+
+        return sub_dir
+
+    def get_filepath_iter_num_key(self, filepath: str):
+        """
+        TODO: split and re-add the sep regex
+        :param filepath:
+        :return:
+        """
+
+        extra_string = self.filepath_W_matrix_normalization_string
+        W_matrix_sub_dir = self.get_W_matrix_sub_dir()
+
+        dir_sep_regex = fr"\{PATH_SEP}"
+
+        # FIXME: filepaths in regex...need to escape dir separators
+        # output_dir, W_MATRIX_TOP_DIR, W_matrix_sub_dir
+        # iter_num_regex = re.compile(fr"{self.output_dir}{dir_sep_regex}"
+        #                             fr"{W_MATRIX_TOP_DIR}{dir_sep_regex}"
+        #                             fr"{W_matrix_sub_dir}{dir_sep_regex}"
+        #                             fr"{W_MATRIX_FILENAME_WITHOUT_EXTENSION}"
+        #                             fr"{extra_string}-(\d+)\.pkl")
+        W_matrix_parent_dir_split = self.W_matrix_parent_dir.split(PATH_SEP)
+        W_matrix_parent_dir_regex = dir_sep_regex.join(W_matrix_parent_dir_split)
+        iter_num_regex = re.compile(fr"{W_matrix_parent_dir_regex}{dir_sep_regex}"
+                                    fr"{W_MATRIX_FILENAME_WITHOUT_EXTENSION}"
+                                    fr"{extra_string}-(\d+)\.pkl")
+
+        iter_num_match = re.search(iter_num_regex, filepath)
+
+        if iter_num_match is None:
+            raise ValueError("no path...")
+
+        # return the first group with the iternum (cast to int)
+        return int(iter_num_match.group(1))
+
+    def get_filepath_W_matrix(self, data_option: DataOptionEnum):
+        """
+        format of filepath
+
+        w_matrix.pkl - no extra normalization (on W or X matrix)
+        w_matrix_norm_w.pkl - normalization on W matrix
+        w_matrix_norm_x.pkl - normalization on X matrix
+        w_matrix_norm_wx.pkl - normalization on W AND X matrix
+
+        :return:
+        """
+
+        # if BOTH normalize options are set to False
+        iter_string = f""
+
+        # if self.normalize_W or self.normalize_X:
+        #     iter_string = f"_normalize_"
+        #     if self.normalize_W and self.normalize_X:
+        #         iter_string += f"wx"
+        #     elif self.normalize_W:
+        #         iter_string += f"w"
+        #     elif self.normalize_X:
+        #         iter_string += f"x"
+
+        output_dir = self.output_dir
+        W_matrix_sub_dir = self.get_W_matrix_sub_dir()
+        W_matrix_parent_dir = os.path.join(output_dir, W_MATRIX_TOP_DIR, W_matrix_sub_dir)
+
+        self.W_matrix_parent_dir = W_matrix_parent_dir
+
+        # TODO: need to find most recent iteration num
+        # fr"{W_matrix_parent_dir}{W_MATRIX_FILENAME_WITHOUT_EXTENSION}{iter_string}-*"
+        W_matrix_filenames_regex = os.path.join(W_matrix_parent_dir,
+                                                fr"{W_MATRIX_FILENAME_WITHOUT_EXTENSION}-*")
+        W_matrix_filenames = glob.glob(W_matrix_filenames_regex)
+
+        self.filepath_W_matrix_normalization_string = iter_string
+
+        # not empty
+        if W_matrix_filenames:
+            # assume list is NOT sorted - ONLY when the list is NOT empty
+            sorted_W_matrix_filenames = sorted(W_matrix_filenames, key=self.get_filepath_iter_num_key, reverse=True)
+
+            print(f"sorted W matrix filenames: {sorted_W_matrix_filenames}")
+
+            prev_iter_num = self.get_filepath_iter_num_key(sorted_W_matrix_filenames[0])
+        # empty
+        else:
+            prev_iter_num = 0
+
+        if data_option == DataOptionEnum.SAVE:
+            next_iter_num = self.hyperparameters.num_iter
+            next_iter_num += prev_iter_num
+            iter_string += f"-{next_iter_num}"
+        elif data_option == DataOptionEnum.LOAD:
+            iter_string += f"-{prev_iter_num}"
+        else:
+            raise ValueError("Invalid option to get W matrix filepath...\nSave or Load\n")
+
+        # recursively create sub directories
+        W_matrix_parent_dir_path = Path(W_matrix_parent_dir)
+        W_matrix_parent_dir_path.mkdir(parents=True, exist_ok=True)
+
+        # get filename
+        W_matrix_filename = f"{W_MATRIX_FILENAME_WITHOUT_EXTENSION}{iter_string}{W_MATRIX_FILENAME_EXTENSION}"
+        # w_matrix_filepath = f"{output_dir}{W_MATRIX_TOP_DIR}{W_matrix_sub_dir}" \
+        #                     f"{W_MATRIX_FILENAME_WITHOUT_EXTENSION}{iter_string}" \
+        #                     f"{W_MATRIX_FILENAME_EXTENSION}"
+
+        # create path for W matrix file
+        W_matrix_filepath = os.path.join(W_matrix_parent_dir, W_matrix_filename)
+
+        return W_matrix_filepath
+
+    def generate_W_matrix(self,
+                          random_initial=False):
         """
         Initialize a weights matrix of zeros...
 
-        TODO: initialize to very SMALL weights, NOT zeros...
+        :param random_initial:
         :return:
         """
 
         k, n = self.k, self.n
-        W_matrix = da.zeros((k, n + 1), dtype=int)
 
-        # FIXME: random initialization of W matrix...
-        # mu = 0
-        # sigma = 0.005
-        #
-        # # FIXME: fixed seed for testing...
-        # np.random.seed(42)
-        # da.random.seed(42)
-        #
-        # W_matrix = da.random.normal(mu, sigma, (k, n + 1))
+        if not random_initial:
+            W_matrix = da.zeros((k, n + 1), dtype=int)
+        else:
+            # random initialization of W matrix
+            mu = 0
+            sigma = 0.005
 
-        # need to map to sparse (to hold sparse results...)
+            # fixed seed for testing
+            np.random.seed(42)
+            da.random.seed(42)
 
-        # FIXME: W won't be sparse after the 1st iteration...
+            W_matrix = da.random.normal(mu, sigma, (k, n + 1))
+
+        # W won't be sparse after the 1st iteration...multiplication with X matrix
         # W_matrix = W_matrix.map_blocks(lambda x: sparse.COO(x, fill_value=0))
 
         return W_matrix
 
+    def create_W_matrix(self):
+        return get_data_from_file(DataFileEnum.W_MATRIX,
+                                  self.generate_W_matrix,
+                                  custom_filepath=self.filepath_W_matrix)
+
     def normalize_W_matrix(self):
         """
-        TODO: need to normalize the ENTIRE W matrix, not just along the column
-        TODO: need to take abs first...
+        need to normalize the ENTIRE W matrix, not just along the column
+        need to take abs first...
 
         :return:
         """
 
+        # do not normalize along a column/row
         # self.W_matrix = da.apply_along_axis(normalize_column_vector,
         #                                     1,
         #                                     self.W_matrix)\
 
-        # print(f"total W matrix sum: {da.sum(da.abs(self.W_matrix)).compute()}")
-        #
-        # print(f"W matrix max BEFORE: {da.max(self.W_matrix).compute()}")
+        if LOGISTIC_REGRESSION_NORMALIZE_W_MATRIX_DEBUG:
+            print(f"total W matrix sum: {da.sum(da.abs(self.W_matrix)).compute()}")
+            print(f"W matrix max BEFORE: {da.max(self.W_matrix).compute()}")
 
         self.W_matrix = self.W_matrix / da.sum(da.abs(self.W_matrix))
         self.W_matrix = self.W_matrix.persist()
 
-        # print(f"W matrix max AFTER: {da.max(self.W_matrix).compute()}")
+        if LOGISTIC_REGRESSION_NORMALIZE_W_MATRIX_DEBUG:
+            print(f"W matrix max AFTER: {da.max(self.W_matrix).compute()}")
+
+    def get_W_matrix(self):
+        return self.W_matrix.compute()
+
+    def set_W_matrix(self, W_matrix):
+        self.W_matrix = W_matrix
 
     def compute_probability_matrix(self):
         """
@@ -220,38 +369,43 @@ class LogisticRegression:
 
         Then fill in the last row with all 1s and normalize each column
 
+        probability matrix cannot be a sparse matrix
+        probability matrix may not have a fill value of 0...which conflicts with multiplication of other matrices
+        with fill value of 0 (subtraction with delta matrix in gradient descent step)
+
         :return:
         """
 
-        # print(f"computing max...")
-        # print(f"max W matrix: {da.max(self.W_matrix).compute()}")
+        if LOGISTIC_REGRESSION_PROBABILITY_MATRIX_DEBUG:
+            print(f"computing max...")
+            print(f"max W matrix: {da.max(self.W_matrix).compute()}")
 
         # compute un-normalized probability matrix
         probability_Y_given_W_X_matrix_no_exp = da.dot(self.W_matrix,
                                                        da.transpose(self.X_matrix))
 
-        # print(f"computing max...")
-        # print(f"max no exp: {da.max(probability_Y_given_W_X_matrix_no_exp).compute()}")
+        if LOGISTIC_REGRESSION_PROBABILITY_MATRIX_DEBUG:
+            print(f"computing max...")
+            print(f"max no exp: {da.max(probability_Y_given_W_X_matrix_no_exp).compute()}")
 
-        # FIXME
-        # print(f"type of prob: {type(probability_Y_given_W_X_matrix_no_exp)}")
-        # print(f"prob without exp: {probability_Y_given_W_X_matrix_no_exp[0][0:6].compute()}")
+            print(f"type of prob: {type(probability_Y_given_W_X_matrix_no_exp)}")
+            print(f"prob without exp: {probability_Y_given_W_X_matrix_no_exp[0][0:6].compute()}")
 
-        # print(f"BEFORE EXP compute probability matrix...")
-        # print(f"{self.W_matrix.compute()}")
-        # print(f"{self.X_matrix.compute()}")
-        # probability_Y_given_W_X_matrix_no_exp.compute()
+            print(f"BEFORE EXP compute probability matrix...")
+            print(f"{self.W_matrix.compute()}")
+            print(f"{self.X_matrix.compute()}")
+            probability_Y_given_W_X_matrix_no_exp.compute()
 
         probability_Y_given_W_X_matrix = da.exp(probability_Y_given_W_X_matrix_no_exp)
 
-        # FIXME
-        # print(f"prob with exp: {probability_Y_given_W_X_matrix[0][0:6].compute()}")
+        if LOGISTIC_REGRESSION_PROBABILITY_MATRIX_DEBUG:
+            print(f"prob with exp: {probability_Y_given_W_X_matrix[0][0:6].compute()}")
 
-        # print(f"probability matrix: {probability_Y_given_W_X_matrix}")
-        # print(f"probability matrix: {probability_Y_given_W_X_matrix.compute()}")
+            print(f"probability matrix: {probability_Y_given_W_X_matrix}")
+            print(f"probability matrix: {probability_Y_given_W_X_matrix.compute()}")
 
-        # print(f"compute probability matrix...")
-        # probability_Y_given_W_X_matrix.compute()
+            print(f"compute probability matrix...")
+            probability_Y_given_W_X_matrix.compute()
 
         # set last row to all 1s
         probability_Y_given_W_X_matrix[-1, :] = 1
@@ -261,7 +415,7 @@ class LogisticRegression:
                                                                         0,
                                                                         probability_Y_given_W_X_matrix)
 
-        # FIXME: using softmax from scipy...similar results
+        # using softmax from scipy...similar results
         # print(f"normalizing probability matrix...")
         # normalized_probability_Y_given_W_X_matrix = softmax(probability_Y_given_W_X_matrix.compute(), axis=0)
         # normalized_probability_Y_given_W_X_matrix = da.from_array(normalized_probability_Y_given_W_X_matrix)
@@ -271,60 +425,76 @@ class LogisticRegression:
 
         return normalized_probability_Y_given_W_X_matrix
 
+    def compute_probability_vector_prediction(self,
+                                              data_row_da: da.array):
+        """
+        P(Y | W, X) ~ exp(W X^T)
+
+        Similar to above, but on a particular data row
+
+        :return:
+        """
+
+        probability_Y_given_W_X_vector_no_exp = da.dot(self.W_matrix,
+                                                       data_row_da)
+
+        probability_Y_given_W_X_vector = da.exp(probability_Y_given_W_X_vector_no_exp)
+
+        # set last row to all 1s
+        probability_Y_given_W_X_vector[-1] = 1
+
+        # normalize each column
+        normalized_probability_Y_given_W_X_vector = normalize_column_vector(probability_Y_given_W_X_vector)
+
+        return normalized_probability_Y_given_W_X_vector
+
     def compute_gradient_descent_step(self):
         hyperparameters = self.hyperparameters
         learning_rate = hyperparameters.learning_rate
         penalty_term = hyperparameters.penalty_term
 
-        # print(f"W matrix: {self.W_matrix}")
-        # print(f"delta matrix: {self.delta_matrix}")
-        # print(f"X: matrix {self.X_matrix}")
-
-        # FIXME: probability matrix doesn't have a fill value of 0...which conflicts with multiplication of other
-        #  matrices with fill value of 0...
-        # TODO: need to convert to dense matrix...
-        # print(f"conversion of probability matrix to dense...")
-        # probability_Y_given_W_X_matrix = da.exp(probability_Y_given_W_X_matrix_no_exp)
-        # probability_Y_given_W_X_matrix = probability_Y_given_W_X_matrix.map_blocks(sparse.COO)
+        if LOGISTIC_REGRESSION_GRADIENT_DESCENT_DEBUG:
+            print(f"W matrix: {self.W_matrix}")
+            print(f"delta matrix: {self.delta_matrix}")
+            print(f"X: matrix {self.X_matrix}")
 
         probability_Y_given_W_X_matrix = self.compute_probability_matrix()
 
-        # FIXME: for subtraction, also need to convert delta matrix to dense...
         intermediate_W_matrix = learning_rate * \
                                 (da.dot((self.delta_matrix - probability_Y_given_W_X_matrix), self.X_matrix) -
                                  penalty_term * self.W_matrix)
 
-        # FIXME
-        # print(f"shape intermediate: {intermediate_W_matrix.shape}")
-        # print(f"delta - P: {da.max(self.delta_matrix - probability_Y_given_W_X_matrix).compute()}")
-        # print(f"(delta - P)X: "
-        #       f"{da.max(da.dot((self.delta_matrix - probability_Y_given_W_X_matrix), self.X_matrix)).compute()}")
-        # print(f"lambda W: {da.max(penalty_term * self.W_matrix).compute()}")
-        # print(f"intermediate W: {da.max(intermediate_W_matrix).compute()}")
+        if LOGISTIC_REGRESSION_GRADIENT_DESCENT_DEBUG:
+            print(f"shape intermediate: {intermediate_W_matrix.shape}")
+            print(f"delta - P: {da.max(self.delta_matrix - probability_Y_given_W_X_matrix).compute()}")
+            print(f"(delta - P)X: "
+                  f"{da.max(da.dot((self.delta_matrix - probability_Y_given_W_X_matrix), self.X_matrix)).compute()}")
+            print(f"lambda W: {da.max(penalty_term * self.W_matrix).compute()}")
+            print(f"intermediate W: {da.max(intermediate_W_matrix).compute()}")
 
-        # print(f"intermediate W: {intermediate_W_matrix.compute()}")
-        # print(f"intermediate W dot: "
-        #       f"{da.dot((self.delta_matrix - probability_Y_given_W_X_matrix), self.X_matrix).compute()}")
+            print(f"intermediate W: {intermediate_W_matrix.compute()}")
+            print(f"intermediate W dot: "
+                  f"{da.dot((self.delta_matrix - probability_Y_given_W_X_matrix), self.X_matrix).compute()}")
 
         self.W_matrix = self.W_matrix + \
                         intermediate_W_matrix
 
-        # print(f"AFTER W matrix: {self.W_matrix}")
+        if LOGISTIC_REGRESSION_GRADIENT_DESCENT_DEBUG:
+            print(f"AFTER W matrix: {self.W_matrix}")
 
         # compute computation after EACH iteration
-        # TODO: maybe experiment so computation is completed after a few iterations...
-
-        print(f"calculating W matrix...")
+        # print(f"calculating W matrix...")
         self.W_matrix = self.W_matrix.persist()
         # self.W_matrix = da.from_array(self.W_matrix.compute())
 
-        print(f"normalizing W matrix...")
-        self.normalize_W_matrix()
+        if self.normalize_W:
+            # print(f"normalizing W matrix...")
+            self.normalize_W_matrix()
 
-        # FIXME
-        # print(f"computing example values of W matrix...")
-        # print(f"final W shape: {self.W_matrix.shape}")
-        # print(f"final W: {self.W_matrix[:][0:6].compute().T}")
+        if LOGISTIC_REGRESSION_GRADIENT_DESCENT_DEBUG:
+            print(f"computing example values of W matrix...")
+            print(f"final W shape: {self.W_matrix.shape}")
+            print(f"final W: {self.W_matrix[:][0:6].compute().T}")
 
     def complete_training(self):
         print(f"Starting training...")
@@ -334,25 +504,47 @@ class LogisticRegression:
         for i in range(num_iter):
             self.compute_gradient_descent_step()
 
-            print(f"Iter {i} complete")
+            if LOGISTIC_REGRESSION_TRAINING_DEBUG:
+                print(f"Iter {i} complete")
+
+        if LOGISTIC_REGRESSION_TRAINING_DEBUG:
+            # finish W matrix
+            print(f"saving W matrix...")
+            start_time = time.time()
+
+        # self.W_matrix = self.W_matrix.compute()
+
+        # TODO: save W matrix into file
+        # TODO: find previous iteration num among files...should work if files are deleted
+        save_da_array_pickle(self.W_matrix, self.get_filepath_W_matrix(DataOptionEnum.SAVE))
+
+        if LOGISTIC_REGRESSION_TRAINING_DEBUG:
+            end_time = time.time()
+            print(f"W matrix time: {end_time - start_time}")
 
     def get_prediction(self,
                        data_row_da: da.array):
+        if LOGISTIC_REGRESSION_PREDICTION_DEBUG:
+            print(f"convert data row to dense...")
+
         # remember to remove the class column and substitute the index value with 1 in the data row
-        print(f"convert data row to dense...")
-        new_data_row = data_row_da[:-1].compute().todense()
-        new_data_row[0] = 1
+        processed_data_row = data_row_da[:-1].compute().todense()
+        processed_data_row[0] = 1
 
-        prediction_vector = da.dot(self.W_matrix, new_data_row)
+        if LOGISTIC_REGRESSION_PREDICTION_DEBUG:
+            print(f"W matrix shape: {self.W_matrix.shape}")
+            print(f"data row shape: {processed_data_row.shape}")
 
-        data_row_argmax = da.argmax(prediction_vector)
+        # probability_prediction_vector = da.dot(self.W_matrix, new_data_row)
+        probability_prediction_vector = self.compute_probability_vector_prediction(processed_data_row)
 
-        print(f"prediction vector: {prediction_vector.compute()}")
-
-        print(f"find max of prediction...")
+        data_row_argmax = da.argmax(probability_prediction_vector)
         data_row_argmax = data_row_argmax.compute()
 
-        print(f"argmax: {data_row_argmax}")
+        if LOGISTIC_REGRESSION_PREDICTION_DEBUG:
+            print(f"prediction vector: {probability_prediction_vector.compute()}")
+            print(f"find max of prediction...")
+            print(f"argmax: {data_row_argmax}")
 
         return data_row_argmax + 1
 
