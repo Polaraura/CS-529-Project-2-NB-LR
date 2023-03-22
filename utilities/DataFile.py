@@ -22,3 +22,7 @@ class WMatrixOptionEnum(Enum):
     W_X_NORMALIZATION = auto()
 
 
+class XMatrixOptionEnum(Enum):
+    NO_NORMALIZATION = auto()
+    X_NORMALIZATION = auto()
+

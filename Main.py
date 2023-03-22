@@ -55,12 +55,13 @@ if __name__ == "__main__":
 
     # tested learning rate = 0.01 and penalty term = 0.01 and the weights exploded...NaN popped up within a few
     # iterations
-    hyperparameters = LogisticRegressionHyperparameters(0.01, 0.001, 10)
+    hyperparameters = LogisticRegressionHyperparameters(0.01, 0.001, 0)
 
     # sparse_da_training = get_training_data()
     sparse_da_training = get_data_from_file(DataFileEnum.OUTPUT_ARRAY_TRAINING, generate_training_data)
 
-    test_logistic_regression = LogisticRegression(sparse_da_training, data_parameters, hyperparameters)
+    test_logistic_regression = LogisticRegression(sparse_da_training, data_parameters, hyperparameters,
+                                                  normalize_W=False, normalize_X=True)
 
     start_time = time.time()
 
@@ -89,7 +90,7 @@ if __name__ == "__main__":
 
     start_time = time.time()
 
-    test_prediction = test_logistic_regression.get_prediction(sparse_da_training[0, :])
+    test_prediction = test_logistic_regression.get_prediction(sparse_da_training[2, :])
 
     print(f"test prediction: {test_prediction}")
     print(f"actual: {sparse_da_training[0, -1].compute()}")

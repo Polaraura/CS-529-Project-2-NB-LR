@@ -6,7 +6,7 @@ if TYPE_CHECKING:
     from parameters.Hyperparameters import LogisticRegressionHyperparameters
 
 from utilities.ParseUtilities import \
-    get_data_from_file
+    get_data_from_file, create_sub_directories
 
 import dask.bag as db
 import dask.array as da
@@ -16,8 +16,9 @@ from utilities.ParseUtilities import save_da_array_pickle, get_data_from_file
 from utilities.DataFile import DataFileEnum, DataOptionEnum, WMatrixOptionEnum
 from utilities.ArrayUtilities import normalize_column_vector
 
-from Constants import DELTA_MATRIX_FILEPATH, X_MATRIX_FILEPATH, W_MATRIX_FILENAME_WITHOUT_EXTENSION, \
-    W_MATRIX_FILENAME_EXTENSION, OUTPUT_DIR, DIR_UP, W_MATRIX_TOP_DIR, W_MATRIX_SUB_DIR_DICT, PATH_SEP
+from Constants import DELTA_MATRIX_FILEPATH, W_MATRIX_FILENAME_WITHOUT_EXTENSION, \
+    W_MATRIX_FILENAME_EXTENSION, OUTPUT_DIR, DIR_UP, W_MATRIX_TOP_DIR, W_MATRIX_SUB_DIR_DICT, PATH_SEP, \
+    X_MATRIX_SUB_DIR_DICT, X_MATRIX_FILEPATH_NO_NORMALIZATION, X_MATRIX_FILEPATH_X_NORMALIZATION
 
 from utilities.DebugFlags import LOGISTIC_REGRESSION_DELTA_DEBUG, LOGISTIC_REGRESSION_X_MATRIX_DEBUG, \
     LOGISTIC_REGRESSION_NORMALIZE_W_MATRIX_DEBUG, LOGISTIC_REGRESSION_PROBABILITY_MATRIX_DEBUG, \
@@ -49,6 +50,9 @@ class LogisticRegression:
         self.hyperparameters = hyperparameters
         self.normalize_W = normalize_W
         self.normalize_X = normalize_X
+
+        # set execution filepath of X matrix
+        self.X_matrix_filepath = None
 
         # set execution filepath of W matrix
         self.output_dir = f"{OUTPUT_DIR}"
@@ -149,6 +153,13 @@ class LogisticRegression:
         # FIXME: expensive operation...
         X_matrix[:, 1:] = self.input_array[:, :-1].compute().todense()
 
+        # TODO: check for normalization
+        if self.normalize_X:
+            # normalize each column (along the feature/word instead of each instance)
+            X_matrix = da.apply_along_axis(normalize_column_vector,
+                                           0,
+                                           X_matrix)
+
         # COO or sparse matrices in general doesn't support item assignment...
         X_matrix = X_matrix.map_blocks(lambda x: sparse.COO(x, fill_value=0))
 
@@ -159,12 +170,29 @@ class LogisticRegression:
             # print(f"X matrix: intermediate steps...")
             # X_matrix = X_matrix.persist()
 
-        save_da_array_pickle(X_matrix, X_MATRIX_FILEPATH)
+        # need to create sub_directories first
+        # FIXME: don't include the filename...
+        X_matrix_filepath_path = Path(self.X_matrix_filepath)
+        X_matrix_parent_path = X_matrix_filepath_path.parent
+
+        create_sub_directories(str(X_matrix_parent_path))
+
+        save_da_array_pickle(X_matrix, self.X_matrix_filepath)
 
         return X_matrix
 
     def create_X_matrix(self):
-        X_matrix = get_data_from_file(DataFileEnum.X_MATRIX, self.generate_X_matrix)
+        # TODO: edit file path (depending on normalization)
+        if self.normalize_X:
+            X_matrix_filepath = X_MATRIX_FILEPATH_X_NORMALIZATION
+        else:
+            X_matrix_filepath = X_MATRIX_FILEPATH_NO_NORMALIZATION
+
+        self.X_matrix_filepath = X_matrix_filepath
+
+        X_matrix = get_data_from_file(DataFileEnum.X_MATRIX,
+                                      self.generate_X_matrix,
+                                      custom_filepath=X_matrix_filepath)
 
         if LOGISTIC_REGRESSION_X_MATRIX_DEBUG:
             # check stats of X matrix...
@@ -193,7 +221,7 @@ class LogisticRegression:
 
         return sub_dir
 
-    def get_filepath_iter_num_key(self, filepath: str):
+    def get_filepath_iter_num_key_W_matrix(self, filepath: str):
         """
         TODO: split and re-add the sep regex
         :param filepath:
@@ -223,17 +251,27 @@ class LogisticRegression:
         if iter_num_match is None:
             raise ValueError("no path...")
 
-        # return the first group with the iternum (cast to int)
+        # return the first group with the iter_num (cast to int)
         return int(iter_num_match.group(1))
 
     def get_filepath_W_matrix(self, data_option: DataOptionEnum):
         """
         format of filepath
 
-        w_matrix.pkl - no extra normalization (on W or X matrix)
-        w_matrix_norm_w.pkl - normalization on W matrix
-        w_matrix_norm_x.pkl - normalization on X matrix
-        w_matrix_norm_wx.pkl - normalization on W AND X matrix
+        w_matrix - top level dir
+        |- no_normalization - sub dir
+        |- w_normalization - sub dir
+        |- x_normalization - sub dir
+        |- w_x_normalization - sub dir
+
+        file name
+        w_matrix-<iter_num>.pkl
+
+        e.g., w_matrix-10.pkl (after a total of 10 iterations, the corresponding W matrix was saved)
+
+        will continue on from the most recent (i.e., file with the highest iter_num) on next execution
+
+        iter_num - the collective amount of iterations (gradient descent) trained on the W matrix
 
         :return:
         """
@@ -267,11 +305,12 @@ class LogisticRegression:
         # not empty
         if W_matrix_filenames:
             # assume list is NOT sorted - ONLY when the list is NOT empty
-            sorted_W_matrix_filenames = sorted(W_matrix_filenames, key=self.get_filepath_iter_num_key, reverse=True)
+            sorted_W_matrix_filenames = sorted(W_matrix_filenames, key=self.get_filepath_iter_num_key_W_matrix,
+                                               reverse=True)
 
             print(f"sorted W matrix filenames: {sorted_W_matrix_filenames}")
 
-            prev_iter_num = self.get_filepath_iter_num_key(sorted_W_matrix_filenames[0])
+            prev_iter_num = self.get_filepath_iter_num_key_W_matrix(sorted_W_matrix_filenames[0])
         # empty
         else:
             prev_iter_num = 0
@@ -285,9 +324,11 @@ class LogisticRegression:
         else:
             raise ValueError("Invalid option to get W matrix filepath...\nSave or Load\n")
 
-        # recursively create sub directories
-        W_matrix_parent_dir_path = Path(W_matrix_parent_dir)
-        W_matrix_parent_dir_path.mkdir(parents=True, exist_ok=True)
+        # # recursively create sub directories
+        # W_matrix_parent_dir_path = Path(W_matrix_parent_dir)
+        # W_matrix_parent_dir_path.mkdir(parents=True, exist_ok=True)
+
+        create_sub_directories(W_matrix_parent_dir)
 
         # get filename
         W_matrix_filename = f"{W_MATRIX_FILENAME_WITHOUT_EXTENSION}{iter_string}{W_MATRIX_FILENAME_EXTENSION}"
@@ -501,6 +542,10 @@ class LogisticRegression:
 
         num_iter = self.hyperparameters.num_iter
 
+        if num_iter == 0:
+            print(f"No training done")
+            return
+
         for i in range(num_iter):
             self.compute_gradient_descent_step()
 
@@ -538,10 +583,14 @@ class LogisticRegression:
         # probability_prediction_vector = da.dot(self.W_matrix, new_data_row)
         probability_prediction_vector = self.compute_probability_vector_prediction(processed_data_row)
 
+        if LOGISTIC_REGRESSION_PREDICTION_DEBUG:
+            print(f"computing argmax...")
+
         data_row_argmax = da.argmax(probability_prediction_vector)
         data_row_argmax = data_row_argmax.compute()
 
         if LOGISTIC_REGRESSION_PREDICTION_DEBUG:
+            print(f"computing entire prediction vector...")
             print(f"prediction vector: {probability_prediction_vector.compute()}")
             print(f"find max of prediction...")
             print(f"argmax: {data_row_argmax}")

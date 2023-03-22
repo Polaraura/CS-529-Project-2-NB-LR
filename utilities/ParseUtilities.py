@@ -1,6 +1,7 @@
 import os
 import pickle
 import time
+from pathlib import Path
 
 import dask.array as da
 import dask.bag as db
@@ -12,7 +13,7 @@ from dask.diagnostics import ProgressBar
 from dask.distributed import Client, LocalCluster
 
 from Constants import CHUNK_SIZE
-from Constants import INPUT_FILEPATH_TRAINING, OUTPUT_FILEPATH_TRAINING, DELTA_MATRIX_FILEPATH, X_MATRIX_FILEPATH
+from Constants import INPUT_FILEPATH_TRAINING, OUTPUT_FILEPATH_TRAINING, DELTA_MATRIX_FILEPATH
 from utilities.DataFile import DataFileEnum
 
 def parse_class_labels(input_filepath: str):
@@ -132,6 +133,12 @@ def generate_training_data():
     return sparse_da_training
 
 
+def create_sub_directories(filepath: str):
+    # recursively create sub directories
+    filepath_path = Path(filepath)
+    filepath_path.mkdir(parents=True, exist_ok=True)
+
+
 def get_data_from_file(data_file_enum: DataFileEnum,
                        generate_data_file_func,
                        custom_filepath=None):
@@ -150,7 +157,9 @@ def get_data_from_file(data_file_enum: DataFileEnum,
     elif data_file_enum == DataFileEnum.OUTPUT_ARRAY_TRAINING:
         output_filepath = OUTPUT_FILEPATH_TRAINING
     elif data_file_enum == DataFileEnum.X_MATRIX:
-        output_filepath = X_MATRIX_FILEPATH
+        # custom filepath for normalization
+        # output_filepath = X_MATRIX_FILEPATH_OLD
+        output_filepath = custom_filepath
     elif data_file_enum == DataFileEnum.W_MATRIX:
         output_filepath = custom_filepath
     else:

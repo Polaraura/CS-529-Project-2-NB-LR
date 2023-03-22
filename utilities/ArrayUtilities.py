@@ -1,6 +1,8 @@
 import dask.array as da
 import numpy as np
 
+from utilities.DebugFlags import LOGISTIC_REGRESSION_PREDICTION_DEBUG
+
 
 def normalize_column_vector(column_vector):
     """
@@ -9,6 +11,9 @@ def normalize_column_vector(column_vector):
     :param column_vector:
     :return:
     """
+
+    if LOGISTIC_REGRESSION_PREDICTION_DEBUG:
+        print(f"normalizing column vector...")
 
     # need to take the abs before taking the sum
     # vector_sum = da.sum(column_vector).compute()
