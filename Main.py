@@ -25,7 +25,7 @@ from utilities.ParseUtilities import \
 from utilities.DataFile import DataFileEnum
 
 from Constants import \
-    OUTPUT_FILEPATH_TRAINING, CLASS_LABELS_FILEPATH
+    INPUT_ARRAY_FILEPATH_TRAINING, CLASS_LABELS_FILEPATH
 
 import time
 
@@ -55,10 +55,10 @@ if __name__ == "__main__":
 
     # tested learning rate = 0.01 and penalty term = 0.01 and the weights exploded...NaN popped up within a few
     # iterations
-    hyperparameters = LogisticRegressionHyperparameters(0.01, 0.001, 0)
+    hyperparameters = LogisticRegressionHyperparameters(0.01, 0.001, 40, 20, 20, 50)
 
     # sparse_da_training = get_training_data()
-    sparse_da_training = get_data_from_file(DataFileEnum.OUTPUT_ARRAY_TRAINING, generate_training_data)
+    sparse_da_training = get_data_from_file(DataFileEnum.INPUT_DATA_TRAINING, generate_training_data)
 
     test_logistic_regression = LogisticRegression(sparse_da_training, data_parameters, hyperparameters,
                                                   normalize_W=False, normalize_X=True)

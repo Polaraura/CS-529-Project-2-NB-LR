@@ -12,8 +12,8 @@ def normalize_column_vector(column_vector):
     :return:
     """
 
-    if LOGISTIC_REGRESSION_PREDICTION_DEBUG:
-        print(f"normalizing column vector...")
+    # if LOGISTIC_REGRESSION_PREDICTION_DEBUG:
+    #     print(f"normalizing column vector...")
 
     # need to take the abs before taking the sum
     # vector_sum = da.sum(column_vector).compute()

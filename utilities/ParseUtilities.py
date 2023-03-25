@@ -13,7 +13,7 @@ from dask.diagnostics import ProgressBar
 from dask.distributed import Client, LocalCluster
 
 from Constants import CHUNK_SIZE
-from Constants import INPUT_FILEPATH_TRAINING, OUTPUT_FILEPATH_TRAINING, DELTA_MATRIX_FILEPATH
+from Constants import INPUT_DATA_FILEPATH_TRAINING, INPUT_ARRAY_FILEPATH_TRAINING, DELTA_MATRIX_FILEPATH
 from utilities.DataFile import DataFileEnum
 
 def parse_class_labels(input_filepath: str):
@@ -114,8 +114,8 @@ def load_da_array_pickle(output_filepath: str):
 
 
 def get_training_data():
-    if os.path.exists(OUTPUT_FILEPATH_TRAINING):
-        sparse_da_training = load_da_array_pickle(OUTPUT_FILEPATH_TRAINING)
+    if os.path.exists(INPUT_ARRAY_FILEPATH_TRAINING):
+        sparse_da_training = load_da_array_pickle(INPUT_ARRAY_FILEPATH_TRAINING)
 
         print(f"{sparse_da_training}")
         print(f"{sparse_da_training.compute()}")
@@ -123,12 +123,12 @@ def get_training_data():
         print(f"chunk size: {sparse_da_training.chunksize}")
     else:
         sparse_da_training = parse_data_training_array(
-            INPUT_FILEPATH_TRAINING, OUTPUT_FILEPATH_TRAINING)
+            INPUT_DATA_FILEPATH_TRAINING, INPUT_ARRAY_FILEPATH_TRAINING)
 
 
 def generate_training_data():
     sparse_da_training = parse_data_training_array(
-        INPUT_FILEPATH_TRAINING, OUTPUT_FILEPATH_TRAINING)
+        INPUT_DATA_FILEPATH_TRAINING, INPUT_ARRAY_FILEPATH_TRAINING)
 
     return sparse_da_training
 
@@ -154,8 +154,8 @@ def get_data_from_file(data_file_enum: DataFileEnum,
     # get output path depending on data file
     if data_file_enum == DataFileEnum.DELTA_MATRIX:
         output_filepath = DELTA_MATRIX_FILEPATH
-    elif data_file_enum == DataFileEnum.OUTPUT_ARRAY_TRAINING:
-        output_filepath = OUTPUT_FILEPATH_TRAINING
+    elif data_file_enum == DataFileEnum.INPUT_DATA_TRAINING:
+        output_filepath = INPUT_ARRAY_FILEPATH_TRAINING
     elif data_file_enum == DataFileEnum.X_MATRIX:
         # custom filepath for normalization
         # output_filepath = X_MATRIX_FILEPATH_OLD

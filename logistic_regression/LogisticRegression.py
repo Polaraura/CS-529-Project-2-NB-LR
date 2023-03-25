@@ -13,12 +13,13 @@ import dask.array as da
 from dask.diagnostics import ProgressBar
 
 from utilities.ParseUtilities import save_da_array_pickle, get_data_from_file
-from utilities.DataFile import DataFileEnum, DataOptionEnum, WMatrixOptionEnum
+from utilities.DataFile import DataFileEnum, DataOptionEnum, WMatrixOptionEnum, XMatrixType
 from utilities.ArrayUtilities import normalize_column_vector
 
 from Constants import DELTA_MATRIX_FILEPATH, W_MATRIX_FILENAME_WITHOUT_EXTENSION, \
     W_MATRIX_FILENAME_EXTENSION, OUTPUT_DIR, DIR_UP, W_MATRIX_TOP_DIR, W_MATRIX_SUB_DIR_DICT, PATH_SEP, \
-    X_MATRIX_SUB_DIR_DICT, X_MATRIX_FILEPATH_NO_NORMALIZATION, X_MATRIX_FILEPATH_X_NORMALIZATION
+    X_MATRIX_SUB_DIR_DICT, X_MATRIX_FILEPATH_NO_NORMALIZATION_TRAINING, X_MATRIX_FILEPATH_X_NORMALIZATION_TRAINING, \
+    X_MATRIX_FILEPATH_X_NORMALIZATION_VALIDATION, X_MATRIX_FILEPATH_NO_NORMALIZATION_VALIDATION
 
 from utilities.DebugFlags import LOGISTIC_REGRESSION_DELTA_DEBUG, LOGISTIC_REGRESSION_X_MATRIX_DEBUG, \
     LOGISTIC_REGRESSION_NORMALIZE_W_MATRIX_DEBUG, LOGISTIC_REGRESSION_PROBABILITY_MATRIX_DEBUG, \
@@ -44,12 +45,18 @@ class LogisticRegression:
                  hyperparameters: LogisticRegressionHyperparameters,
                  normalize_W=True,
                  normalize_X=False):
-        # remove the index column
-        self.input_array = input_array_da[:, 1:]
         self.data_parameters = data_parameters
         self.hyperparameters = hyperparameters
         self.normalize_W = normalize_W
         self.normalize_X = normalize_X
+
+        # TODO: add validation
+        # remove the index column
+        self.input_array_da = input_array_da[:, 1:]
+        self.training_array_da, self.validation_array_da = self.create_training_validation_array()
+
+        # keep track of validation accuracy list
+        self.validation_accuracy_list = []
 
         # set execution filepath of X matrix
         self.X_matrix_filepath = None
@@ -63,23 +70,70 @@ class LogisticRegression:
         # number of rows is the number of examples
         # number of columns is the total number of attributes (except for the index column at the beginning and the
         # class column at the end)
-        self.m, self.n = self.input_array.shape
+        self.m, self.n = self.training_array_da.shape
 
         # do not include the class column
         self.n -= 1
 
         self.k = len(data_parameters.class_labels_dict)
 
-        self.class_vector = self.input_array[:, -1]
+        self.class_vector = self.training_array_da[:, -1]
         self.delta_matrix = self.create_delta_matrix()
 
         # print(f"example delta matrix columns")
         # print(f"{self.delta_matrix[:, 0:20].compute()}")
 
-        self.X_matrix = self.create_X_matrix()
+        self.X_matrix_training = self.create_X_matrix()
 
         self.Y_vector = self.create_Y_vector()
         self.W_matrix = self.create_W_matrix()
+
+    def generate_training_validation_array(self):
+        """
+        Simple split
+
+        a - num of training instances
+        b - num of validation instances
+
+        first a instances (rows) are for training
+        last b instances (rows) are for validation
+
+        :return: training array, validation array
+        """
+
+        hyperparameters = self.hyperparameters
+        validation_split = hyperparameters.validation_split
+
+        input_array_num_rows, input_array_num_columns = self.input_array_da.shape
+
+        num_instances_validation = int(validation_split * input_array_num_rows)
+        num_instances_training = input_array_num_rows - num_instances_validation
+
+        return self.input_array_da[0: num_instances_training, :], self.input_array_da[num_instances_training:, :]
+
+    def create_training_validation_array(self):
+        """
+        Little tricky since generate_training_validation_array() will return 2 objects instead of the usual one --
+        conflicts with fetching only 1 object from a file
+
+        Use isinstance() to check for tuple
+
+        :return:
+        """
+
+        training_validation_data = \
+            get_data_from_file(DataFileEnum.INPUT_ARRAY_TRAINING, self.generate_training_validation_array)
+
+        if isinstance(training_validation_data, tuple):
+            training_array = training_validation_data
+            validation_array = \
+                get_data_from_file(DataFileEnum.INPUT_ARRAY_VALIDATION, self.generate_training_validation_array)
+
+            assert not isinstance(validation_array, tuple)
+        else:
+            training_array, validation_array = training_validation_data
+
+        return training_array, validation_array
 
     def generate_delta_matrix(self):
         """
@@ -134,10 +188,12 @@ class LogisticRegression:
     def create_delta_matrix(self):
         return get_data_from_file(DataFileEnum.DELTA_MATRIX, self.generate_delta_matrix)
 
-    def generate_X_matrix(self):
+    def generate_X_matrix(self, type: XMatrixType = None):
         """
         First column is all 1s (for initial weights w_0 when finding the probability matrix)
         Other columns are just values from the input data (excluding the class column)
+
+        Edit: add option to also create for validation (type)
 
         :return:
         """
@@ -151,7 +207,13 @@ class LogisticRegression:
             print(f"computing X matrix...")
 
         # FIXME: expensive operation...
-        X_matrix[:, 1:] = self.input_array[:, :-1].compute().todense()
+        # TODO: also check for validation type
+        if type == XMatrixType.TRAINING:
+            X_matrix[:, 1:] = self.training_array_da[:, :-1].compute().todense()
+        elif type == XMatrixType.VALIDATION:
+            X_matrix[:, 1:] = self.validation_array_da[:, :-1].compute().todense()
+        else:
+            raise ValueError("Invalid X matrix type...")
 
         # TODO: check for normalization
         if self.normalize_X:
@@ -164,8 +226,8 @@ class LogisticRegression:
         X_matrix = X_matrix.map_blocks(lambda x: sparse.COO(x, fill_value=0))
 
         if LOGISTIC_REGRESSION_X_MATRIX_DEBUG:
-            print(f"input array: {self.input_array}")
-            print(f"input array: {self.input_array.compute()}")
+            print(f"input array: {self.training_array_da}")
+            print(f"input array: {self.training_array_da.compute()}")
 
             # print(f"X matrix: intermediate steps...")
             # X_matrix = X_matrix.persist()
@@ -181,12 +243,21 @@ class LogisticRegression:
 
         return X_matrix
 
-    def create_X_matrix(self):
+    def create_X_matrix(self, type: XMatrixType = None):
         # TODO: edit file path (depending on normalization)
-        if self.normalize_X:
-            X_matrix_filepath = X_MATRIX_FILEPATH_X_NORMALIZATION
+        # TODO: also check for validation type
+        if type == XMatrixType.TRAINING:
+            if self.normalize_X:
+                X_matrix_filepath = X_MATRIX_FILEPATH_X_NORMALIZATION_TRAINING
+            else:
+                X_matrix_filepath = X_MATRIX_FILEPATH_NO_NORMALIZATION_TRAINING
+        elif type == XMatrixType.VALIDATION:
+            if self.normalize_X:
+                X_matrix_filepath = X_MATRIX_FILEPATH_X_NORMALIZATION_VALIDATION
+            else:
+                X_matrix_filepath = X_MATRIX_FILEPATH_NO_NORMALIZATION_VALIDATION
         else:
-            X_matrix_filepath = X_MATRIX_FILEPATH_NO_NORMALIZATION
+            raise ValueError("Invalid X matrix type...")
 
         self.X_matrix_filepath = X_matrix_filepath
 
@@ -221,6 +292,15 @@ class LogisticRegression:
 
         return sub_dir
 
+    def get_W_matrix_hyperparameters_dir(self):
+        hyperparameters = self.hyperparameters
+
+        training_eta = hyperparameters.learning_rate
+        training_lambda = hyperparameters.penalty_term
+
+        return f"eta={training_eta},lambda={training_lambda}"
+
+
     def get_filepath_iter_num_key_W_matrix(self, filepath: str):
         """
         TODO: split and re-add the sep regex
@@ -254,7 +334,7 @@ class LogisticRegression:
         # return the first group with the iter_num (cast to int)
         return int(iter_num_match.group(1))
 
-    def get_filepath_W_matrix(self, data_option: DataOptionEnum):
+    def get_filepath_W_matrix(self, data_option: DataOptionEnum, current_iter=None):
         """
         format of filepath
 
@@ -263,6 +343,10 @@ class LogisticRegression:
         |- w_normalization - sub dir
         |- x_normalization - sub dir
         |- w_x_normalization - sub dir
+
+        Under the sub dir, there will be another dir that specifies the eta and lambda values used for the training
+
+        e.g., "eta=0.01,lambda=0.001"
 
         file name
         w_matrix-<iter_num>.pkl
@@ -273,6 +357,7 @@ class LogisticRegression:
 
         iter_num - the collective amount of iterations (gradient descent) trained on the W matrix
 
+        :param current_iter:
         :return:
         """
 
@@ -290,7 +375,8 @@ class LogisticRegression:
 
         output_dir = self.output_dir
         W_matrix_sub_dir = self.get_W_matrix_sub_dir()
-        W_matrix_parent_dir = os.path.join(output_dir, W_MATRIX_TOP_DIR, W_matrix_sub_dir)
+        W_matrix_hyperparameters_dir = self.get_W_matrix_hyperparameters_dir()
+        W_matrix_parent_dir = os.path.join(output_dir, W_MATRIX_TOP_DIR, W_matrix_sub_dir, W_matrix_hyperparameters_dir)
 
         self.W_matrix_parent_dir = W_matrix_parent_dir
 
@@ -316,7 +402,12 @@ class LogisticRegression:
             prev_iter_num = 0
 
         if data_option == DataOptionEnum.SAVE:
-            next_iter_num = self.hyperparameters.num_iter
+            # TODO: instead of using num_iter, pass in iteration number (may save MULTIPLE times in the same run...)
+            # next_iter_num = self.hyperparameters.num_iter
+
+            assert current_iter is not None
+            next_iter_num = current_iter
+
             next_iter_num += prev_iter_num
             iter_string += f"-{next_iter_num}"
         elif data_option == DataOptionEnum.LOAD:
@@ -423,7 +514,7 @@ class LogisticRegression:
 
         # compute un-normalized probability matrix
         probability_Y_given_W_X_matrix_no_exp = da.dot(self.W_matrix,
-                                                       da.transpose(self.X_matrix))
+                                                       da.transpose(self.X_matrix_training))
 
         if LOGISTIC_REGRESSION_PROBABILITY_MATRIX_DEBUG:
             print(f"computing max...")
@@ -434,7 +525,7 @@ class LogisticRegression:
 
             print(f"BEFORE EXP compute probability matrix...")
             print(f"{self.W_matrix.compute()}")
-            print(f"{self.X_matrix.compute()}")
+            print(f"{self.X_matrix_training.compute()}")
             probability_Y_given_W_X_matrix_no_exp.compute()
 
         probability_Y_given_W_X_matrix = da.exp(probability_Y_given_W_X_matrix_no_exp)
@@ -489,6 +580,21 @@ class LogisticRegression:
 
         return normalized_probability_Y_given_W_X_vector
 
+    def get_validation_accuracy(self):
+        probability_Y_given_W_X_vector_no_exp = da.dot(self.W_matrix,
+                                                       data_row_da)
+
+        probability_Y_given_W_X_vector = da.exp(probability_Y_given_W_X_vector_no_exp)
+
+        # set last row to all 1s
+        probability_Y_given_W_X_vector[-1] = 1
+
+        # normalize each column
+        normalized_probability_Y_given_W_X_vector = normalize_column_vector(probability_Y_given_W_X_vector)
+
+        return normalized_probability_Y_given_W_X_vector
+
+
     def compute_gradient_descent_step(self):
         hyperparameters = self.hyperparameters
         learning_rate = hyperparameters.learning_rate
@@ -497,25 +603,25 @@ class LogisticRegression:
         if LOGISTIC_REGRESSION_GRADIENT_DESCENT_DEBUG:
             print(f"W matrix: {self.W_matrix}")
             print(f"delta matrix: {self.delta_matrix}")
-            print(f"X: matrix {self.X_matrix}")
+            print(f"X: matrix {self.X_matrix_training}")
 
         probability_Y_given_W_X_matrix = self.compute_probability_matrix()
 
         intermediate_W_matrix = learning_rate * \
-                                (da.dot((self.delta_matrix - probability_Y_given_W_X_matrix), self.X_matrix) -
+                                (da.dot((self.delta_matrix - probability_Y_given_W_X_matrix), self.X_matrix_training) -
                                  penalty_term * self.W_matrix)
 
         if LOGISTIC_REGRESSION_GRADIENT_DESCENT_DEBUG:
             print(f"shape intermediate: {intermediate_W_matrix.shape}")
             print(f"delta - P: {da.max(self.delta_matrix - probability_Y_given_W_X_matrix).compute()}")
             print(f"(delta - P)X: "
-                  f"{da.max(da.dot((self.delta_matrix - probability_Y_given_W_X_matrix), self.X_matrix)).compute()}")
+                  f"{da.max(da.dot((self.delta_matrix - probability_Y_given_W_X_matrix), self.X_matrix_training)).compute()}")
             print(f"lambda W: {da.max(penalty_term * self.W_matrix).compute()}")
             print(f"intermediate W: {da.max(intermediate_W_matrix).compute()}")
 
             print(f"intermediate W: {intermediate_W_matrix.compute()}")
             print(f"intermediate W dot: "
-                  f"{da.dot((self.delta_matrix - probability_Y_given_W_X_matrix), self.X_matrix).compute()}")
+                  f"{da.dot((self.delta_matrix - probability_Y_given_W_X_matrix), self.X_matrix_training).compute()}")
 
         self.W_matrix = self.W_matrix + \
                         intermediate_W_matrix
@@ -538,6 +644,12 @@ class LogisticRegression:
             print(f"final W: {self.W_matrix[:][0:6].compute().T}")
 
     def complete_training(self):
+        hyperparameters = self.hyperparameters
+        num_iter_print = hyperparameters.num_iter_print
+        num_iter_save = hyperparameters.num_iter_save
+        num_iter_validation = hyperparameters.num_iter_validation
+        validation_accuracy_diff_cutoff = hyperparameters.validation_accuracy_diff_cutoff
+
         print(f"Starting training...")
 
         num_iter = self.hyperparameters.num_iter
@@ -552,6 +664,30 @@ class LogisticRegression:
             if LOGISTIC_REGRESSION_TRAINING_DEBUG:
                 print(f"Iter {i} complete")
 
+            if (i + 1) % num_iter_print == 0:
+                print(f"-----------------------------------")
+                print(f"Finished {i} iterations")
+                print(f"-----------------------------------")
+
+            if (i + 1) % num_iter_save == 0:
+                print(f"-----------------------------------")
+                print(f"Saving after {i} iterations...")
+                save_da_array_pickle(self.W_matrix, self.get_filepath_W_matrix(DataOptionEnum.SAVE, num_iter_save))
+                print(f"Saving complete")
+                print(f"-----------------------------------")
+
+            # Simple validation
+            if (i + 1) % num_iter_validation == 0:
+
+
+                print(f"-----------------------------------")
+                print(f"Finished {i} iterations")
+                print(f"-----------------------------------")
+
+                # validation list is empty
+                if not self.validation_accuracy_list:
+                    pass
+
         if LOGISTIC_REGRESSION_TRAINING_DEBUG:
             # finish W matrix
             print(f"saving W matrix...")
@@ -561,11 +697,21 @@ class LogisticRegression:
 
         # TODO: save W matrix into file
         # TODO: find previous iteration num among files...should work if files are deleted
-        save_da_array_pickle(self.W_matrix, self.get_filepath_W_matrix(DataOptionEnum.SAVE))
+        num_iter_remainder = num_iter % num_iter_save
+        if num_iter_remainder != 0:
+            print(f"-----------------------------------")
+            print(f"Saving {num_iter_remainder} remainder iterations...")
+            save_da_array_pickle(self.W_matrix, self.get_filepath_W_matrix(DataOptionEnum.SAVE, num_iter_remainder))
+            print(f"Saving complete")
+            print(f"-----------------------------------")
 
         if LOGISTIC_REGRESSION_TRAINING_DEBUG:
             end_time = time.time()
             print(f"W matrix time: {end_time - start_time}")
+
+        print(f"-----------------------------------")
+        print(f"Training complete")
+        print(f"-----------------------------------")
 
     def get_prediction(self,
                        data_row_da: da.array):
