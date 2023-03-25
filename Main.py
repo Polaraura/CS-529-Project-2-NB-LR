@@ -1,6 +1,5 @@
 from __future__ import annotations
 from typing import TYPE_CHECKING
-
 if TYPE_CHECKING:
     pass
 
@@ -22,7 +21,7 @@ from dask.distributed import Client, LocalCluster
 from utilities.ParseUtilities import \
     parse_class_labels, get_training_data, generate_training_data, get_data_from_file
 
-from utilities.DataFile import DataFileEnum
+from utilities.DataFile import DataFileEnum, XMatrixType
 
 from Constants import \
     INPUT_ARRAY_FILEPATH_TRAINING, CLASS_LABELS_FILEPATH
@@ -56,7 +55,12 @@ if __name__ == "__main__":
 
     # tested learning rate = 0.01 and penalty term = 0.01 and the weights exploded...NaN popped up within a few
     # iterations
-    hyperparameters = LogisticRegressionHyperparameters(0.01, 0.001, 5, 5, 5, 50)
+    hyperparameters = LogisticRegressionHyperparameters(0.01,
+                                                        0.001,
+                                                        5,
+                                                        5,
+                                                        5,
+                                                        5)
 
     # sparse_da_training = get_training_data()
     # FIXME:
@@ -88,23 +92,27 @@ if __name__ == "__main__":
 
     ##############################################################
 
-    # test prediction
-
-    start_time = time.time()
-
-    test_prediction = test_logistic_regression.get_prediction(sparse_da_training[2, :])
-
-    print(f"test prediction: {test_prediction}")
-    print(f"actual: {sparse_da_training[0, -1].compute()}")
-
-    end_time = time.time()
-
-    print(f"total prediction time: {end_time - start_time}")
+    # # test prediction
+    #
+    # start_time = time.time()
+    #
+    # test_prediction = test_logistic_regression.get_prediction(sparse_da_training[2, :])
+    #
+    # print(f"test prediction: {test_prediction}")
+    # print(f"actual: {sparse_da_training[0, -1].compute()}")
+    #
+    # end_time = time.time()
+    #
+    # print(f"total prediction time: {end_time - start_time}")
 
     ##############################################################
 
     # training accuracy
 
-
+    print(f"-----------------------------------")
+    print(f"Checking accuracy of training...")
+    training_accuracy = test_logistic_regression.get_accuracy(X_matrix_type=XMatrixType.TRAINING)
+    print(f"training accuracy: {training_accuracy}")
+    print(f"-----------------------------------")
 
 

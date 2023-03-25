@@ -2,6 +2,8 @@ from enum import Enum, auto
 
 import os
 
+import numpy as np
+
 
 class DataFileEnum(Enum):
     INPUT_DATA_TRAINING = auto()
@@ -98,4 +100,13 @@ if __name__ == "__main__":
 
     test5(another_test, z=3)
     test6(another_test_2)
+
+    print(f"-------------------")
+
+    a = np.array([1, 2, 3])
+    b = np.array([1, 4, 3])
+
+    print(np.where(a == b, True, False))
+
+    print(f"{a[0:None]}")
 

@@ -26,7 +26,7 @@ from Constants import DELTA_MATRIX_FILEPATH, W_MATRIX_FILENAME_WITHOUT_EXTENSION
 from utilities.DebugFlags import LOGISTIC_REGRESSION_DELTA_DEBUG, LOGISTIC_REGRESSION_X_MATRIX_DEBUG, \
     LOGISTIC_REGRESSION_NORMALIZE_W_MATRIX_DEBUG, LOGISTIC_REGRESSION_PROBABILITY_MATRIX_DEBUG, \
     LOGISTIC_REGRESSION_GRADIENT_DESCENT_DEBUG, LOGISTIC_REGRESSION_TRAINING_DEBUG, \
-    LOGISTIC_REGRESSION_PREDICTION_DEBUG
+    LOGISTIC_REGRESSION_PREDICTION_DEBUG, LOGISTIC_REGRESSION_ACCURACY_DEBUG, LOGISTIC_REGRESSION_Y_VECTOR_DEBUG
 
 import sparse
 from math import exp
@@ -55,10 +55,20 @@ class LogisticRegression:
         # TODO: add validation
         # remove the index column
         self.input_array_da = input_array_da[:, 1:]
+
+        # FIXME: should be based on the ENTIRE input data...
+        self.class_vector = self.input_array_da[:, -1]
+
+        # number of data instances for training, validation
+        self.num_instances_training = None
+        self.num_instances_validation = None
+        self.set_num_instances_training_validation()
+
         self.training_array_da, self.validation_array_da = self.create_training_validation_array()
 
         # keep track of validation accuracy list
         self.validation_accuracy_list = []
+        self.validation_accuracy_max = None
 
         # set execution filepath of X matrix
         self.X_matrix_filepath = None
@@ -78,10 +88,12 @@ class LogisticRegression:
 
         # do not include the class column
         self.n -= 1
-
         self.k = len(data_parameters.class_labels_dict)
 
-        self.class_vector = self.training_array_da[:, -1]
+        ##################################################################
+
+        # create the matrices
+
         self.delta_matrix = self.create_delta_matrix()
 
         # print(f"example delta matrix columns")
@@ -89,11 +101,30 @@ class LogisticRegression:
 
         # TODO: need to create X matrix for both training and validation
         # TODO: also for testing
-        self.X_matrix_training = self.create_X_matrix(type=XMatrixType.TRAINING)
-        self.X_matrix_validation = self.create_X_matrix(type=XMatrixType.VALIDATION)
+        self.X_matrix_training = self.create_X_matrix(X_matrix_type=XMatrixType.TRAINING)
+        self.X_matrix_validation = self.create_X_matrix(X_matrix_type=XMatrixType.VALIDATION)
 
-        self.Y_vector = self.create_Y_vector()
+        # TODO: save training/validation Y vector for checking accuracy...
+        self.Y_vector_training = self.create_Y_vector(X_matrix_type=XMatrixType.TRAINING)
+        self.Y_vector_validation = self.create_Y_vector(X_matrix_type=XMatrixType.VALIDATION)
+
+        self.Y_vector_dict = {XMatrixType.TRAINING: self.Y_vector_training,
+                              XMatrixType.VALIDATION: self.Y_vector_validation}
+
         self.W_matrix = self.create_W_matrix()
+
+    def set_num_instances_training_validation(self):
+        hyperparameters = self.hyperparameters
+        validation_split = hyperparameters.validation_split
+
+        input_array_num_rows, input_array_num_columns = self.input_array_da.shape
+        num_instances_validation = int(validation_split * input_array_num_rows)
+        num_instances_training = input_array_num_rows - num_instances_validation
+
+        # FIXME: not ran on EACH run (i.e., not initialized when reading in from file)
+        # save for later use
+        self.num_instances_training = num_instances_training
+        self.num_instances_validation = num_instances_validation
 
     def generate_training_validation_array(self):
         """
@@ -108,15 +139,24 @@ class LogisticRegression:
         :return: training array, validation array
         """
 
-        hyperparameters = self.hyperparameters
-        validation_split = hyperparameters.validation_split
-
-        input_array_num_rows, input_array_num_columns = self.input_array_da.shape
-
-        num_instances_validation = int(validation_split * input_array_num_rows)
-        num_instances_training = input_array_num_rows - num_instances_validation
+        # hyperparameters = self.hyperparameters
+        # validation_split = hyperparameters.validation_split
+        #
+        # input_array_num_rows, input_array_num_columns = self.input_array_da.shape
+        #
+        # num_instances_validation = int(validation_split * input_array_num_rows)
+        # num_instances_training = input_array_num_rows - num_instances_validation
+        #
+        # # FIXME: not ran on EACH run (i.e., not initialized when reading in from file)
+        # # save for later use
+        # self.num_instances_training = num_instances_training
+        # self.num_instances_validation = num_instances_validation
 
         # TODO: need to save...
+
+        num_instances_training = self.num_instances_training
+        assert num_instances_training is not None
+
         training_array = self.input_array_da[0: num_instances_training, :]
         validation_array = self.input_array_da[num_instances_training:, :]
 
@@ -208,7 +248,7 @@ class LogisticRegression:
     def create_delta_matrix(self):
         return get_data_from_file(DataFileEnum.DELTA_MATRIX, self.generate_delta_matrix)
 
-    def generate_X_matrix(self, type: XMatrixType = None):
+    def generate_X_matrix(self, X_matrix_type: XMatrixType = None):
         """
         First column is all 1s (for initial weights w_0 when finding the probability matrix)
         Other columns are just values from the input data (excluding the class column)
@@ -219,11 +259,11 @@ class LogisticRegression:
         """
 
         if LOGISTIC_REGRESSION_X_MATRIX_DEBUG:
-            print(f"X matrix type: {type}")
+            print(f"X matrix type: {X_matrix_type}")
 
-        if type == XMatrixType.TRAINING:
+        if X_matrix_type == XMatrixType.TRAINING:
             m = self.m_training
-        elif type == XMatrixType.VALIDATION:
+        elif X_matrix_type == XMatrixType.VALIDATION:
             m = self.m_validation
         else:
             raise ValueError("Invalid X matrix type...")
@@ -239,9 +279,9 @@ class LogisticRegression:
 
         # FIXME: expensive operation...
         # TODO: also check for validation type
-        if type == XMatrixType.TRAINING:
+        if X_matrix_type == XMatrixType.TRAINING:
             X_matrix[:, 1:] = self.training_array_da[:, :-1].compute().todense()
-        elif type == XMatrixType.VALIDATION:
+        elif X_matrix_type == XMatrixType.VALIDATION:
             X_matrix[:, 1:] = self.validation_array_da[:, :-1].compute().todense()
         else:
             raise ValueError("Invalid X matrix type...")
@@ -274,17 +314,17 @@ class LogisticRegression:
 
         return X_matrix
 
-    def create_X_matrix(self, type: XMatrixType = None):
+    def create_X_matrix(self, X_matrix_type: XMatrixType = None):
         # TODO: edit file path (depending on normalization)
         # TODO: also check for validation type
-        if type == XMatrixType.TRAINING:
+        if X_matrix_type == XMatrixType.TRAINING:
             data_file_enum = DataFileEnum.X_MATRIX_TRAINING
 
             if self.normalize_X:
                 X_matrix_filepath = X_MATRIX_FILEPATH_X_NORMALIZATION_TRAINING
             else:
                 X_matrix_filepath = X_MATRIX_FILEPATH_NO_NORMALIZATION_TRAINING
-        elif type == XMatrixType.VALIDATION:
+        elif X_matrix_type == XMatrixType.VALIDATION:
             data_file_enum = DataFileEnum.X_MATRIX_VALIDATION
 
             if self.normalize_X:
@@ -300,7 +340,7 @@ class LogisticRegression:
         X_matrix = get_data_from_file(data_file_enum,
                                       self.generate_X_matrix,
                                       custom_filepath=X_matrix_filepath,
-                                      type=type)
+                                      X_matrix_type=X_matrix_type)
 
         if LOGISTIC_REGRESSION_X_MATRIX_DEBUG:
             # check stats of X matrix...
@@ -309,8 +349,26 @@ class LogisticRegression:
 
         return X_matrix
 
-    def create_Y_vector(self):
-        Y_vector = self.class_vector
+    def create_Y_vector(self, X_matrix_type: XMatrixType = None):
+        num_instances_training = self.num_instances_training
+        num_instances_validation = self.num_instances_validation
+
+        assert num_instances_training is not None
+
+        if X_matrix_type == XMatrixType.TRAINING:
+            Y_vector = self.class_vector[0: num_instances_training]
+        elif X_matrix_type == XMatrixType.VALIDATION:
+            Y_vector = self.class_vector[num_instances_training:]
+        else:
+            raise ValueError("Invalid X matrix type...")
+
+        if LOGISTIC_REGRESSION_Y_VECTOR_DEBUG:
+            print(f"-----------------------------------------------------")
+            print(f"num instances training: {num_instances_training}")
+            print(f"x matrix type: {X_matrix_type}")
+            print(f"y vector shape: {Y_vector.shape}")
+            print(f"class_vector shape: {self.class_vector.shape}")
+            print(f"-----------------------------------------------------")
 
         return Y_vector
 
@@ -532,7 +590,7 @@ class LogisticRegression:
     def set_W_matrix(self, W_matrix):
         self.W_matrix = W_matrix
 
-    def compute_probability_matrix(self):
+    def compute_probability_matrix(self, X_matrix_type: XMatrixType = None):
         """
         P(Y | W, X) ~ exp(W X^T)
 
@@ -549,9 +607,17 @@ class LogisticRegression:
             print(f"computing max...")
             print(f"max W matrix: {da.max(self.W_matrix).compute()}")
 
+        # get X matrix depending on type
+        if X_matrix_type == XMatrixType.TRAINING:
+            X_matrix = self.X_matrix_training
+        elif X_matrix_type == XMatrixType.VALIDATION:
+            X_matrix = self.X_matrix_validation
+        else:
+            raise ValueError("Invalid X matrix type...")
+
         # compute un-normalized probability matrix
         probability_Y_given_W_X_matrix_no_exp = da.dot(self.W_matrix,
-                                                       da.transpose(self.X_matrix_training))
+                                                       da.transpose(X_matrix))
 
         if LOGISTIC_REGRESSION_PROBABILITY_MATRIX_DEBUG:
             print(f"computing max...")
@@ -560,10 +626,10 @@ class LogisticRegression:
             print(f"type of prob: {type(probability_Y_given_W_X_matrix_no_exp)}")
             print(f"prob without exp: {probability_Y_given_W_X_matrix_no_exp[0][0:6].compute()}")
 
-            print(f"BEFORE EXP compute probability matrix...")
-            print(f"{self.W_matrix.compute()}")
-            print(f"{self.X_matrix_training.compute()}")
-            probability_Y_given_W_X_matrix_no_exp.compute()
+            # print(f"BEFORE EXP compute probability matrix...")
+            # print(f"{self.W_matrix.compute()}")
+            # print(f"{self.X_matrix_training.compute()}")
+            # probability_Y_given_W_X_matrix_no_exp.compute()
 
         probability_Y_given_W_X_matrix = da.exp(probability_Y_given_W_X_matrix_no_exp)
 
@@ -617,20 +683,72 @@ class LogisticRegression:
 
         return normalized_probability_Y_given_W_X_vector
 
-    def get_validation_accuracy(self):
-        probability_Y_given_W_X_vector_no_exp = da.dot(self.W_matrix,
-                                                       data_row_da)
+    def get_prediction(self,
+                       data_row_da: da.array):
+        if LOGISTIC_REGRESSION_PREDICTION_DEBUG:
+            print(f"convert data row to dense...")
 
-        probability_Y_given_W_X_vector = da.exp(probability_Y_given_W_X_vector_no_exp)
+        # remember to remove the class column and substitute the index value with 1 in the data row
+        processed_data_row = data_row_da[:-1].compute().todense()
+        processed_data_row[0] = 1
 
-        # set last row to all 1s
-        probability_Y_given_W_X_vector[-1] = 1
+        if LOGISTIC_REGRESSION_PREDICTION_DEBUG:
+            print(f"W matrix shape: {self.W_matrix.shape}")
+            print(f"data row shape: {processed_data_row.shape}")
 
-        # normalize each column
-        normalized_probability_Y_given_W_X_vector = normalize_column_vector(probability_Y_given_W_X_vector)
+        # probability_prediction_vector = da.dot(self.W_matrix, new_data_row)
+        probability_prediction_vector = self.compute_probability_vector_prediction(processed_data_row)
 
-        return normalized_probability_Y_given_W_X_vector
+        if LOGISTIC_REGRESSION_PREDICTION_DEBUG:
+            print(f"computing argmax...")
 
+        data_row_argmax = da.argmax(probability_prediction_vector)
+        data_row_argmax = data_row_argmax.compute()
+
+        if LOGISTIC_REGRESSION_PREDICTION_DEBUG:
+            print(f"computing entire prediction vector...")
+            print(f"prediction vector: {probability_prediction_vector.compute()}")
+            print(f"find max of prediction...")
+            print(f"argmax: {data_row_argmax}")
+
+        return data_row_argmax + 1
+
+    def get_prediction_vector(self, X_matrix_type: XMatrixType = None):
+        """
+        Should be a (, m) vector containing the predictions for each data instance (m total data instances,
+        depending on which X matrix is used)
+
+        :param X_matrix_type:
+        :return:
+        """
+
+        probability_matrix = self.compute_probability_matrix(X_matrix_type=X_matrix_type)
+
+        # get argmax along the columns
+        prediction_vector_argmax = da.argmax(probability_matrix, axis=0)
+
+        # add 1 since indexing starts at 0 and classes start at 1
+        prediction_vector_argmax = prediction_vector_argmax + 1
+        prediction_vector_argmax = prediction_vector_argmax.persist()
+
+        return prediction_vector_argmax
+
+    def get_accuracy(self, X_matrix_type: XMatrixType = None):
+        prediction_vector = self.get_prediction_vector(X_matrix_type=X_matrix_type)
+        Y_vector = self.Y_vector_dict[X_matrix_type]
+
+        if LOGISTIC_REGRESSION_ACCURACY_DEBUG:
+            print(f"x matrix type: {X_matrix_type}")
+            print(f"prediction vector shape: {prediction_vector.shape}")
+            print(f"Y_vector shape: {Y_vector.shape}")
+
+        boolean_vector = da.where(prediction_vector == Y_vector, 1, 0)
+        accuracy = da.sum(boolean_vector) / len(boolean_vector)
+
+        # FIXME: need to compute...
+        accuracy = accuracy.compute()
+
+        return accuracy
 
     def compute_gradient_descent_step(self):
         hyperparameters = self.hyperparameters
@@ -642,7 +760,7 @@ class LogisticRegression:
             print(f"delta matrix: {self.delta_matrix}")
             print(f"X: matrix {self.X_matrix_training}")
 
-        probability_Y_given_W_X_matrix = self.compute_probability_matrix()
+        probability_Y_given_W_X_matrix = self.compute_probability_matrix(X_matrix_type=XMatrixType.TRAINING)
 
         intermediate_W_matrix = learning_rate * \
                                 (da.dot((self.delta_matrix - probability_Y_given_W_X_matrix), self.X_matrix_training) -
@@ -689,13 +807,14 @@ class LogisticRegression:
 
         print(f"Starting training...")
 
-        num_iter = self.hyperparameters.num_iter
+        total_num_iter = self.hyperparameters.num_iter
+        num_iter = total_num_iter
 
-        if num_iter == 0:
+        if total_num_iter == 0:
             print(f"No training done")
             return
 
-        for i in range(num_iter):
+        for i in range(total_num_iter):
             self.compute_gradient_descent_step()
 
             if LOGISTIC_REGRESSION_TRAINING_DEBUG:
@@ -715,15 +834,30 @@ class LogisticRegression:
 
             # Simple validation
             if (i + 1) % num_iter_validation == 0:
-
-
                 print(f"-----------------------------------")
-                print(f"Finished {i} iterations")
+                print(f"Checking validation...")
+                validation_accuracy = self.get_accuracy(X_matrix_type=XMatrixType.VALIDATION)
+                print(f"validation accuracy: {validation_accuracy}")
                 print(f"-----------------------------------")
 
-                # validation list is empty
-                if not self.validation_accuracy_list:
-                    pass
+                current_validation_accuracy_max = self.validation_accuracy_max
+
+                if current_validation_accuracy_max is None:
+                    self.validation_accuracy_max = validation_accuracy
+                elif validation_accuracy > current_validation_accuracy_max:
+                    self.validation_accuracy_max = validation_accuracy
+                else:
+                    # stop training if validation worsens by a certain margin from the best validation accuracy
+                    if current_validation_accuracy_max - validation_accuracy > validation_accuracy_diff_cutoff:
+                        num_iter = i + 1
+                        break
+
+                # maybe to plot later
+                self.validation_accuracy_list.append(validation_accuracy)
+
+                # # validation list is empty
+                # if not self.validation_accuracy_list:
+                #     pass
 
         if LOGISTIC_REGRESSION_TRAINING_DEBUG:
             # finish W matrix
@@ -738,7 +872,8 @@ class LogisticRegression:
         if num_iter_remainder != 0:
             print(f"-----------------------------------")
             print(f"Saving {num_iter_remainder} remainder iterations...")
-            save_da_array_pickle(self.W_matrix, self.get_filepath_W_matrix(DataOptionEnum.SAVE, num_iter_remainder))
+            save_da_array_pickle(self.W_matrix, self.get_filepath_W_matrix(DataOptionEnum.SAVE,
+                                                                           num_iter_remainder))
             print(f"Saving complete")
             print(f"-----------------------------------")
 
@@ -749,36 +884,6 @@ class LogisticRegression:
         print(f"-----------------------------------")
         print(f"Training complete")
         print(f"-----------------------------------")
-
-    def get_prediction(self,
-                       data_row_da: da.array):
-        if LOGISTIC_REGRESSION_PREDICTION_DEBUG:
-            print(f"convert data row to dense...")
-
-        # remember to remove the class column and substitute the index value with 1 in the data row
-        processed_data_row = data_row_da[:-1].compute().todense()
-        processed_data_row[0] = 1
-
-        if LOGISTIC_REGRESSION_PREDICTION_DEBUG:
-            print(f"W matrix shape: {self.W_matrix.shape}")
-            print(f"data row shape: {processed_data_row.shape}")
-
-        # probability_prediction_vector = da.dot(self.W_matrix, new_data_row)
-        probability_prediction_vector = self.compute_probability_vector_prediction(processed_data_row)
-
-        if LOGISTIC_REGRESSION_PREDICTION_DEBUG:
-            print(f"computing argmax...")
-
-        data_row_argmax = da.argmax(probability_prediction_vector)
-        data_row_argmax = data_row_argmax.compute()
-
-        if LOGISTIC_REGRESSION_PREDICTION_DEBUG:
-            print(f"computing entire prediction vector...")
-            print(f"prediction vector: {probability_prediction_vector.compute()}")
-            print(f"find max of prediction...")
-            print(f"argmax: {data_row_argmax}")
-
-        return data_row_argmax + 1
 
     def set_initial_parameters(self):
         pass
