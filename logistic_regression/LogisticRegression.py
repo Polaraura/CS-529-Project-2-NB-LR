@@ -6,12 +6,15 @@ if TYPE_CHECKING:
     from parameters.Hyperparameters import LogisticRegressionHyperparameters
 
 from utilities.ParseUtilities import \
-    get_data_from_file
+    get_data_from_file, parse_data_training_testing_array, load_da_array_pickle
 from utilities.FileSystemUtilities import create_sub_directories
 
 import dask.bag as db
 import dask.array as da
+import dask.dataframe as df
 from dask.diagnostics import ProgressBar
+
+import pandas as pd
 
 from utilities.ParseUtilities import save_da_array_pickle, get_data_from_file
 from utilities.DataFile import DataFileEnum, DataOptionEnum, WMatrixOptionEnum, XMatrixType
@@ -21,12 +24,15 @@ from Constants import DELTA_MATRIX_FILEPATH, W_MATRIX_FILENAME_WITHOUT_EXTENSION
     W_MATRIX_FILENAME_EXTENSION, OUTPUT_DIR, DIR_UP, W_MATRIX_TOP_DIR, W_MATRIX_SUB_DIR_DICT, PATH_SEP, \
     X_MATRIX_SUB_DIR_DICT, X_MATRIX_FILEPATH_NO_NORMALIZATION_TRAINING, X_MATRIX_FILEPATH_X_NORMALIZATION_TRAINING, \
     X_MATRIX_FILEPATH_X_NORMALIZATION_VALIDATION, X_MATRIX_FILEPATH_NO_NORMALIZATION_VALIDATION, \
-    INPUT_ARRAY_FILEPATH_TRAINING, INPUT_ARRAY_FILEPATH_VALIDATION
+    INPUT_ARRAY_FILEPATH_TRAINING, INPUT_ARRAY_FILEPATH_VALIDATION, X_MATRIX_FILEPATH_NO_NORMALIZATION_TESTING, \
+    X_MATRIX_FILEPATH_X_NORMALIZATION_TESTING, INPUT_DATA_FILEPATH_TESTING, INPUT_ARRAY_FILEPATH_TESTING, \
+    ID_COLUMN_NAME, CLASS_COLUMN_NAME, TESTING_PREDICTION_FILEPATH, TESTING_PREDICTION_PARENT_DIR
 
 from utilities.DebugFlags import LOGISTIC_REGRESSION_DELTA_DEBUG, LOGISTIC_REGRESSION_X_MATRIX_DEBUG, \
     LOGISTIC_REGRESSION_NORMALIZE_W_MATRIX_DEBUG, LOGISTIC_REGRESSION_PROBABILITY_MATRIX_DEBUG, \
     LOGISTIC_REGRESSION_GRADIENT_DESCENT_DEBUG, LOGISTIC_REGRESSION_TRAINING_DEBUG, \
-    LOGISTIC_REGRESSION_PREDICTION_DEBUG, LOGISTIC_REGRESSION_ACCURACY_DEBUG, LOGISTIC_REGRESSION_Y_VECTOR_DEBUG
+    LOGISTIC_REGRESSION_PREDICTION_DEBUG, LOGISTIC_REGRESSION_ACCURACY_DEBUG, LOGISTIC_REGRESSION_Y_VECTOR_DEBUG, \
+    LOGISTIC_REGRESSION_TESTING_ARRAY_DEBUG
 
 import sparse
 from math import exp
@@ -42,7 +48,8 @@ from pathlib import Path
 
 class LogisticRegression:
     def __init__(self,
-                 input_array_da: da.array,
+                 input_training_array_da: da.array,
+                 input_testing_array_da: da.array,
                  data_parameters: DataParameters,
                  hyperparameters: LogisticRegressionHyperparameters,
                  normalize_W=True,
@@ -54,7 +61,12 @@ class LogisticRegression:
 
         # TODO: add validation
         # remove the index column
-        self.input_array_da = input_array_da[:, 1:]
+        self.input_array_da = input_training_array_da[:, 1:]
+        self.testing_array_da, self.testing_id_da = self.create_testing_array(input_testing_array_da)
+
+        # save current iter number (different from num passed into hyperparameters)
+        # used in creating the testing prediction file
+        self.current_num_iter = None
 
         # FIXME: should be based on the ENTIRE input data...
         self.class_vector = self.input_array_da[:, -1]
@@ -85,6 +97,7 @@ class LogisticRegression:
         # TODO: different values of m for training, validation...n is the same for both
         self.m_training, self.n = self.training_array_da.shape
         self.m_validation, _ = self.validation_array_da.shape
+        self.m_testing, _ = self.testing_array_da.shape
 
         # do not include the class column
         self.n -= 1
@@ -103,6 +116,7 @@ class LogisticRegression:
         # TODO: also for testing
         self.X_matrix_training = self.create_X_matrix(X_matrix_type=XMatrixType.TRAINING)
         self.X_matrix_validation = self.create_X_matrix(X_matrix_type=XMatrixType.VALIDATION)
+        self.X_matrix_testing = self.create_X_matrix(X_matrix_type=XMatrixType.TESTING)
 
         # TODO: save training/validation Y vector for checking accuracy...
         self.Y_vector_training = self.create_Y_vector(X_matrix_type=XMatrixType.TRAINING)
@@ -195,6 +209,12 @@ class LogisticRegression:
 
         return training_array, validation_array
 
+    def create_testing_array(self, input_testing_array_da: da):
+        testing_array_da = input_testing_array_da[:, 1:]
+        testing_id_da = input_testing_array_da[:, 0]
+
+        return testing_array_da, testing_id_da
+
     def generate_delta_matrix(self):
         """
         Takes a while to construct the delta matrix because of the for loop...
@@ -265,6 +285,8 @@ class LogisticRegression:
             m = self.m_training
         elif X_matrix_type == XMatrixType.VALIDATION:
             m = self.m_validation
+        elif X_matrix_type == XMatrixType.TESTING:
+            m = self.m_testing
         else:
             raise ValueError("Invalid X matrix type...")
 
@@ -283,6 +305,9 @@ class LogisticRegression:
             X_matrix[:, 1:] = self.training_array_da[:, :-1].compute().todense()
         elif X_matrix_type == XMatrixType.VALIDATION:
             X_matrix[:, 1:] = self.validation_array_da[:, :-1].compute().todense()
+        elif X_matrix_type == XMatrixType.TESTING:
+            # FIXME: testing data doesn't have a class column...so take all columns
+            X_matrix[:, 1:] = self.testing_array_da[:, :].compute().todense()
         else:
             raise ValueError("Invalid X matrix type...")
 
@@ -331,6 +356,13 @@ class LogisticRegression:
                 X_matrix_filepath = X_MATRIX_FILEPATH_X_NORMALIZATION_VALIDATION
             else:
                 X_matrix_filepath = X_MATRIX_FILEPATH_NO_NORMALIZATION_VALIDATION
+        elif X_matrix_type == XMatrixType.TESTING:
+            data_file_enum = DataFileEnum.X_MATRIX_TESTING
+
+            if self.normalize_X:
+                X_matrix_filepath = X_MATRIX_FILEPATH_X_NORMALIZATION_TESTING
+            else:
+                X_matrix_filepath = X_MATRIX_FILEPATH_NO_NORMALIZATION_TESTING
         else:
             raise ValueError("Invalid X matrix type...")
 
@@ -505,8 +537,12 @@ class LogisticRegression:
 
             next_iter_num += prev_iter_num
             iter_string += f"-{next_iter_num}"
+
+            self.current_num_iter = next_iter_num
         elif data_option == DataOptionEnum.LOAD:
             iter_string += f"-{prev_iter_num}"
+
+            self.current_num_iter = prev_iter_num
         else:
             raise ValueError("Invalid option to get W matrix filepath...\nSave or Load\n")
 
@@ -612,6 +648,8 @@ class LogisticRegression:
             X_matrix = self.X_matrix_training
         elif X_matrix_type == XMatrixType.VALIDATION:
             X_matrix = self.X_matrix_validation
+        elif X_matrix_type == XMatrixType.TESTING:
+            X_matrix = self.X_matrix_testing
         else:
             raise ValueError("Invalid X matrix type...")
 
@@ -883,6 +921,49 @@ class LogisticRegression:
 
         print(f"-----------------------------------")
         print(f"Training complete")
+        print(f"-----------------------------------")
+
+    def create_testing_file(self):
+        print(f"-----------------------------------")
+        print(f"TESTING PREDICTION FILE")
+        print(f"-----------------------------------")
+        print(f"Getting testing prediction vector...")
+
+        testing_prediction_vector = self.get_prediction_vector(X_matrix_type=XMatrixType.TESTING)
+
+        print(f"Saving testing prediction into file...")
+
+        print(f"Converting ID column to dense...")
+        print(f"id column: {self.testing_id_da}")
+
+        self.testing_id_da = self.testing_id_da.compute().todense()
+
+        print(f"Densification complete...")
+
+        testing_dict = {ID_COLUMN_NAME: self.testing_id_da,
+                        CLASS_COLUMN_NAME: testing_prediction_vector}
+        testing_df = pd.DataFrame(testing_dict)
+
+        # need to create directory first
+        # FIXME: only parent dir, not entire filepath...
+        create_sub_directories(TESTING_PREDICTION_PARENT_DIR)
+
+        # TODO: save the hyperparameters and iter num for each prediction...
+        hyperparameters = self.hyperparameters
+        eta_training = hyperparameters.learning_rate
+        lambda_training = hyperparameters.penalty_term
+        current_num_iter = self.current_num_iter
+
+        testing_prediction_filename = \
+            f"testing_prediction_eta={eta_training}-lambda={lambda_training}-iter_num={current_num_iter}.csv"
+
+        testing_prediction_filepath = os.path.join(TESTING_PREDICTION_PARENT_DIR, testing_prediction_filename)
+
+        testing_df.to_csv(testing_prediction_filepath, index=False)
+
+        print(f"Saving complete")
+        print(f"save location: {testing_prediction_filepath}")
+
         print(f"-----------------------------------")
 
     def set_initial_parameters(self):

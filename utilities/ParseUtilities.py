@@ -11,7 +11,8 @@ import sparse
 from dask.diagnostics import ProgressBar
 from dask.distributed import Client, LocalCluster
 
-from Constants import CHUNK_SIZE, INPUT_ARRAY_FILEPATH_ENTIRE_DATA
+from Constants import CHUNK_SIZE, INPUT_ARRAY_FILEPATH_ENTIRE_DATA, INPUT_DATA_FILEPATH_TESTING, \
+    INPUT_ARRAY_FILEPATH_TESTING
 from Constants import INPUT_DATA_FILEPATH_TRAINING, INPUT_ARRAY_FILEPATH_TRAINING, DELTA_MATRIX_FILEPATH
 from utilities.DataFile import DataFileEnum
 
@@ -27,7 +28,7 @@ def parse_class_labels(input_filepath: str):
     return class_labels_dict
 
 
-def parse_data_training_array(input_filepath: str, output_filepath: str, chunksize=CHUNK_SIZE):
+def parse_data_training_testing_array(input_filepath: str, output_filepath: str, chunksize=CHUNK_SIZE):
     # data = ddf.read_csv(filename, header=None)
 
     # only reads line by line...
@@ -115,7 +116,7 @@ def load_da_array_pickle(output_filepath: str):
     return data_output
 
 
-def get_training_data():
+def create_input_training_data():
     if os.path.exists(INPUT_ARRAY_FILEPATH_TRAINING):
         sparse_da_training = load_da_array_pickle(INPUT_ARRAY_FILEPATH_TRAINING)
 
@@ -124,16 +125,29 @@ def get_training_data():
 
         print(f"chunk size: {sparse_da_training.chunksize}")
     else:
-        sparse_da_training = parse_data_training_array(
+        sparse_da_training = parse_data_training_testing_array(
             INPUT_DATA_FILEPATH_TRAINING, INPUT_ARRAY_FILEPATH_TRAINING)
 
 
-def generate_training_data():
+def generate_input_training_data():
     # FIXME: wrong filepath INPUT_ARRAY_FILEPATH_TRAINING...
-    sparse_da_training = parse_data_training_array(
+    sparse_da_training = parse_data_training_testing_array(
         INPUT_DATA_FILEPATH_TRAINING, INPUT_ARRAY_FILEPATH_ENTIRE_DATA)
 
     return sparse_da_training
+
+
+def generate_input_testing_array():
+    """
+    Adapted from generate_input_training_data() above
+
+    :return:
+    """
+
+    sparse_da_testing = parse_data_training_testing_array(
+        INPUT_DATA_FILEPATH_TESTING, INPUT_ARRAY_FILEPATH_TESTING)
+
+    return sparse_da_testing
 
 
 def get_data_from_file(data_file_enum: DataFileEnum,
@@ -153,6 +167,9 @@ def get_data_from_file(data_file_enum: DataFileEnum,
     if data_file_enum == DataFileEnum.INPUT_DATA_TRAINING:
         # FIXME: INPUT_ARRAY_FILEPATH_TRAINING
         output_filepath = INPUT_ARRAY_FILEPATH_ENTIRE_DATA
+    elif data_file_enum == DataFileEnum.INPUT_DATA_TESTING:
+        # FIXME: INPUT_ARRAY_FILEPATH_TRAINING
+        output_filepath = INPUT_ARRAY_FILEPATH_TESTING
     elif data_file_enum == DataFileEnum.DELTA_MATRIX:
         output_filepath = DELTA_MATRIX_FILEPATH
     elif data_file_enum == DataFileEnum.X_MATRIX_TRAINING \
@@ -228,7 +245,7 @@ if __name__ == "__main__":
 
         PRINT_TEST_CALCULATIONS = True
     else:
-        sparse_da_training = parse_data_training_array(
+        sparse_da_training = parse_data_training_testing_array(
             f"../cs429529-project-2-topic-categorization/training.csv", output_filepath)
 
         PRINT_TEST_CALCULATIONS = False

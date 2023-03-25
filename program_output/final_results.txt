@@ -1,0 +1,30 @@
+[########################################] | 100% Completed | 111.36 ms
+validation accuracy: 0.745
+-----------------------------------
+saving W matrix...
+W matrix time: 0.0
+-----------------------------------
+Training complete
+-----------------------------------
+total time: 2.0160202980041504
+-----------------------------------
+Checking accuracy of training...
+[########################################] | 100% Completed | 213.69 ms
+x matrix type: XMatrixType.TRAINING
+prediction vector shape: (9600,)
+Y_vector shape: (9600,)
+[########################################] | 100% Completed | 103.76 ms
+training accuracy: 0.9447916666666667
+-----------------------------------
+
+
+
+
+
+
+
+
+
+
+
+

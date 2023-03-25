@@ -19,7 +19,8 @@ from dask.diagnostics import ProgressBar
 from dask.distributed import Client, LocalCluster
 
 from utilities.ParseUtilities import \
-    parse_class_labels, get_training_data, generate_training_data, get_data_from_file
+    parse_class_labels, create_input_training_data, generate_input_training_data, get_data_from_file, \
+    generate_input_testing_array
 
 from utilities.DataFile import DataFileEnum, XMatrixType
 
@@ -64,10 +65,15 @@ if __name__ == "__main__":
 
     # sparse_da_training = get_training_data()
     # FIXME:
-    sparse_da_training = get_data_from_file(DataFileEnum.INPUT_DATA_TRAINING, generate_training_data)
+    sparse_da_training = get_data_from_file(DataFileEnum.INPUT_DATA_TRAINING, generate_input_training_data)
+    sparse_da_testing = get_data_from_file(DataFileEnum.INPUT_DATA_TESTING, generate_input_testing_array)
 
-    test_logistic_regression = LogisticRegression(sparse_da_training, data_parameters, hyperparameters,
-                                                  normalize_W=False, normalize_X=True)
+    test_logistic_regression = LogisticRegression(sparse_da_training,
+                                                  sparse_da_testing,
+                                                  data_parameters,
+                                                  hyperparameters,
+                                                  normalize_W=False,
+                                                  normalize_X=True)
 
     start_time = time.time()
 
@@ -115,4 +121,13 @@ if __name__ == "__main__":
     print(f"training accuracy: {training_accuracy}")
     print(f"-----------------------------------")
 
+    ##############################################################
+
+    # testing prediction
+
+    print(f"------------------------------------------------------------")
+    print(f"TESTING PREDICTION FILE")
+    print(f"------------------------------------------------------------")
+
+    test_logistic_regression.create_testing_file()
 

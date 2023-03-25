@@ -7,11 +7,14 @@ import numpy as np
 
 class DataFileEnum(Enum):
     INPUT_DATA_TRAINING = auto()
+    INPUT_DATA_TESTING = auto()
     INPUT_ARRAY_TRAINING = auto()
     INPUT_ARRAY_VALIDATION = auto()
+    INPUT_ARRAY_TESTING = auto()
     DELTA_MATRIX = auto()
     X_MATRIX_TRAINING = auto()
     X_MATRIX_VALIDATION = auto()
+    X_MATRIX_TESTING = auto()
     W_MATRIX = auto()
 
 
@@ -35,6 +38,7 @@ class XMatrixOptionEnum(Enum):
 class XMatrixType(Enum):
     TRAINING = auto()
     VALIDATION = auto()
+    TESTING = auto()
 
 
 # def test(a, b, *args, **kwargs):
