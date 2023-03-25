@@ -6,7 +6,8 @@ if TYPE_CHECKING:
     from parameters.Hyperparameters import LogisticRegressionHyperparameters
 
 from utilities.ParseUtilities import \
-    get_data_from_file, create_sub_directories
+    get_data_from_file
+from utilities.FileSystemUtilities import create_sub_directories
 
 import dask.bag as db
 import dask.array as da
@@ -19,7 +20,8 @@ from utilities.ArrayUtilities import normalize_column_vector
 from Constants import DELTA_MATRIX_FILEPATH, W_MATRIX_FILENAME_WITHOUT_EXTENSION, \
     W_MATRIX_FILENAME_EXTENSION, OUTPUT_DIR, DIR_UP, W_MATRIX_TOP_DIR, W_MATRIX_SUB_DIR_DICT, PATH_SEP, \
     X_MATRIX_SUB_DIR_DICT, X_MATRIX_FILEPATH_NO_NORMALIZATION_TRAINING, X_MATRIX_FILEPATH_X_NORMALIZATION_TRAINING, \
-    X_MATRIX_FILEPATH_X_NORMALIZATION_VALIDATION, X_MATRIX_FILEPATH_NO_NORMALIZATION_VALIDATION
+    X_MATRIX_FILEPATH_X_NORMALIZATION_VALIDATION, X_MATRIX_FILEPATH_NO_NORMALIZATION_VALIDATION, \
+    INPUT_ARRAY_FILEPATH_TRAINING, INPUT_ARRAY_FILEPATH_VALIDATION
 
 from utilities.DebugFlags import LOGISTIC_REGRESSION_DELTA_DEBUG, LOGISTIC_REGRESSION_X_MATRIX_DEBUG, \
     LOGISTIC_REGRESSION_NORMALIZE_W_MATRIX_DEBUG, LOGISTIC_REGRESSION_PROBABILITY_MATRIX_DEBUG, \
@@ -70,7 +72,9 @@ class LogisticRegression:
         # number of rows is the number of examples
         # number of columns is the total number of attributes (except for the index column at the beginning and the
         # class column at the end)
-        self.m, self.n = self.training_array_da.shape
+        # TODO: different values of m for training, validation...n is the same for both
+        self.m_training, self.n = self.training_array_da.shape
+        self.m_validation, _ = self.validation_array_da.shape
 
         # do not include the class column
         self.n -= 1
@@ -83,7 +87,10 @@ class LogisticRegression:
         # print(f"example delta matrix columns")
         # print(f"{self.delta_matrix[:, 0:20].compute()}")
 
-        self.X_matrix_training = self.create_X_matrix()
+        # TODO: need to create X matrix for both training and validation
+        # TODO: also for testing
+        self.X_matrix_training = self.create_X_matrix(type=XMatrixType.TRAINING)
+        self.X_matrix_validation = self.create_X_matrix(type=XMatrixType.VALIDATION)
 
         self.Y_vector = self.create_Y_vector()
         self.W_matrix = self.create_W_matrix()
@@ -109,7 +116,14 @@ class LogisticRegression:
         num_instances_validation = int(validation_split * input_array_num_rows)
         num_instances_training = input_array_num_rows - num_instances_validation
 
-        return self.input_array_da[0: num_instances_training, :], self.input_array_da[num_instances_training:, :]
+        # TODO: need to save...
+        training_array = self.input_array_da[0: num_instances_training, :]
+        validation_array = self.input_array_da[num_instances_training:, :]
+
+        save_da_array_pickle(training_array, INPUT_ARRAY_FILEPATH_TRAINING)
+        save_da_array_pickle(validation_array, INPUT_ARRAY_FILEPATH_VALIDATION)
+
+        return training_array, validation_array
 
     def create_training_validation_array(self):
         """
@@ -122,12 +136,18 @@ class LogisticRegression:
         """
 
         training_validation_data = \
-            get_data_from_file(DataFileEnum.INPUT_ARRAY_TRAINING, self.generate_training_validation_array)
+            get_data_from_file(DataFileEnum.INPUT_ARRAY_TRAINING,
+                               self.generate_training_validation_array,
+                               custom_filepath=INPUT_ARRAY_FILEPATH_TRAINING)
 
-        if isinstance(training_validation_data, tuple):
+        print(f"training, validation: {training_validation_data}")
+
+        if not isinstance(training_validation_data, tuple):
             training_array = training_validation_data
             validation_array = \
-                get_data_from_file(DataFileEnum.INPUT_ARRAY_VALIDATION, self.generate_training_validation_array)
+                get_data_from_file(DataFileEnum.INPUT_ARRAY_VALIDATION,
+                                   self.generate_training_validation_array,
+                                   custom_filepath=INPUT_ARRAY_FILEPATH_VALIDATION)
 
             assert not isinstance(validation_array, tuple)
         else:
@@ -145,7 +165,7 @@ class LogisticRegression:
         class_column = self.class_vector
         num_data_rows = len(class_column)
 
-        k, m = self.k, self.m
+        k, m = self.k, self.m_training
         delta_matrix = da.zeros((k, m), dtype=int)
 
         index_class_column = da.arange(num_data_rows).map_blocks(lambda x: sparse.COO(x, fill_value=0))
@@ -198,7 +218,18 @@ class LogisticRegression:
         :return:
         """
 
-        m, n = self.m, self.n
+        if LOGISTIC_REGRESSION_X_MATRIX_DEBUG:
+            print(f"X matrix type: {type}")
+
+        if type == XMatrixType.TRAINING:
+            m = self.m_training
+        elif type == XMatrixType.VALIDATION:
+            m = self.m_validation
+        else:
+            raise ValueError("Invalid X matrix type...")
+
+        n = self.n
+
         X_matrix = da.zeros((m, n + 1), dtype=int)
 
         X_matrix[:, 0] = 1
@@ -247,11 +278,15 @@ class LogisticRegression:
         # TODO: edit file path (depending on normalization)
         # TODO: also check for validation type
         if type == XMatrixType.TRAINING:
+            data_file_enum = DataFileEnum.X_MATRIX_TRAINING
+
             if self.normalize_X:
                 X_matrix_filepath = X_MATRIX_FILEPATH_X_NORMALIZATION_TRAINING
             else:
                 X_matrix_filepath = X_MATRIX_FILEPATH_NO_NORMALIZATION_TRAINING
         elif type == XMatrixType.VALIDATION:
+            data_file_enum = DataFileEnum.X_MATRIX_VALIDATION
+
             if self.normalize_X:
                 X_matrix_filepath = X_MATRIX_FILEPATH_X_NORMALIZATION_VALIDATION
             else:
@@ -261,9 +296,11 @@ class LogisticRegression:
 
         self.X_matrix_filepath = X_matrix_filepath
 
-        X_matrix = get_data_from_file(DataFileEnum.X_MATRIX,
+        # TODO: add kwargs for passing optional args to generate_X_matrix()
+        X_matrix = get_data_from_file(data_file_enum,
                                       self.generate_X_matrix,
-                                      custom_filepath=X_matrix_filepath)
+                                      custom_filepath=X_matrix_filepath,
+                                      type=type)
 
         if LOGISTIC_REGRESSION_X_MATRIX_DEBUG:
             # check stats of X matrix...

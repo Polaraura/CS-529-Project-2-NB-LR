@@ -1,7 +1,6 @@
 import os
 import pickle
 import time
-from pathlib import Path
 
 import dask.array as da
 import dask.bag as db
@@ -12,7 +11,7 @@ import sparse
 from dask.diagnostics import ProgressBar
 from dask.distributed import Client, LocalCluster
 
-from Constants import CHUNK_SIZE
+from Constants import CHUNK_SIZE, INPUT_ARRAY_FILEPATH_ENTIRE_DATA
 from Constants import INPUT_DATA_FILEPATH_TRAINING, INPUT_ARRAY_FILEPATH_TRAINING, DELTA_MATRIX_FILEPATH
 from utilities.DataFile import DataFileEnum
 
@@ -54,6 +53,9 @@ def parse_data_training_array(input_filepath: str, output_filepath: str, chunksi
     print(f"{data_array}")
 
     sparse_chunks = data_array
+
+    # for sparse_chunk in sparse_chunks:
+    #     print(sparse_chunk.shape)
 
     ################################################
 
@@ -127,21 +129,17 @@ def get_training_data():
 
 
 def generate_training_data():
+    # FIXME: wrong filepath INPUT_ARRAY_FILEPATH_TRAINING...
     sparse_da_training = parse_data_training_array(
-        INPUT_DATA_FILEPATH_TRAINING, INPUT_ARRAY_FILEPATH_TRAINING)
+        INPUT_DATA_FILEPATH_TRAINING, INPUT_ARRAY_FILEPATH_ENTIRE_DATA)
 
     return sparse_da_training
 
 
-def create_sub_directories(filepath: str):
-    # recursively create sub directories
-    filepath_path = Path(filepath)
-    filepath_path.mkdir(parents=True, exist_ok=True)
-
-
 def get_data_from_file(data_file_enum: DataFileEnum,
                        generate_data_file_func,
-                       custom_filepath=None):
+                       custom_filepath=None,
+                       **kwargs):
     """
     Generates or retrieves data stored in file (if already exists)
 
@@ -152,18 +150,25 @@ def get_data_from_file(data_file_enum: DataFileEnum,
     """
 
     # get output path depending on data file
-    if data_file_enum == DataFileEnum.DELTA_MATRIX:
+    if data_file_enum == DataFileEnum.INPUT_DATA_TRAINING:
+        # FIXME: INPUT_ARRAY_FILEPATH_TRAINING
+        output_filepath = INPUT_ARRAY_FILEPATH_ENTIRE_DATA
+    elif data_file_enum == DataFileEnum.DELTA_MATRIX:
         output_filepath = DELTA_MATRIX_FILEPATH
-    elif data_file_enum == DataFileEnum.INPUT_DATA_TRAINING:
-        output_filepath = INPUT_ARRAY_FILEPATH_TRAINING
-    elif data_file_enum == DataFileEnum.X_MATRIX:
+    elif data_file_enum == DataFileEnum.X_MATRIX_TRAINING \
+            or data_file_enum == DataFileEnum.X_MATRIX_VALIDATION:
         # custom filepath for normalization
         # output_filepath = X_MATRIX_FILEPATH_OLD
         output_filepath = custom_filepath
     elif data_file_enum == DataFileEnum.W_MATRIX:
         output_filepath = custom_filepath
     else:
-        raise ValueError("Invalid option for retrieving data file")
+        # TODO: too tiresome to add all options here...just default to custom_filepath if data_file_enum is some
+        #  valid option in the Enum class and provide custom_filepath manually
+        if isinstance(data_file_enum, DataFileEnum):
+            output_filepath = custom_filepath
+        else:
+            raise ValueError("Invalid option for retrieving data file")
 
     print(f"{data_file_enum}")
     print(f"filepath: {output_filepath}")
@@ -176,13 +181,14 @@ def get_data_from_file(data_file_enum: DataFileEnum,
 
         print(f"LOAD COMPLETE")
         print(f"chunk size: {output_data.chunksize}")
+        print(f"shape: {output_data.shape}")
 
         print(f"{output_data}")
         print(f"{output_data.compute()}")
     else:
         print(f"CREATING...")
 
-        output_data = generate_data_file_func()
+        output_data = generate_data_file_func(**kwargs)
 
         print(f"SAVE COMPLETE")
         print(f"save location: {output_filepath}")

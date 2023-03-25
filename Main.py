@@ -31,6 +31,7 @@ import time
 
 # Global variables
 PROGRESS_BAR_SET = True
+PARALLEL_CLUSTER_CLIENT = False
 MAIN_DEBUG = False
 MAIN_PRINT = True
 
@@ -55,9 +56,10 @@ if __name__ == "__main__":
 
     # tested learning rate = 0.01 and penalty term = 0.01 and the weights exploded...NaN popped up within a few
     # iterations
-    hyperparameters = LogisticRegressionHyperparameters(0.01, 0.001, 40, 20, 20, 50)
+    hyperparameters = LogisticRegressionHyperparameters(0.01, 0.001, 5, 5, 5, 50)
 
     # sparse_da_training = get_training_data()
+    # FIXME:
     sparse_da_training = get_data_from_file(DataFileEnum.INPUT_DATA_TRAINING, generate_training_data)
 
     test_logistic_regression = LogisticRegression(sparse_da_training, data_parameters, hyperparameters,
@@ -65,7 +67,7 @@ if __name__ == "__main__":
 
     start_time = time.time()
 
-    if False:
+    if PARALLEL_CLUSTER_CLIENT:
         # introduce parallelism with multiple workers/threads...slower though and can't see the progress bar
         local_cluster = LocalCluster()
 
@@ -98,3 +100,11 @@ if __name__ == "__main__":
     end_time = time.time()
 
     print(f"total prediction time: {end_time - start_time}")
+
+    ##############################################################
+
+    # training accuracy
+
+
+
+

@@ -8,7 +8,8 @@ class DataFileEnum(Enum):
     INPUT_ARRAY_TRAINING = auto()
     INPUT_ARRAY_VALIDATION = auto()
     DELTA_MATRIX = auto()
-    X_MATRIX = auto()
+    X_MATRIX_TRAINING = auto()
+    X_MATRIX_VALIDATION = auto()
     W_MATRIX = auto()
 
 
@@ -34,7 +35,6 @@ class XMatrixType(Enum):
     VALIDATION = auto()
 
 
-
 # def test(a, b, *args, **kwargs):
 def test(a, b, c=1, *args, **kwargs):
     print(a)
@@ -44,8 +44,16 @@ def test(a, b, c=1, *args, **kwargs):
     print(kwargs)
 
 
+def another_test(a, b, c=1, **kwargs):
+    print(a)
+    print(b)
+    print(c)
+    print(kwargs)
+
+
 def test2(f, *args, **kwargs):
     f(2, 3, *args, **kwargs)
+
 
 
 def test3(*args, **kwargs):
@@ -54,8 +62,21 @@ def test3(*args, **kwargs):
     print(args)
     print(kwargs)
 
+
 def test4(f, *args, **kwargs):
     f(*args, **kwargs)
+
+
+def test5(f, **kwargs):
+    f(1, 2, **kwargs)
+
+
+def another_test_2():
+    print(f"empty...")
+
+
+def test6(f, **kwargs):
+    f(**kwargs)
 
 
 if __name__ == "__main__":
@@ -73,4 +94,8 @@ if __name__ == "__main__":
     test4(test3, 1, 2, a=2, b=4)
     test3(1, 2, a=2, b=4)
 
-    print(f"{(3)}")
+    print(f"------------")
+
+    test5(another_test, z=3)
+    test6(another_test_2)
+
