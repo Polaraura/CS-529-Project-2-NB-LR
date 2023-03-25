@@ -73,3 +73,34 @@ same name or use a custom folder name and edit the hardcoded output filepaths in
 - some calculations conflict if a mix of sparse and dense matrices are used in matrix operations (more specifically, 
   subtraction as both matrices would need to be sparse and have the same fill value) -- had to save the weight 
   matrix and delta matrix as a dense matrix 
+
+### Naive Bayes Implementation
+
+The Naive Bayes portion of the project operates differently than that of Logistic regression due to early design 
+differences between the two. 
+
+To run, simply type `python naive_bayes.py -s` with a trailing number. This was implemented using argument parser,
+and the majority of arguments are set by default in a way that should be feasible based on the assignment structure. 
+Assuming the data download from kaggle is stored as its original name (`cs429529-project-2-topic-categorization`)
+in the same directory, and the `resources` and `program_output` folders are pulled locally, no other arguments are needed. 
+The command line arguments are named in a way that should be self explanatory, and can be displayed by typing the command
+`python naive_bayes.py -h`.
+
+For completeness, the command line arguments are as follows:
+- `-trd`,`--train-data`; file path to the `training.csv` file. 
+- `-ted`,`--test-data`; file path to the `testing.csv` file. 
+- `-trx`,`--train-mtx`; file path to the `training_matrix.npz` sparse matrix file. 
+- `-tex`,`--test-mtx`; file path to the `testing_matrix.npz` sparse matrix file. 
+- `-vl`,`--vocab-list`; file path to the `vocabulary.txt` file in the downloaded assignment folder. 
+- `-nl`,`--news-list`; file path to the `newsgrouplabels.txt` file in the downloaded assignment folder. 
+- `-ba`,`--beta-accs`; file path to the `acc.csv` file, which contains beta values and their associated accuracies from kaggle submissions. 
+- `-s`,`--scenario`; a number denoting the desired functionality to be performed. options range from 1-5, and are as follows:
+  - 1: a single run of Naive Bayes with beta value of 1/vocab size. 
+  - 2: generate multiple predictions based on differing beta values to be submitted to kaggle.
+  - 3: plot betas vs accuracy from the `acc.csv` file.
+  - 4: plot a confusion matrix of the data based on a validation set. 
+  - 5: rank words based on their usefulness in making a classification.
+- `-ps`,`--print-save`; used to note whether you want output files to be saved or just printed. `False` by default, meaning files will not be saved. 
+
+
+
