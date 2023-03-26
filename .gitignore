@@ -170,3 +170,5 @@ cython_debug/
 cs429529-project-2-topic-categorization/
 screenshots/
 
+# don't upload w_matrix for now...bloat the repo
+resources/validation_split=0.2/w_matrix

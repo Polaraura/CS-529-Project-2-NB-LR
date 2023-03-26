@@ -30,7 +30,7 @@ from Constants import \
 import time
 
 # Global variables
-PROGRESS_BAR_SET = True
+PROGRESS_BAR_SET = False
 PARALLEL_CLUSTER_CLIENT = False
 MAIN_DEBUG = False
 MAIN_PRINT = True
@@ -56,12 +56,12 @@ if __name__ == "__main__":
 
     # tested learning rate = 0.01 and penalty term = 0.01 and the weights exploded...NaN popped up within a few
     # iterations
-    hyperparameters = LogisticRegressionHyperparameters(0.01,
-                                                        0.001,
-                                                        5,
-                                                        5,
-                                                        5,
-                                                        5)
+    hyperparameters = LogisticRegressionHyperparameters(0.005,
+                                                        0.005,
+                                                        10000,
+                                                        100,
+                                                        200,
+                                                        200)
 
     # sparse_da_training = get_training_data()
     # FIXME:
@@ -129,5 +129,6 @@ if __name__ == "__main__":
     print(f"TESTING PREDICTION FILE")
     print(f"------------------------------------------------------------")
 
+    # test_logistic_regression.create_testing_file(custom_num_iter=401)
     test_logistic_regression.create_testing_file()
 

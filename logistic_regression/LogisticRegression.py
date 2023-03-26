@@ -87,9 +87,9 @@ class LogisticRegression:
 
         # set execution filepath of W matrix
         self.output_dir = f"{OUTPUT_DIR}"
+        self.set_parent_dir_W_matrix()
         self.filepath_W_matrix = self.get_filepath_W_matrix(DataOptionEnum.LOAD)
         self.filepath_W_matrix_normalization_string = None
-        self.W_matrix_parent_dir = None
 
         # number of rows is the number of examples
         # number of columns is the total number of attributes (except for the index column at the beginning and the
@@ -461,6 +461,15 @@ class LogisticRegression:
         # return the first group with the iter_num (cast to int)
         return int(iter_num_match.group(1))
 
+    def set_parent_dir_W_matrix(self):
+        output_dir = self.output_dir
+        W_matrix_sub_dir = self.get_W_matrix_sub_dir()
+        W_matrix_hyperparameters_dir = self.get_W_matrix_hyperparameters_dir()
+        W_matrix_parent_dir = os.path.join(output_dir, W_MATRIX_TOP_DIR, W_matrix_sub_dir,
+                                           W_matrix_hyperparameters_dir)
+
+        self.W_matrix_parent_dir = W_matrix_parent_dir
+
     def get_filepath_W_matrix(self, data_option: DataOptionEnum, current_iter=None):
         """
         format of filepath
@@ -500,12 +509,14 @@ class LogisticRegression:
         #     elif self.normalize_X:
         #         iter_string += f"x"
 
-        output_dir = self.output_dir
-        W_matrix_sub_dir = self.get_W_matrix_sub_dir()
-        W_matrix_hyperparameters_dir = self.get_W_matrix_hyperparameters_dir()
-        W_matrix_parent_dir = os.path.join(output_dir, W_MATRIX_TOP_DIR, W_matrix_sub_dir, W_matrix_hyperparameters_dir)
+        # output_dir = self.output_dir
+        # W_matrix_sub_dir = self.get_W_matrix_sub_dir()
+        # W_matrix_hyperparameters_dir = self.get_W_matrix_hyperparameters_dir()
+        # W_matrix_parent_dir = os.path.join(output_dir, W_MATRIX_TOP_DIR, W_matrix_sub_dir, W_matrix_hyperparameters_dir)
 
-        self.W_matrix_parent_dir = W_matrix_parent_dir
+        W_matrix_parent_dir = self.W_matrix_parent_dir
+
+        print(f"W matrix parent dir: {W_matrix_parent_dir}")
 
         # TODO: need to find most recent iteration num
         # fr"{W_matrix_parent_dir}{W_MATRIX_FILENAME_WITHOUT_EXTENSION}{iter_string}-*"
@@ -845,14 +856,14 @@ class LogisticRegression:
 
         print(f"Starting training...")
 
-        total_num_iter = self.hyperparameters.num_iter
-        num_iter = total_num_iter
+        current_num_iter_execution = self.hyperparameters.num_iter
+        num_iter = current_num_iter_execution
 
-        if total_num_iter == 0:
+        if current_num_iter_execution == 0:
             print(f"No training done")
-            return
+            # return
 
-        for i in range(total_num_iter):
+        for i in range(current_num_iter_execution):
             self.compute_gradient_descent_step()
 
             if LOGISTIC_REGRESSION_TRAINING_DEBUG:
@@ -860,12 +871,12 @@ class LogisticRegression:
 
             if (i + 1) % num_iter_print == 0:
                 print(f"-----------------------------------")
-                print(f"Finished {i} iterations")
+                print(f"Finished {i + 1} iterations")
                 print(f"-----------------------------------")
 
             if (i + 1) % num_iter_save == 0:
                 print(f"-----------------------------------")
-                print(f"Saving after {i} iterations...")
+                print(f"Saving after {i + 1} iterations...")
                 save_da_array_pickle(self.W_matrix, self.get_filepath_W_matrix(DataOptionEnum.SAVE, num_iter_save))
                 print(f"Saving complete")
                 print(f"-----------------------------------")
@@ -904,6 +915,14 @@ class LogisticRegression:
 
         # self.W_matrix = self.W_matrix.compute()
 
+        # complete validation for 0 iterations (DEBUG stuff)
+        if current_num_iter_execution == 0:
+            print(f"-----------------------------------")
+            print(f"Checking validation...")
+            validation_accuracy = self.get_accuracy(X_matrix_type=XMatrixType.VALIDATION)
+            print(f"validation accuracy: {validation_accuracy}")
+            print(f"-----------------------------------")
+
         # TODO: save W matrix into file
         # TODO: find previous iteration num among files...should work if files are deleted
         num_iter_remainder = num_iter % num_iter_save
@@ -923,11 +942,43 @@ class LogisticRegression:
         print(f"Training complete")
         print(f"-----------------------------------")
 
-    def create_testing_file(self):
+    def create_testing_file(self, custom_num_iter=None):
         print(f"-----------------------------------")
         print(f"TESTING PREDICTION FILE")
         print(f"-----------------------------------")
         print(f"Getting testing prediction vector...")
+
+        # TODO: save the hyperparameters and iter num for each prediction...
+        hyperparameters = self.hyperparameters
+        eta_training = hyperparameters.learning_rate
+        lambda_training = hyperparameters.penalty_term
+        current_num_iter = self.current_num_iter
+
+        if custom_num_iter is not None:
+            # need to rewrite the num iter saved in filename
+            current_num_iter = custom_num_iter
+
+            # TODO: reload W matrix with corresponding custom_num_iter
+            W_matrix_parent_dir = self.W_matrix_parent_dir
+
+            # get filename
+            W_matrix_filename = f"{W_MATRIX_FILENAME_WITHOUT_EXTENSION}-{custom_num_iter}" \
+                                f"{W_MATRIX_FILENAME_EXTENSION}"
+
+            print(f"W matrix parent dir: {W_matrix_parent_dir}")
+            print(f"W matrix filename: {W_matrix_filename}")
+
+            # create path for W matrix file
+            W_matrix_filepath = os.path.join(W_matrix_parent_dir, W_matrix_filename)
+
+            self.W_matrix = load_da_array_pickle(W_matrix_filepath)
+
+            # check validation AFTER LOADING in the W matrix
+            print(f"-----------------------------------")
+            print(f"Checking validation...")
+            validation_accuracy = self.get_accuracy(X_matrix_type=XMatrixType.VALIDATION)
+            print(f"validation accuracy: {validation_accuracy}")
+            print(f"-----------------------------------")
 
         testing_prediction_vector = self.get_prediction_vector(X_matrix_type=XMatrixType.TESTING)
 
@@ -947,12 +998,6 @@ class LogisticRegression:
         # need to create directory first
         # FIXME: only parent dir, not entire filepath...
         create_sub_directories(TESTING_PREDICTION_PARENT_DIR)
-
-        # TODO: save the hyperparameters and iter num for each prediction...
-        hyperparameters = self.hyperparameters
-        eta_training = hyperparameters.learning_rate
-        lambda_training = hyperparameters.penalty_term
-        current_num_iter = self.current_num_iter
 
         testing_prediction_filename = \
             f"testing_prediction_eta={eta_training}-lambda={lambda_training}-iter_num={current_num_iter}.csv"

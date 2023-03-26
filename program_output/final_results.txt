@@ -17,7 +17,79 @@ Y_vector shape: (9600,)
 training accuracy: 0.9447916666666667
 -----------------------------------
 
+[########################################] | 100% Completed | 109.81 ms
+validation accuracy: 0.7470833333333333
+-----------------------------------
+saving W matrix...
+W matrix time: 0.0
+-----------------------------------
+Training complete
+-----------------------------------
+total time: 1.8889551162719727
+-----------------------------------
+Checking accuracy of training...
+[########################################] | 100% Completed | 217.25 ms
+x matrix type: XMatrixType.TRAINING
+prediction vector shape: (9600,)
+Y_vector shape: (9600,)
+[########################################] | 100% Completed | 106.24 ms
+training accuracy: 0.946875
+-----------------------------------
 
+
+1000 iterations
+[########################################] | 100% Completed | 104.36 ms
+validation accuracy: 0.7375
+-----------------------------------
+saving W matrix...
+W matrix time: 0.0
+-----------------------------------
+Training complete
+-----------------------------------
+total time: 233.17357325553894
+-----------------------------------
+Checking accuracy of training...
+[########################################] | 100% Completed | 215.46 ms
+x matrix type: XMatrixType.TRAINING
+prediction vector shape: (9600,)
+Y_vector shape: (9600,)
+[########################################] | 100% Completed | 105.58 ms
+training accuracy: 0.9803125
+-----------------------------------
+
+after 5000 iterations
+[########################################] | 100% Completed | 108.23 ms
+validation accuracy: 0.7233333333333334
+-----------------------------------
+-----------------------------------
+Training complete
+-----------------------------------
+total time: 930.5616617202759
+-----------------------------------
+Checking accuracy of training...
+[########################################] | 100% Completed | 234.24 ms
+x matrix type: XMatrixType.TRAINING
+prediction vector shape: (9600,)
+Y_vector shape: (9600,)
+[########################################] | 100% Completed | 108.25 ms
+training accuracy: 0.9928125
+-----------------------------------
+
+
+after 4800 iterations (no progress bar)
+validation accuracy: 0.7175
+-----------------------------------
+-----------------------------------
+Training complete
+-----------------------------------
+total time: 729.3855566978455
+-----------------------------------
+Checking accuracy of training...
+x matrix type: XMatrixType.TRAINING
+prediction vector shape: (9600,)
+Y_vector shape: (9600,)
+training accuracy: 0.9960416666666667
+-----------------------------------
 
 
 
