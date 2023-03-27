@@ -1253,6 +1253,18 @@ class LogisticRegression:
         :return:
         """
 
+        # increase font size of all elements
+        seaborn.set(font_scale=1.5)
+        plt.rcParams["axes.labelsize"] = 30
+
+        plt.rc('axes', titlesize=20)
+        plt.rc('axes', labelsize=30)
+        plt.rc('xtick', labelsize=18)
+        plt.rc('ytick', labelsize=18)
+        plt.rc('legend', fontsize=12)
+        # plt.yticks(rotation=90)
+        # plt.tight_layout()
+
         confusion_matrix_da_training, confusion_matrix_da_validation = self.create_confusion_matrix()
 
         print(f"confusion_matrix_training: {confusion_matrix_da_training}")
@@ -1281,42 +1293,91 @@ class LogisticRegression:
         confusion_matrix_plot_filepath_validation = \
             os.path.join(PROGRAM_OUTPUT_DIR, confusion_matrix_plot_filename_validation)
 
-        f = plt.figure(1, figsize=(16, 10))
+        # f = plt.figure(1, figsize=(16, 10))
+        f = plt.figure(1, figsize=(12, 10))
 
-        plt.rc('axes', titlesize=20)
-        plt.rc('axes', labelsize=15)
-        plt.rc('xtick', labelsize=12)
-        plt.rc('ytick', labelsize=12)
-        plt.rc('legend', fontsize=12)
+        # plt.rc('axes', titlesize=20)
+        # plt.rc('axes', labelsize=30)
+        # plt.rc('xtick', labelsize=12)
+        # plt.rc('ytick', labelsize=12)
+        # plt.rc('legend', fontsize=12)
         # fig = plt.figure(figsize=(16, 10))
         ax = f.add_subplot(1, 1, 1)
         ax.set_title(f"Confusion Matrix Training "
                      f"(eta={eta_training},lambda={lambda_training},num iter={current_num_iter})")
 
-        seaborn.heatmap(confusion_matrix_da_training,
-                        annot=True, fmt=".0f", xticklabels=news_groups, yticklabels=news_groups)  # plot
-        ax.set_xticklabels(news_groups, rotation=60)
+        # for tick in ax.xaxis.get_major_ticks():
+        #     tick.label.set_fontsize(20)
+        #
+        # for tick in ax.yaxis.get_major_ticks():
+        #     tick.label.set_fontsize(20)
 
-        f.savefig(confusion_matrix_plot_filepath_training, format='png')
+        # ax.legend(prop=dict(size=20))
+
+        # seaborn.heatmap(confusion_matrix_da_training,
+        #                 annot=True, fmt=".0f", xticklabels=news_groups, yticklabels=news_groups)  # plot
+        confusion_plot = seaborn.heatmap(confusion_matrix_da_training,
+                        annot=True, fmt=".0f")  # plot
+        # ax.set_xticklabels(news_groups, rotation=60)
+        # ax.set_yticklabels(confusion_plot.get_yticklabels(), rotation=90)
+
+        # use matplotlib.colorbar.Colorbar object
+        cbar = ax.collections[0].colorbar
+        # here set the labelsize by 20
+        cbar.ax.tick_params(labelsize=30)
+        cbar.remove()
+
+        # ax.set_xticks(range(20))
+        # ax.set_yticks(range(20))
+        ax.set_xticklabels(range(1, 21), va='center')
+        ax.set_yticklabels(range(1, 21), rotation=90, va='center')
+        # ax.set_xlim(1, 20)
+        # ax.set_ylim(1, 20)
+        plt.tight_layout()
+
+        f.savefig(confusion_matrix_plot_filepath_training, bbox_inches='tight', format='png')
         f.show()
 
-        g = plt.figure(2, figsize=(16, 10))
+        g = plt.figure(2, figsize=(12, 10))
 
-        plt.rc('axes', titlesize=20)
-        plt.rc('axes', labelsize=15)
-        plt.rc('xtick', labelsize=12)
-        plt.rc('ytick', labelsize=12)
-        plt.rc('legend', fontsize=12)
+        # plt.rc('axes', titlesize=20)
+        # plt.rc('axes', labelsize=30)
+        # plt.rc('xtick', labelsize=12)
+        # plt.rc('ytick', labelsize=12)
+        # plt.rc('legend', fontsize=12)
         # fig = plt.figure(figsize=(16, 10))
         ax = g.add_subplot(1, 1, 1)
         ax.set_title(f"Confusion Matrix Validation "
                      f"(eta={eta_training},lambda={lambda_training},num iter={current_num_iter})")
 
-        seaborn.heatmap(confusion_matrix_da_validation,
-                        annot=True, fmt=".0f", xticklabels=news_groups, yticklabels=news_groups)  # plot
-        ax.set_xticklabels(news_groups, rotation=60)
+        # for tick in ax.xaxis.get_major_ticks():
+        #     tick.label.set_fontsize(20)
+        #
+        # for tick in ax.yaxis.get_major_ticks():
+        #     tick.label.set_fontsize(20)
+        #
+        # ax.legend(prop=dict(size=20))
 
-        g.savefig(confusion_matrix_plot_filepath_validation, format='png')
+        # seaborn.heatmap(confusion_matrix_da_validation,
+        #                 annot=True, fmt=".0f", xticklabels=news_groups, yticklabels=news_groups)  # plot
+        confusion_plot = seaborn.heatmap(confusion_matrix_da_validation,
+                        annot=True, fmt=".0f")  # plot
+        # ax.set_xticklabels(news_groups, rotation=60)
+        # ax.set_yticklabels(confusion_plot.get_yticklabels(), rotation=90)
+
+        # use matplotlib.colorbar.Colorbar object
+        cbar = ax.collections[0].colorbar
+        # here set the labelsize by 20
+        cbar.ax.tick_params(labelsize=30)
+        cbar.remove()
+
+        # ax.set_xticks(range(20))
+        # ax.set_yticks(range(20))
+        ax.set_xticklabels(range(1, 21), va='center')
+        ax.set_yticklabels(range(1, 21), rotation=90, va='center')
+        plt.tight_layout()
+
+        g.savefig(confusion_matrix_plot_filepath_validation, bbox_inches='tight', format='png')
         g.show()
 
 
