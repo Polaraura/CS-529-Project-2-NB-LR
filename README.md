@@ -11,6 +11,7 @@ The code was run using `Python 3.9` with the following major packages:
 - `scipy`
 - `dask`
 - `sparse`
+- `pandas`
 
 ### Introduction
 
@@ -102,5 +103,32 @@ For completeness, the command line arguments are as follows:
   - 5: rank words based on their usefulness in making a classification.
 - `-ps`,`--print-save`; used to note whether you want output files to be saved or just printed. `False` by default, meaning files will not be saved. 
 
+### Logistic Regression Implementation
 
+Unfortunately, the implementation of Logistic Regression went to numerous overhauls to design and structure so not 
+much time was available to add command line args. However, there are a number of quality of life (QOL) features that 
+were added to make the training quite seemless. A general overview of the features will be listed out below:
 
+- The main entry of the program is `Main.py` at the root of the repo
+- There will be comments and docs for many of the functions in the `logistic_regression/LogisticRegression.py` file, 
+  containing the bulk of the implementation so check them out for more details
+- A lot of the code relies on `dask` and `sparse` to make the training efficient, so it is critical to have `Python` 
+  version 3.9 specifically and not any other version (at least with version `3.10` upwards as that breaks 
+  compatability with `dask` and `sparse` for sparse representations)
+- All of the main features can be modified in the `Main.py` file, sectioned off in clear groupings
+- There are global flags in `Main.py` as well as many other print `DEBUG` flags in the `utilities/Debug.py` file for 
+  more information while training is done
+- Edit the `Hyperparameters` object for various details, like learning rate (eta), lambda (penalty term), when to 
+  print progress updates, when to save intermediate weights (W) matrices, and much more (check 
+  `parameters/Hyperparameters` for more details)
+- There is an optional progress bar to check how long each iteration or intermediate calculations (when DEBUG flags 
+  are set to `True`) -- may increase overall runtime
+- A nifty feature is the `MAIN_CUSTOM_TESTING` flag that can go back and list out all major stats of the classifer 
+  **without** having to run the entire training process again **if** the corresponding files were saved (can specify 
+  which iteration to look at, but may have to edit the hyperparameters manually) -- can reload the W matrix, check 
+  the training and validation accuracies again, save predictions at any point where the corresponding matrices are 
+  saved, and more (it will also display the total time taken, which is only relevant when training for long periods 
+  since getting the stats on a saved W matrix is fairly quick)
+- all the related output (not text), like plots and confusion matrices, can be found in the `program_output` folder
+- all the saved data (including W, X, delta matrices and more) are saved in the `resources` folder with a detailed 
+  file structure (check `logistic_regression/LogisticRegression.py` file for more details)
