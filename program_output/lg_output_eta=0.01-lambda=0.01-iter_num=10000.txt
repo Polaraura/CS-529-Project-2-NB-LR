@@ -1,0 +1,1416 @@
+C:\Users\johnt\miniforge3\envs\machine-learning-3.9\python.exe "C:\Users\johnt\OneDrive\Desktop\Spring 2023\CS 529 - Intro to Machine Learning\Projects\cs529-project2-scratch\Main.py"
+class labels dict: {1: 'alt.atheism', 2: 'comp.graphics', 3: 'comp.os.ms-windows.misc', 4: 'comp.sys.ibm.pc.hardware', 5: 'comp.sys.mac.hardware', 6: 'comp.windows.x', 7: 'misc.forsale', 8: 'rec.autos', 9: 'rec.motorcycles', 10: 'rec.sport.baseball', 11: 'rec.sport.hockey', 12: 'sci.crypt', 13: 'sci.electronics', 14: 'sci.med', 15: 'sci.space', 16: 'soc.religion.christian', 17: 'talk.politics.guns', 18: 'talk.politics.mideast', 19: 'talk.politics.misc', 20: 'talk.religion.misc'}
+DataFileEnum.INPUT_DATA_TRAINING
+filepath: resources\validation_split=0.2\entire_input_data.pkl
+LOADING...
+LOAD COMPLETE
+chunk size: (5792, 5792)
+shape: (12000, 61190)
+dask.array<array, shape=(12000, 61190), dtype=int32, chunksize=(5792, 5792), chunktype=sparse.COO>
+<COO: shape=(12000, 61190), dtype=int32, nnz=1577553, fill_value=0>
+DataFileEnum.INPUT_DATA_TESTING
+filepath: resources\validation_split=0.2\testing_array.pkl
+LOADING...
+LOAD COMPLETE
+chunk size: (5792, 5792)
+shape: (6774, 61189)
+dask.array<array, shape=(6774, 61189), dtype=int32, chunksize=(5792, 5792), chunktype=sparse.COO>
+<COO: shape=(6774, 61189), dtype=int32, nnz=888440, fill_value=0>
+DataFileEnum.INPUT_ARRAY_TRAINING
+filepath: resources\validation_split=0.2\training_array.pkl
+LOADING...
+LOAD COMPLETE
+chunk size: (5792, 5792)
+shape: (9600, 61189)
+dask.array<array, shape=(9600, 61189), dtype=int32, chunksize=(5792, 5792), chunktype=sparse.COO>
+<COO: shape=(9600, 61189), dtype=int32, nnz=1246032, fill_value=0>
+training, validation: dask.array<array, shape=(9600, 61189), dtype=int32, chunksize=(5792, 5792), chunktype=sparse.COO>
+DataFileEnum.INPUT_ARRAY_VALIDATION
+filepath: resources\validation_split=0.2\validation_array.pkl
+LOADING...
+LOAD COMPLETE
+chunk size: (2400, 13981)
+shape: (2400, 61189)
+dask.array<array, shape=(2400, 61189), dtype=int32, chunksize=(2400, 13981), chunktype=sparse.COO>
+<COO: shape=(2400, 61189), dtype=int32, nnz=319521, fill_value=0>
+W matrix parent dir: resources\validation_split=0.2\w_matrix\x_normalization\eta=0.01,lambda=0.01
+DataFileEnum.DELTA_MATRIX
+filepath: resources\validation_split=0.2\delta_matrix.pkl
+LOADING...
+LOAD COMPLETE
+chunk size: (20, 9600)
+shape: (20, 9600)
+dask.array<array, shape=(20, 9600), dtype=int32, chunksize=(20, 9600), chunktype=numpy.ndarray>
+[[0 0 0 ... 0 0 0]
+ [0 0 0 ... 0 0 0]
+ [0 0 0 ... 0 0 0]
+ ...
+ [0 0 0 ... 0 0 1]
+ [0 0 0 ... 0 0 0]
+ [0 0 0 ... 0 0 0]]
+DataFileEnum.X_MATRIX_TRAINING
+filepath: resources\validation_split=0.2\x_matrix\x_matrix_training\x_normalization\x_matrix.pkl
+LOADING...
+LOAD COMPLETE
+chunk size: (4096, 4096)
+shape: (9600, 61189)
+dask.array<array, shape=(9600, 61189), dtype=float64, chunksize=(4096, 4096), chunktype=sparse.COO>
+<COO: shape=(9600, 61189), dtype=float64, nnz=1240958, fill_value=0.0>
+DataFileEnum.X_MATRIX_VALIDATION
+filepath: resources\validation_split=0.2\x_matrix\x_matrix_validation\x_normalization\x_matrix.pkl
+LOADING...
+LOAD COMPLETE
+chunk size: (2400, 6990)
+shape: (2400, 61189)
+dask.array<array, shape=(2400, 61189), dtype=float64, chunksize=(2400, 6990), chunktype=sparse.COO>
+<COO: shape=(2400, 61189), dtype=float64, nnz=303563, fill_value=0.0>
+DataFileEnum.X_MATRIX_TESTING
+filepath: resources\validation_split=0.2\x_matrix\x_matrix_testing\x_normalization\x_matrix.pkl
+LOADING...
+LOAD COMPLETE
+chunk size: (4096, 4096)
+shape: (6774, 61189)
+dask.array<array, shape=(6774, 61189), dtype=float64, chunksize=(4096, 4096), chunktype=sparse.COO>
+<COO: shape=(6774, 61189), dtype=float64, nnz=887223, fill_value=0.0>
+-----------------------------------------------------
+num instances training: 9600
+x matrix type: XMatrixType.TRAINING
+y vector shape: (9600,)
+class_vector shape: (12000,)
+-----------------------------------------------------
+-----------------------------------------------------
+num instances training: 9600
+x matrix type: XMatrixType.VALIDATION
+y vector shape: (2400,)
+class_vector shape: (12000,)
+-----------------------------------------------------
+DataFileEnum.W_MATRIX
+filepath: resources\validation_split=0.2\w_matrix\x_normalization\eta=0.01,lambda=0.01\w_matrix-0.pkl
+CREATING...
+SAVE COMPLETE
+save location: resources\validation_split=0.2\w_matrix\x_normalization\eta=0.01,lambda=0.01\w_matrix-0.pkl
+output data: dask.array<zeros_like, shape=(20, 61189), dtype=int32, chunksize=(20, 61189), chunktype=numpy.ndarray>
+Starting training...
+-----------------------------------
+Finished 100 iterations
+-----------------------------------
+-----------------------------------
+Finished 200 iterations
+-----------------------------------
+-----------------------------------
+Saving after 200 iterations...
+W matrix parent dir: resources\validation_split=0.2\w_matrix\x_normalization\eta=0.01,lambda=0.01
+Saving complete
+-----------------------------------
+-----------------------------------
+Checking accuracy of training...
+x matrix type: XMatrixType.TRAINING
+prediction vector shape: (9600,)
+Y_vector shape: (9600,)
+training accuracy: 0.9592708333333333
+-----------------------------------
+-----------------------------------
+Checking validation...
+x matrix type: XMatrixType.VALIDATION
+prediction vector shape: (2400,)
+Y_vector shape: (2400,)
+validation accuracy: 0.7466666666666667
+-----------------------------------
+-----------------------------------
+Finished 300 iterations
+-----------------------------------
+-----------------------------------
+Finished 400 iterations
+-----------------------------------
+-----------------------------------
+Saving after 400 iterations...
+W matrix parent dir: resources\validation_split=0.2\w_matrix\x_normalization\eta=0.01,lambda=0.01
+sorted W matrix filenames: ['resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-200.pkl']
+Saving complete
+-----------------------------------
+-----------------------------------
+Checking accuracy of training...
+x matrix type: XMatrixType.TRAINING
+prediction vector shape: (9600,)
+Y_vector shape: (9600,)
+training accuracy: 0.9680208333333333
+-----------------------------------
+-----------------------------------
+Checking validation...
+x matrix type: XMatrixType.VALIDATION
+prediction vector shape: (2400,)
+Y_vector shape: (2400,)
+validation accuracy: 0.7408333333333333
+-----------------------------------
+-----------------------------------
+Finished 500 iterations
+-----------------------------------
+-----------------------------------
+Finished 600 iterations
+-----------------------------------
+-----------------------------------
+Saving after 600 iterations...
+W matrix parent dir: resources\validation_split=0.2\w_matrix\x_normalization\eta=0.01,lambda=0.01
+sorted W matrix filenames: ['resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-200.pkl']
+Saving complete
+-----------------------------------
+-----------------------------------
+Checking accuracy of training...
+x matrix type: XMatrixType.TRAINING
+prediction vector shape: (9600,)
+Y_vector shape: (9600,)
+training accuracy: 0.9734375
+-----------------------------------
+-----------------------------------
+Checking validation...
+x matrix type: XMatrixType.VALIDATION
+prediction vector shape: (2400,)
+Y_vector shape: (2400,)
+validation accuracy: 0.7404166666666666
+-----------------------------------
+-----------------------------------
+Finished 700 iterations
+-----------------------------------
+-----------------------------------
+Finished 800 iterations
+-----------------------------------
+-----------------------------------
+Saving after 800 iterations...
+W matrix parent dir: resources\validation_split=0.2\w_matrix\x_normalization\eta=0.01,lambda=0.01
+sorted W matrix filenames: ['resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-200.pkl']
+Saving complete
+-----------------------------------
+-----------------------------------
+Checking accuracy of training...
+x matrix type: XMatrixType.TRAINING
+prediction vector shape: (9600,)
+Y_vector shape: (9600,)
+training accuracy: 0.9766666666666667
+-----------------------------------
+-----------------------------------
+Checking validation...
+x matrix type: XMatrixType.VALIDATION
+prediction vector shape: (2400,)
+Y_vector shape: (2400,)
+validation accuracy: 0.7383333333333333
+-----------------------------------
+-----------------------------------
+Finished 900 iterations
+-----------------------------------
+-----------------------------------
+Finished 1000 iterations
+-----------------------------------
+-----------------------------------
+Saving after 1000 iterations...
+W matrix parent dir: resources\validation_split=0.2\w_matrix\x_normalization\eta=0.01,lambda=0.01
+sorted W matrix filenames: ['resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-200.pkl']
+Saving complete
+-----------------------------------
+-----------------------------------
+Checking accuracy of training...
+x matrix type: XMatrixType.TRAINING
+prediction vector shape: (9600,)
+Y_vector shape: (9600,)
+training accuracy: 0.9788541666666667
+-----------------------------------
+-----------------------------------
+Checking validation...
+x matrix type: XMatrixType.VALIDATION
+prediction vector shape: (2400,)
+Y_vector shape: (2400,)
+validation accuracy: 0.7370833333333333
+-----------------------------------
+-----------------------------------
+Finished 1100 iterations
+-----------------------------------
+-----------------------------------
+Finished 1200 iterations
+-----------------------------------
+-----------------------------------
+Saving after 1200 iterations...
+W matrix parent dir: resources\validation_split=0.2\w_matrix\x_normalization\eta=0.01,lambda=0.01
+sorted W matrix filenames: ['resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-200.pkl']
+Saving complete
+-----------------------------------
+-----------------------------------
+Checking accuracy of training...
+x matrix type: XMatrixType.TRAINING
+prediction vector shape: (9600,)
+Y_vector shape: (9600,)
+training accuracy: 0.980625
+-----------------------------------
+-----------------------------------
+Checking validation...
+x matrix type: XMatrixType.VALIDATION
+prediction vector shape: (2400,)
+Y_vector shape: (2400,)
+validation accuracy: 0.7366666666666667
+-----------------------------------
+-----------------------------------
+Finished 1300 iterations
+-----------------------------------
+-----------------------------------
+Finished 1400 iterations
+-----------------------------------
+-----------------------------------
+Saving after 1400 iterations...
+W matrix parent dir: resources\validation_split=0.2\w_matrix\x_normalization\eta=0.01,lambda=0.01
+sorted W matrix filenames: ['resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-200.pkl']
+Saving complete
+-----------------------------------
+-----------------------------------
+Checking accuracy of training...
+x matrix type: XMatrixType.TRAINING
+prediction vector shape: (9600,)
+Y_vector shape: (9600,)
+training accuracy: 0.9816666666666667
+-----------------------------------
+-----------------------------------
+Checking validation...
+x matrix type: XMatrixType.VALIDATION
+prediction vector shape: (2400,)
+Y_vector shape: (2400,)
+validation accuracy: 0.73875
+-----------------------------------
+-----------------------------------
+Finished 1500 iterations
+-----------------------------------
+-----------------------------------
+Finished 1600 iterations
+-----------------------------------
+-----------------------------------
+Saving after 1600 iterations...
+W matrix parent dir: resources\validation_split=0.2\w_matrix\x_normalization\eta=0.01,lambda=0.01
+sorted W matrix filenames: ['resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-200.pkl']
+Saving complete
+-----------------------------------
+-----------------------------------
+Checking accuracy of training...
+x matrix type: XMatrixType.TRAINING
+prediction vector shape: (9600,)
+Y_vector shape: (9600,)
+training accuracy: 0.9835416666666666
+-----------------------------------
+-----------------------------------
+Checking validation...
+x matrix type: XMatrixType.VALIDATION
+prediction vector shape: (2400,)
+Y_vector shape: (2400,)
+validation accuracy: 0.7383333333333333
+-----------------------------------
+-----------------------------------
+Finished 1700 iterations
+-----------------------------------
+-----------------------------------
+Finished 1800 iterations
+-----------------------------------
+-----------------------------------
+Saving after 1800 iterations...
+W matrix parent dir: resources\validation_split=0.2\w_matrix\x_normalization\eta=0.01,lambda=0.01
+sorted W matrix filenames: ['resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-200.pkl']
+Saving complete
+-----------------------------------
+-----------------------------------
+Checking accuracy of training...
+x matrix type: XMatrixType.TRAINING
+prediction vector shape: (9600,)
+Y_vector shape: (9600,)
+training accuracy: 0.9847916666666666
+-----------------------------------
+-----------------------------------
+Checking validation...
+x matrix type: XMatrixType.VALIDATION
+prediction vector shape: (2400,)
+Y_vector shape: (2400,)
+validation accuracy: 0.7391666666666666
+-----------------------------------
+-----------------------------------
+Finished 1900 iterations
+-----------------------------------
+-----------------------------------
+Finished 2000 iterations
+-----------------------------------
+-----------------------------------
+Saving after 2000 iterations...
+W matrix parent dir: resources\validation_split=0.2\w_matrix\x_normalization\eta=0.01,lambda=0.01
+sorted W matrix filenames: ['resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-200.pkl']
+Saving complete
+-----------------------------------
+-----------------------------------
+Checking accuracy of training...
+x matrix type: XMatrixType.TRAINING
+prediction vector shape: (9600,)
+Y_vector shape: (9600,)
+training accuracy: 0.98625
+-----------------------------------
+-----------------------------------
+Checking validation...
+x matrix type: XMatrixType.VALIDATION
+prediction vector shape: (2400,)
+Y_vector shape: (2400,)
+validation accuracy: 0.7375
+-----------------------------------
+-----------------------------------
+Finished 2100 iterations
+-----------------------------------
+-----------------------------------
+Finished 2200 iterations
+-----------------------------------
+-----------------------------------
+Saving after 2200 iterations...
+W matrix parent dir: resources\validation_split=0.2\w_matrix\x_normalization\eta=0.01,lambda=0.01
+sorted W matrix filenames: ['resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-200.pkl']
+Saving complete
+-----------------------------------
+-----------------------------------
+Checking accuracy of training...
+x matrix type: XMatrixType.TRAINING
+prediction vector shape: (9600,)
+Y_vector shape: (9600,)
+training accuracy: 0.9870833333333333
+-----------------------------------
+-----------------------------------
+Checking validation...
+x matrix type: XMatrixType.VALIDATION
+prediction vector shape: (2400,)
+Y_vector shape: (2400,)
+validation accuracy: 0.7366666666666667
+-----------------------------------
+-----------------------------------
+Finished 2300 iterations
+-----------------------------------
+-----------------------------------
+Finished 2400 iterations
+-----------------------------------
+-----------------------------------
+Saving after 2400 iterations...
+W matrix parent dir: resources\validation_split=0.2\w_matrix\x_normalization\eta=0.01,lambda=0.01
+sorted W matrix filenames: ['resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-200.pkl']
+Saving complete
+-----------------------------------
+-----------------------------------
+Checking accuracy of training...
+x matrix type: XMatrixType.TRAINING
+prediction vector shape: (9600,)
+Y_vector shape: (9600,)
+training accuracy: 0.9872916666666667
+-----------------------------------
+-----------------------------------
+Checking validation...
+x matrix type: XMatrixType.VALIDATION
+prediction vector shape: (2400,)
+Y_vector shape: (2400,)
+validation accuracy: 0.7354166666666667
+-----------------------------------
+-----------------------------------
+Finished 2500 iterations
+-----------------------------------
+-----------------------------------
+Finished 2600 iterations
+-----------------------------------
+-----------------------------------
+Saving after 2600 iterations...
+W matrix parent dir: resources\validation_split=0.2\w_matrix\x_normalization\eta=0.01,lambda=0.01
+sorted W matrix filenames: ['resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-200.pkl']
+Saving complete
+-----------------------------------
+-----------------------------------
+Checking accuracy of training...
+x matrix type: XMatrixType.TRAINING
+prediction vector shape: (9600,)
+Y_vector shape: (9600,)
+training accuracy: 0.9879166666666667
+-----------------------------------
+-----------------------------------
+Checking validation...
+x matrix type: XMatrixType.VALIDATION
+prediction vector shape: (2400,)
+Y_vector shape: (2400,)
+validation accuracy: 0.7329166666666667
+-----------------------------------
+-----------------------------------
+Finished 2700 iterations
+-----------------------------------
+-----------------------------------
+Finished 2800 iterations
+-----------------------------------
+-----------------------------------
+Saving after 2800 iterations...
+W matrix parent dir: resources\validation_split=0.2\w_matrix\x_normalization\eta=0.01,lambda=0.01
+sorted W matrix filenames: ['resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-200.pkl']
+Saving complete
+-----------------------------------
+-----------------------------------
+Checking accuracy of training...
+x matrix type: XMatrixType.TRAINING
+prediction vector shape: (9600,)
+Y_vector shape: (9600,)
+training accuracy: 0.9884375
+-----------------------------------
+-----------------------------------
+Checking validation...
+x matrix type: XMatrixType.VALIDATION
+prediction vector shape: (2400,)
+Y_vector shape: (2400,)
+validation accuracy: 0.7329166666666667
+-----------------------------------
+-----------------------------------
+Finished 2900 iterations
+-----------------------------------
+-----------------------------------
+Finished 3000 iterations
+-----------------------------------
+-----------------------------------
+Saving after 3000 iterations...
+W matrix parent dir: resources\validation_split=0.2\w_matrix\x_normalization\eta=0.01,lambda=0.01
+sorted W matrix filenames: ['resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-200.pkl']
+Saving complete
+-----------------------------------
+-----------------------------------
+Checking accuracy of training...
+x matrix type: XMatrixType.TRAINING
+prediction vector shape: (9600,)
+Y_vector shape: (9600,)
+training accuracy: 0.9886458333333333
+-----------------------------------
+-----------------------------------
+Checking validation...
+x matrix type: XMatrixType.VALIDATION
+prediction vector shape: (2400,)
+Y_vector shape: (2400,)
+validation accuracy: 0.7304166666666667
+-----------------------------------
+-----------------------------------
+Finished 3100 iterations
+-----------------------------------
+-----------------------------------
+Finished 3200 iterations
+-----------------------------------
+-----------------------------------
+Saving after 3200 iterations...
+W matrix parent dir: resources\validation_split=0.2\w_matrix\x_normalization\eta=0.01,lambda=0.01
+sorted W matrix filenames: ['resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-3000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-200.pkl']
+Saving complete
+-----------------------------------
+-----------------------------------
+Checking accuracy of training...
+x matrix type: XMatrixType.TRAINING
+prediction vector shape: (9600,)
+Y_vector shape: (9600,)
+training accuracy: 0.9891666666666666
+-----------------------------------
+-----------------------------------
+Checking validation...
+x matrix type: XMatrixType.VALIDATION
+prediction vector shape: (2400,)
+Y_vector shape: (2400,)
+validation accuracy: 0.7275
+-----------------------------------
+-----------------------------------
+Finished 3300 iterations
+-----------------------------------
+-----------------------------------
+Finished 3400 iterations
+-----------------------------------
+-----------------------------------
+Saving after 3400 iterations...
+W matrix parent dir: resources\validation_split=0.2\w_matrix\x_normalization\eta=0.01,lambda=0.01
+sorted W matrix filenames: ['resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-3200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-3000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-200.pkl']
+Saving complete
+-----------------------------------
+-----------------------------------
+Checking accuracy of training...
+x matrix type: XMatrixType.TRAINING
+prediction vector shape: (9600,)
+Y_vector shape: (9600,)
+training accuracy: 0.9892708333333333
+-----------------------------------
+-----------------------------------
+Checking validation...
+x matrix type: XMatrixType.VALIDATION
+prediction vector shape: (2400,)
+Y_vector shape: (2400,)
+validation accuracy: 0.72875
+-----------------------------------
+-----------------------------------
+Finished 3500 iterations
+-----------------------------------
+-----------------------------------
+Finished 3600 iterations
+-----------------------------------
+-----------------------------------
+Saving after 3600 iterations...
+W matrix parent dir: resources\validation_split=0.2\w_matrix\x_normalization\eta=0.01,lambda=0.01
+sorted W matrix filenames: ['resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-3400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-3200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-3000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-200.pkl']
+Saving complete
+-----------------------------------
+-----------------------------------
+Checking accuracy of training...
+x matrix type: XMatrixType.TRAINING
+prediction vector shape: (9600,)
+Y_vector shape: (9600,)
+training accuracy: 0.9897916666666666
+-----------------------------------
+-----------------------------------
+Checking validation...
+x matrix type: XMatrixType.VALIDATION
+prediction vector shape: (2400,)
+Y_vector shape: (2400,)
+validation accuracy: 0.72875
+-----------------------------------
+-----------------------------------
+Finished 3700 iterations
+-----------------------------------
+-----------------------------------
+Finished 3800 iterations
+-----------------------------------
+-----------------------------------
+Saving after 3800 iterations...
+W matrix parent dir: resources\validation_split=0.2\w_matrix\x_normalization\eta=0.01,lambda=0.01
+sorted W matrix filenames: ['resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-3600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-3400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-3200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-3000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-200.pkl']
+Saving complete
+-----------------------------------
+-----------------------------------
+Checking accuracy of training...
+x matrix type: XMatrixType.TRAINING
+prediction vector shape: (9600,)
+Y_vector shape: (9600,)
+training accuracy: 0.9902083333333334
+-----------------------------------
+-----------------------------------
+Checking validation...
+x matrix type: XMatrixType.VALIDATION
+prediction vector shape: (2400,)
+Y_vector shape: (2400,)
+validation accuracy: 0.7266666666666667
+-----------------------------------
+-----------------------------------
+Finished 3900 iterations
+-----------------------------------
+-----------------------------------
+Finished 4000 iterations
+-----------------------------------
+-----------------------------------
+Saving after 4000 iterations...
+W matrix parent dir: resources\validation_split=0.2\w_matrix\x_normalization\eta=0.01,lambda=0.01
+sorted W matrix filenames: ['resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-3800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-3600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-3400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-3200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-3000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-200.pkl']
+Saving complete
+-----------------------------------
+-----------------------------------
+Checking accuracy of training...
+x matrix type: XMatrixType.TRAINING
+prediction vector shape: (9600,)
+Y_vector shape: (9600,)
+training accuracy: 0.9905208333333333
+-----------------------------------
+-----------------------------------
+Checking validation...
+x matrix type: XMatrixType.VALIDATION
+prediction vector shape: (2400,)
+Y_vector shape: (2400,)
+validation accuracy: 0.7245833333333334
+-----------------------------------
+-----------------------------------
+Finished 4100 iterations
+-----------------------------------
+-----------------------------------
+Finished 4200 iterations
+-----------------------------------
+-----------------------------------
+Saving after 4200 iterations...
+W matrix parent dir: resources\validation_split=0.2\w_matrix\x_normalization\eta=0.01,lambda=0.01
+sorted W matrix filenames: ['resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-4000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-3800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-3600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-3400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-3200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-3000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-200.pkl']
+Saving complete
+-----------------------------------
+-----------------------------------
+Checking accuracy of training...
+x matrix type: XMatrixType.TRAINING
+prediction vector shape: (9600,)
+Y_vector shape: (9600,)
+training accuracy: 0.9908333333333333
+-----------------------------------
+-----------------------------------
+Checking validation...
+x matrix type: XMatrixType.VALIDATION
+prediction vector shape: (2400,)
+Y_vector shape: (2400,)
+validation accuracy: 0.7229166666666667
+-----------------------------------
+-----------------------------------
+Finished 4300 iterations
+-----------------------------------
+-----------------------------------
+Finished 4400 iterations
+-----------------------------------
+-----------------------------------
+Saving after 4400 iterations...
+W matrix parent dir: resources\validation_split=0.2\w_matrix\x_normalization\eta=0.01,lambda=0.01
+sorted W matrix filenames: ['resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-4200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-4000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-3800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-3600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-3400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-3200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-3000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-200.pkl']
+Saving complete
+-----------------------------------
+-----------------------------------
+Checking accuracy of training...
+x matrix type: XMatrixType.TRAINING
+prediction vector shape: (9600,)
+Y_vector shape: (9600,)
+training accuracy: 0.9913541666666666
+-----------------------------------
+-----------------------------------
+Checking validation...
+x matrix type: XMatrixType.VALIDATION
+prediction vector shape: (2400,)
+Y_vector shape: (2400,)
+validation accuracy: 0.7220833333333333
+-----------------------------------
+-----------------------------------
+Finished 4500 iterations
+-----------------------------------
+-----------------------------------
+Finished 4600 iterations
+-----------------------------------
+-----------------------------------
+Saving after 4600 iterations...
+W matrix parent dir: resources\validation_split=0.2\w_matrix\x_normalization\eta=0.01,lambda=0.01
+sorted W matrix filenames: ['resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-4400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-4200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-4000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-3800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-3600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-3400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-3200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-3000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-200.pkl']
+Saving complete
+-----------------------------------
+-----------------------------------
+Checking accuracy of training...
+x matrix type: XMatrixType.TRAINING
+prediction vector shape: (9600,)
+Y_vector shape: (9600,)
+training accuracy: 0.9916666666666667
+-----------------------------------
+-----------------------------------
+Checking validation...
+x matrix type: XMatrixType.VALIDATION
+prediction vector shape: (2400,)
+Y_vector shape: (2400,)
+validation accuracy: 0.7220833333333333
+-----------------------------------
+-----------------------------------
+Finished 4700 iterations
+-----------------------------------
+-----------------------------------
+Finished 4800 iterations
+-----------------------------------
+-----------------------------------
+Saving after 4800 iterations...
+W matrix parent dir: resources\validation_split=0.2\w_matrix\x_normalization\eta=0.01,lambda=0.01
+sorted W matrix filenames: ['resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-4600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-4400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-4200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-4000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-3800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-3600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-3400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-3200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-3000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-200.pkl']
+Saving complete
+-----------------------------------
+-----------------------------------
+Checking accuracy of training...
+x matrix type: XMatrixType.TRAINING
+prediction vector shape: (9600,)
+Y_vector shape: (9600,)
+training accuracy: 0.991875
+-----------------------------------
+-----------------------------------
+Checking validation...
+x matrix type: XMatrixType.VALIDATION
+prediction vector shape: (2400,)
+Y_vector shape: (2400,)
+validation accuracy: 0.72125
+-----------------------------------
+-----------------------------------
+Finished 4900 iterations
+-----------------------------------
+-----------------------------------
+Finished 5000 iterations
+-----------------------------------
+-----------------------------------
+Saving after 5000 iterations...
+W matrix parent dir: resources\validation_split=0.2\w_matrix\x_normalization\eta=0.01,lambda=0.01
+sorted W matrix filenames: ['resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-4800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-4600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-4400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-4200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-4000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-3800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-3600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-3400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-3200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-3000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-200.pkl']
+Saving complete
+-----------------------------------
+-----------------------------------
+Checking accuracy of training...
+x matrix type: XMatrixType.TRAINING
+prediction vector shape: (9600,)
+Y_vector shape: (9600,)
+training accuracy: 0.9921875
+-----------------------------------
+-----------------------------------
+Checking validation...
+x matrix type: XMatrixType.VALIDATION
+prediction vector shape: (2400,)
+Y_vector shape: (2400,)
+validation accuracy: 0.7204166666666667
+-----------------------------------
+-----------------------------------
+Finished 5100 iterations
+-----------------------------------
+-----------------------------------
+Finished 5200 iterations
+-----------------------------------
+-----------------------------------
+Saving after 5200 iterations...
+W matrix parent dir: resources\validation_split=0.2\w_matrix\x_normalization\eta=0.01,lambda=0.01
+sorted W matrix filenames: ['resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-5000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-4800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-4600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-4400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-4200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-4000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-3800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-3600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-3400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-3200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-3000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-200.pkl']
+Saving complete
+-----------------------------------
+-----------------------------------
+Checking accuracy of training...
+x matrix type: XMatrixType.TRAINING
+prediction vector shape: (9600,)
+Y_vector shape: (9600,)
+training accuracy: 0.9921875
+-----------------------------------
+-----------------------------------
+Checking validation...
+x matrix type: XMatrixType.VALIDATION
+prediction vector shape: (2400,)
+Y_vector shape: (2400,)
+validation accuracy: 0.7204166666666667
+-----------------------------------
+-----------------------------------
+Finished 5300 iterations
+-----------------------------------
+-----------------------------------
+Finished 5400 iterations
+-----------------------------------
+-----------------------------------
+Saving after 5400 iterations...
+W matrix parent dir: resources\validation_split=0.2\w_matrix\x_normalization\eta=0.01,lambda=0.01
+sorted W matrix filenames: ['resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-5200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-5000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-4800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-4600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-4400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-4200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-4000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-3800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-3600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-3400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-3200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-3000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-200.pkl']
+Saving complete
+-----------------------------------
+-----------------------------------
+Checking accuracy of training...
+x matrix type: XMatrixType.TRAINING
+prediction vector shape: (9600,)
+Y_vector shape: (9600,)
+training accuracy: 0.9922916666666667
+-----------------------------------
+-----------------------------------
+Checking validation...
+x matrix type: XMatrixType.VALIDATION
+prediction vector shape: (2400,)
+Y_vector shape: (2400,)
+validation accuracy: 0.7208333333333333
+-----------------------------------
+-----------------------------------
+Finished 5500 iterations
+-----------------------------------
+-----------------------------------
+Finished 5600 iterations
+-----------------------------------
+-----------------------------------
+Saving after 5600 iterations...
+W matrix parent dir: resources\validation_split=0.2\w_matrix\x_normalization\eta=0.01,lambda=0.01
+sorted W matrix filenames: ['resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-5400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-5200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-5000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-4800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-4600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-4400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-4200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-4000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-3800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-3600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-3400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-3200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-3000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-200.pkl']
+Saving complete
+-----------------------------------
+-----------------------------------
+Checking accuracy of training...
+x matrix type: XMatrixType.TRAINING
+prediction vector shape: (9600,)
+Y_vector shape: (9600,)
+training accuracy: 0.9923958333333334
+-----------------------------------
+-----------------------------------
+Checking validation...
+x matrix type: XMatrixType.VALIDATION
+prediction vector shape: (2400,)
+Y_vector shape: (2400,)
+validation accuracy: 0.7195833333333334
+-----------------------------------
+-----------------------------------
+Finished 5700 iterations
+-----------------------------------
+-----------------------------------
+Finished 5800 iterations
+-----------------------------------
+-----------------------------------
+Saving after 5800 iterations...
+W matrix parent dir: resources\validation_split=0.2\w_matrix\x_normalization\eta=0.01,lambda=0.01
+sorted W matrix filenames: ['resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-5600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-5400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-5200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-5000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-4800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-4600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-4400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-4200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-4000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-3800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-3600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-3400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-3200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-3000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-200.pkl']
+Saving complete
+-----------------------------------
+-----------------------------------
+Checking accuracy of training...
+x matrix type: XMatrixType.TRAINING
+prediction vector shape: (9600,)
+Y_vector shape: (9600,)
+training accuracy: 0.9926041666666666
+-----------------------------------
+-----------------------------------
+Checking validation...
+x matrix type: XMatrixType.VALIDATION
+prediction vector shape: (2400,)
+Y_vector shape: (2400,)
+validation accuracy: 0.71875
+-----------------------------------
+-----------------------------------
+Finished 5900 iterations
+-----------------------------------
+-----------------------------------
+Finished 6000 iterations
+-----------------------------------
+-----------------------------------
+Saving after 6000 iterations...
+W matrix parent dir: resources\validation_split=0.2\w_matrix\x_normalization\eta=0.01,lambda=0.01
+sorted W matrix filenames: ['resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-5800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-5600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-5400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-5200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-5000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-4800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-4600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-4400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-4200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-4000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-3800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-3600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-3400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-3200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-3000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-200.pkl']
+Saving complete
+-----------------------------------
+-----------------------------------
+Checking accuracy of training...
+x matrix type: XMatrixType.TRAINING
+prediction vector shape: (9600,)
+Y_vector shape: (9600,)
+training accuracy: 0.9929166666666667
+-----------------------------------
+-----------------------------------
+Checking validation...
+x matrix type: XMatrixType.VALIDATION
+prediction vector shape: (2400,)
+Y_vector shape: (2400,)
+validation accuracy: 0.7191666666666666
+-----------------------------------
+-----------------------------------
+Finished 6100 iterations
+-----------------------------------
+-----------------------------------
+Finished 6200 iterations
+-----------------------------------
+-----------------------------------
+Saving after 6200 iterations...
+W matrix parent dir: resources\validation_split=0.2\w_matrix\x_normalization\eta=0.01,lambda=0.01
+sorted W matrix filenames: ['resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-6000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-5800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-5600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-5400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-5200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-5000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-4800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-4600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-4400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-4200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-4000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-3800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-3600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-3400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-3200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-3000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-200.pkl']
+Saving complete
+-----------------------------------
+-----------------------------------
+Checking accuracy of training...
+x matrix type: XMatrixType.TRAINING
+prediction vector shape: (9600,)
+Y_vector shape: (9600,)
+training accuracy: 0.9930208333333334
+-----------------------------------
+-----------------------------------
+Checking validation...
+x matrix type: XMatrixType.VALIDATION
+prediction vector shape: (2400,)
+Y_vector shape: (2400,)
+validation accuracy: 0.7191666666666666
+-----------------------------------
+-----------------------------------
+Finished 6300 iterations
+-----------------------------------
+-----------------------------------
+Finished 6400 iterations
+-----------------------------------
+-----------------------------------
+Saving after 6400 iterations...
+W matrix parent dir: resources\validation_split=0.2\w_matrix\x_normalization\eta=0.01,lambda=0.01
+sorted W matrix filenames: ['resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-6200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-6000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-5800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-5600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-5400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-5200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-5000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-4800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-4600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-4400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-4200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-4000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-3800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-3600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-3400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-3200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-3000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-200.pkl']
+Saving complete
+-----------------------------------
+-----------------------------------
+Checking accuracy of training...
+x matrix type: XMatrixType.TRAINING
+prediction vector shape: (9600,)
+Y_vector shape: (9600,)
+training accuracy: 0.993125
+-----------------------------------
+-----------------------------------
+Checking validation...
+x matrix type: XMatrixType.VALIDATION
+prediction vector shape: (2400,)
+Y_vector shape: (2400,)
+validation accuracy: 0.7191666666666666
+-----------------------------------
+-----------------------------------
+Finished 6500 iterations
+-----------------------------------
+-----------------------------------
+Finished 6600 iterations
+-----------------------------------
+-----------------------------------
+Saving after 6600 iterations...
+W matrix parent dir: resources\validation_split=0.2\w_matrix\x_normalization\eta=0.01,lambda=0.01
+sorted W matrix filenames: ['resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-6400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-6200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-6000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-5800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-5600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-5400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-5200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-5000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-4800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-4600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-4400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-4200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-4000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-3800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-3600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-3400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-3200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-3000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-200.pkl']
+Saving complete
+-----------------------------------
+-----------------------------------
+Checking accuracy of training...
+x matrix type: XMatrixType.TRAINING
+prediction vector shape: (9600,)
+Y_vector shape: (9600,)
+training accuracy: 0.9932291666666667
+-----------------------------------
+-----------------------------------
+Checking validation...
+x matrix type: XMatrixType.VALIDATION
+prediction vector shape: (2400,)
+Y_vector shape: (2400,)
+validation accuracy: 0.7195833333333334
+-----------------------------------
+-----------------------------------
+Finished 6700 iterations
+-----------------------------------
+-----------------------------------
+Finished 6800 iterations
+-----------------------------------
+-----------------------------------
+Saving after 6800 iterations...
+W matrix parent dir: resources\validation_split=0.2\w_matrix\x_normalization\eta=0.01,lambda=0.01
+sorted W matrix filenames: ['resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-6600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-6400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-6200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-6000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-5800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-5600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-5400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-5200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-5000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-4800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-4600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-4400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-4200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-4000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-3800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-3600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-3400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-3200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-3000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-200.pkl']
+Saving complete
+-----------------------------------
+-----------------------------------
+Checking accuracy of training...
+x matrix type: XMatrixType.TRAINING
+prediction vector shape: (9600,)
+Y_vector shape: (9600,)
+training accuracy: 0.9932291666666667
+-----------------------------------
+-----------------------------------
+Checking validation...
+x matrix type: XMatrixType.VALIDATION
+prediction vector shape: (2400,)
+Y_vector shape: (2400,)
+validation accuracy: 0.7204166666666667
+-----------------------------------
+-----------------------------------
+Finished 6900 iterations
+-----------------------------------
+-----------------------------------
+Finished 7000 iterations
+-----------------------------------
+-----------------------------------
+Saving after 7000 iterations...
+W matrix parent dir: resources\validation_split=0.2\w_matrix\x_normalization\eta=0.01,lambda=0.01
+sorted W matrix filenames: ['resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-6800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-6600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-6400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-6200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-6000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-5800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-5600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-5400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-5200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-5000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-4800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-4600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-4400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-4200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-4000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-3800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-3600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-3400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-3200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-3000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-200.pkl']
+Saving complete
+-----------------------------------
+-----------------------------------
+Checking accuracy of training...
+x matrix type: XMatrixType.TRAINING
+prediction vector shape: (9600,)
+Y_vector shape: (9600,)
+training accuracy: 0.9933333333333333
+-----------------------------------
+-----------------------------------
+Checking validation...
+x matrix type: XMatrixType.VALIDATION
+prediction vector shape: (2400,)
+Y_vector shape: (2400,)
+validation accuracy: 0.7204166666666667
+-----------------------------------
+-----------------------------------
+Finished 7100 iterations
+-----------------------------------
+-----------------------------------
+Finished 7200 iterations
+-----------------------------------
+-----------------------------------
+Saving after 7200 iterations...
+W matrix parent dir: resources\validation_split=0.2\w_matrix\x_normalization\eta=0.01,lambda=0.01
+sorted W matrix filenames: ['resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-7000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-6800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-6600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-6400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-6200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-6000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-5800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-5600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-5400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-5200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-5000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-4800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-4600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-4400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-4200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-4000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-3800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-3600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-3400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-3200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-3000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-200.pkl']
+Saving complete
+-----------------------------------
+-----------------------------------
+Checking accuracy of training...
+x matrix type: XMatrixType.TRAINING
+prediction vector shape: (9600,)
+Y_vector shape: (9600,)
+training accuracy: 0.9934375
+-----------------------------------
+-----------------------------------
+Checking validation...
+x matrix type: XMatrixType.VALIDATION
+prediction vector shape: (2400,)
+Y_vector shape: (2400,)
+validation accuracy: 0.72
+-----------------------------------
+-----------------------------------
+Finished 7300 iterations
+-----------------------------------
+-----------------------------------
+Finished 7400 iterations
+-----------------------------------
+-----------------------------------
+Saving after 7400 iterations...
+W matrix parent dir: resources\validation_split=0.2\w_matrix\x_normalization\eta=0.01,lambda=0.01
+sorted W matrix filenames: ['resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-7200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-7000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-6800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-6600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-6400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-6200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-6000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-5800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-5600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-5400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-5200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-5000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-4800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-4600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-4400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-4200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-4000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-3800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-3600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-3400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-3200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-3000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-200.pkl']
+Saving complete
+-----------------------------------
+-----------------------------------
+Checking accuracy of training...
+x matrix type: XMatrixType.TRAINING
+prediction vector shape: (9600,)
+Y_vector shape: (9600,)
+training accuracy: 0.9934375
+-----------------------------------
+-----------------------------------
+Checking validation...
+x matrix type: XMatrixType.VALIDATION
+prediction vector shape: (2400,)
+Y_vector shape: (2400,)
+validation accuracy: 0.72
+-----------------------------------
+-----------------------------------
+Finished 7500 iterations
+-----------------------------------
+-----------------------------------
+Finished 7600 iterations
+-----------------------------------
+-----------------------------------
+Saving after 7600 iterations...
+W matrix parent dir: resources\validation_split=0.2\w_matrix\x_normalization\eta=0.01,lambda=0.01
+sorted W matrix filenames: ['resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-7400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-7200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-7000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-6800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-6600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-6400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-6200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-6000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-5800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-5600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-5400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-5200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-5000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-4800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-4600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-4400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-4200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-4000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-3800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-3600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-3400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-3200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-3000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-200.pkl']
+Saving complete
+-----------------------------------
+-----------------------------------
+Checking accuracy of training...
+x matrix type: XMatrixType.TRAINING
+prediction vector shape: (9600,)
+Y_vector shape: (9600,)
+training accuracy: 0.99375
+-----------------------------------
+-----------------------------------
+Checking validation...
+x matrix type: XMatrixType.VALIDATION
+prediction vector shape: (2400,)
+Y_vector shape: (2400,)
+validation accuracy: 0.7195833333333334
+-----------------------------------
+-----------------------------------
+Finished 7700 iterations
+-----------------------------------
+-----------------------------------
+Finished 7800 iterations
+-----------------------------------
+-----------------------------------
+Saving after 7800 iterations...
+W matrix parent dir: resources\validation_split=0.2\w_matrix\x_normalization\eta=0.01,lambda=0.01
+sorted W matrix filenames: ['resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-7600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-7400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-7200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-7000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-6800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-6600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-6400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-6200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-6000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-5800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-5600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-5400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-5200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-5000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-4800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-4600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-4400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-4200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-4000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-3800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-3600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-3400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-3200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-3000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-200.pkl']
+Saving complete
+-----------------------------------
+-----------------------------------
+Checking accuracy of training...
+x matrix type: XMatrixType.TRAINING
+prediction vector shape: (9600,)
+Y_vector shape: (9600,)
+training accuracy: 0.9936458333333333
+-----------------------------------
+-----------------------------------
+Checking validation...
+x matrix type: XMatrixType.VALIDATION
+prediction vector shape: (2400,)
+Y_vector shape: (2400,)
+validation accuracy: 0.7204166666666667
+-----------------------------------
+-----------------------------------
+Finished 7900 iterations
+-----------------------------------
+-----------------------------------
+Finished 8000 iterations
+-----------------------------------
+-----------------------------------
+Saving after 8000 iterations...
+W matrix parent dir: resources\validation_split=0.2\w_matrix\x_normalization\eta=0.01,lambda=0.01
+sorted W matrix filenames: ['resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-7800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-7600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-7400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-7200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-7000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-6800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-6600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-6400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-6200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-6000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-5800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-5600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-5400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-5200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-5000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-4800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-4600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-4400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-4200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-4000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-3800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-3600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-3400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-3200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-3000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-200.pkl']
+Saving complete
+-----------------------------------
+-----------------------------------
+Checking accuracy of training...
+x matrix type: XMatrixType.TRAINING
+prediction vector shape: (9600,)
+Y_vector shape: (9600,)
+training accuracy: 0.99375
+-----------------------------------
+-----------------------------------
+Checking validation...
+x matrix type: XMatrixType.VALIDATION
+prediction vector shape: (2400,)
+Y_vector shape: (2400,)
+validation accuracy: 0.7208333333333333
+-----------------------------------
+-----------------------------------
+Finished 8100 iterations
+-----------------------------------
+-----------------------------------
+Finished 8200 iterations
+-----------------------------------
+-----------------------------------
+Saving after 8200 iterations...
+W matrix parent dir: resources\validation_split=0.2\w_matrix\x_normalization\eta=0.01,lambda=0.01
+sorted W matrix filenames: ['resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-8000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-7800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-7600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-7400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-7200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-7000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-6800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-6600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-6400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-6200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-6000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-5800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-5600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-5400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-5200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-5000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-4800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-4600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-4400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-4200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-4000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-3800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-3600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-3400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-3200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-3000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-200.pkl']
+Saving complete
+-----------------------------------
+-----------------------------------
+Checking accuracy of training...
+x matrix type: XMatrixType.TRAINING
+prediction vector shape: (9600,)
+Y_vector shape: (9600,)
+training accuracy: 0.9938541666666667
+-----------------------------------
+-----------------------------------
+Checking validation...
+x matrix type: XMatrixType.VALIDATION
+prediction vector shape: (2400,)
+Y_vector shape: (2400,)
+validation accuracy: 0.7208333333333333
+-----------------------------------
+-----------------------------------
+Finished 8300 iterations
+-----------------------------------
+-----------------------------------
+Finished 8400 iterations
+-----------------------------------
+-----------------------------------
+Saving after 8400 iterations...
+W matrix parent dir: resources\validation_split=0.2\w_matrix\x_normalization\eta=0.01,lambda=0.01
+sorted W matrix filenames: ['resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-8200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-8000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-7800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-7600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-7400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-7200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-7000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-6800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-6600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-6400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-6200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-6000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-5800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-5600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-5400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-5200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-5000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-4800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-4600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-4400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-4200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-4000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-3800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-3600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-3400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-3200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-3000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-200.pkl']
+Saving complete
+-----------------------------------
+-----------------------------------
+Checking accuracy of training...
+x matrix type: XMatrixType.TRAINING
+prediction vector shape: (9600,)
+Y_vector shape: (9600,)
+training accuracy: 0.9939583333333334
+-----------------------------------
+-----------------------------------
+Checking validation...
+x matrix type: XMatrixType.VALIDATION
+prediction vector shape: (2400,)
+Y_vector shape: (2400,)
+validation accuracy: 0.7208333333333333
+-----------------------------------
+-----------------------------------
+Finished 8500 iterations
+-----------------------------------
+-----------------------------------
+Finished 8600 iterations
+-----------------------------------
+-----------------------------------
+Saving after 8600 iterations...
+W matrix parent dir: resources\validation_split=0.2\w_matrix\x_normalization\eta=0.01,lambda=0.01
+sorted W matrix filenames: ['resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-8400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-8200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-8000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-7800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-7600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-7400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-7200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-7000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-6800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-6600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-6400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-6200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-6000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-5800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-5600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-5400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-5200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-5000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-4800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-4600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-4400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-4200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-4000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-3800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-3600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-3400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-3200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-3000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-200.pkl']
+Saving complete
+-----------------------------------
+-----------------------------------
+Checking accuracy of training...
+x matrix type: XMatrixType.TRAINING
+prediction vector shape: (9600,)
+Y_vector shape: (9600,)
+training accuracy: 0.9940625
+-----------------------------------
+-----------------------------------
+Checking validation...
+x matrix type: XMatrixType.VALIDATION
+prediction vector shape: (2400,)
+Y_vector shape: (2400,)
+validation accuracy: 0.72125
+-----------------------------------
+-----------------------------------
+Finished 8700 iterations
+-----------------------------------
+-----------------------------------
+Finished 8800 iterations
+-----------------------------------
+-----------------------------------
+Saving after 8800 iterations...
+W matrix parent dir: resources\validation_split=0.2\w_matrix\x_normalization\eta=0.01,lambda=0.01
+sorted W matrix filenames: ['resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-8600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-8400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-8200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-8000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-7800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-7600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-7400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-7200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-7000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-6800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-6600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-6400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-6200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-6000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-5800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-5600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-5400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-5200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-5000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-4800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-4600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-4400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-4200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-4000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-3800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-3600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-3400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-3200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-3000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-200.pkl']
+Saving complete
+-----------------------------------
+-----------------------------------
+Checking accuracy of training...
+x matrix type: XMatrixType.TRAINING
+prediction vector shape: (9600,)
+Y_vector shape: (9600,)
+training accuracy: 0.9941666666666666
+-----------------------------------
+-----------------------------------
+Checking validation...
+x matrix type: XMatrixType.VALIDATION
+prediction vector shape: (2400,)
+Y_vector shape: (2400,)
+validation accuracy: 0.72125
+-----------------------------------
+-----------------------------------
+Finished 8900 iterations
+-----------------------------------
+-----------------------------------
+Finished 9000 iterations
+-----------------------------------
+-----------------------------------
+Saving after 9000 iterations...
+W matrix parent dir: resources\validation_split=0.2\w_matrix\x_normalization\eta=0.01,lambda=0.01
+sorted W matrix filenames: ['resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-8800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-8600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-8400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-8200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-8000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-7800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-7600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-7400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-7200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-7000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-6800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-6600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-6400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-6200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-6000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-5800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-5600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-5400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-5200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-5000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-4800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-4600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-4400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-4200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-4000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-3800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-3600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-3400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-3200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-3000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-200.pkl']
+Saving complete
+-----------------------------------
+-----------------------------------
+Checking accuracy of training...
+x matrix type: XMatrixType.TRAINING
+prediction vector shape: (9600,)
+Y_vector shape: (9600,)
+training accuracy: 0.9941666666666666
+-----------------------------------
+-----------------------------------
+Checking validation...
+x matrix type: XMatrixType.VALIDATION
+prediction vector shape: (2400,)
+Y_vector shape: (2400,)
+validation accuracy: 0.7208333333333333
+-----------------------------------
+-----------------------------------
+Finished 9100 iterations
+-----------------------------------
+-----------------------------------
+Finished 9200 iterations
+-----------------------------------
+-----------------------------------
+Saving after 9200 iterations...
+W matrix parent dir: resources\validation_split=0.2\w_matrix\x_normalization\eta=0.01,lambda=0.01
+sorted W matrix filenames: ['resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-9000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-8800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-8600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-8400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-8200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-8000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-7800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-7600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-7400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-7200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-7000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-6800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-6600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-6400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-6200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-6000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-5800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-5600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-5400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-5200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-5000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-4800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-4600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-4400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-4200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-4000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-3800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-3600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-3400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-3200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-3000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-200.pkl']
+Saving complete
+-----------------------------------
+-----------------------------------
+Checking accuracy of training...
+x matrix type: XMatrixType.TRAINING
+prediction vector shape: (9600,)
+Y_vector shape: (9600,)
+training accuracy: 0.9942708333333333
+-----------------------------------
+-----------------------------------
+Checking validation...
+x matrix type: XMatrixType.VALIDATION
+prediction vector shape: (2400,)
+Y_vector shape: (2400,)
+validation accuracy: 0.7204166666666667
+-----------------------------------
+-----------------------------------
+Finished 9300 iterations
+-----------------------------------
+-----------------------------------
+Finished 9400 iterations
+-----------------------------------
+-----------------------------------
+Saving after 9400 iterations...
+W matrix parent dir: resources\validation_split=0.2\w_matrix\x_normalization\eta=0.01,lambda=0.01
+sorted W matrix filenames: ['resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-9200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-9000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-8800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-8600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-8400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-8200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-8000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-7800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-7600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-7400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-7200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-7000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-6800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-6600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-6400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-6200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-6000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-5800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-5600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-5400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-5200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-5000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-4800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-4600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-4400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-4200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-4000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-3800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-3600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-3400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-3200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-3000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-200.pkl']
+Saving complete
+-----------------------------------
+-----------------------------------
+Checking accuracy of training...
+x matrix type: XMatrixType.TRAINING
+prediction vector shape: (9600,)
+Y_vector shape: (9600,)
+training accuracy: 0.994375
+-----------------------------------
+-----------------------------------
+Checking validation...
+x matrix type: XMatrixType.VALIDATION
+prediction vector shape: (2400,)
+Y_vector shape: (2400,)
+validation accuracy: 0.72
+-----------------------------------
+ -----------------------------------
+Finished 9500 iterations
+-----------------------------------
+-----------------------------------
+Finished 9600 iterations
+-----------------------------------
+-----------------------------------
+Saving after 9600 iterations...
+W matrix parent dir: resources\validation_split=0.2\w_matrix\x_normalization\eta=0.01,lambda=0.01
+sorted W matrix filenames: ['resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-9400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-9200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-9000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-8800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-8600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-8400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-8200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-8000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-7800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-7600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-7400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-7200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-7000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-6800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-6600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-6400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-6200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-6000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-5800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-5600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-5400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-5200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-5000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-4800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-4600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-4400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-4200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-4000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-3800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-3600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-3400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-3200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-3000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-200.pkl']
+Saving complete
+-----------------------------------
+-----------------------------------
+Checking accuracy of training...
+x matrix type: XMatrixType.TRAINING
+prediction vector shape: (9600,)
+Y_vector shape: (9600,)
+training accuracy: 0.994375
+-----------------------------------
+-----------------------------------
+Checking validation...
+x matrix type: XMatrixType.VALIDATION
+prediction vector shape: (2400,)
+Y_vector shape: (2400,)
+validation accuracy: 0.7195833333333334
+-----------------------------------
+-----------------------------------
+Finished 9700 iterations
+-----------------------------------
+-----------------------------------
+Finished 9800 iterations
+-----------------------------------
+-----------------------------------
+Saving after 9800 iterations...
+W matrix parent dir: resources\validation_split=0.2\w_matrix\x_normalization\eta=0.01,lambda=0.01
+sorted W matrix filenames: ['resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-9600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-9400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-9200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-9000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-8800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-8600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-8400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-8200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-8000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-7800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-7600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-7400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-7200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-7000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-6800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-6600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-6400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-6200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-6000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-5800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-5600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-5400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-5200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-5000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-4800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-4600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-4400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-4200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-4000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-3800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-3600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-3400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-3200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-3000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-200.pkl']
+Saving complete
+-----------------------------------
+-----------------------------------
+Checking accuracy of training...
+x matrix type: XMatrixType.TRAINING
+prediction vector shape: (9600,)
+Y_vector shape: (9600,)
+training accuracy: 0.9945833333333334
+-----------------------------------
+-----------------------------------
+Checking validation...
+x matrix type: XMatrixType.VALIDATION
+prediction vector shape: (2400,)
+Y_vector shape: (2400,)
+validation accuracy: 0.7195833333333334
+-----------------------------------
+-----------------------------------
+Finished 9900 iterations
+-----------------------------------
+-----------------------------------
+Finished 10000 iterations
+-----------------------------------
+-----------------------------------
+Saving after 10000 iterations...
+W matrix parent dir: resources\validation_split=0.2\w_matrix\x_normalization\eta=0.01,lambda=0.01
+sorted W matrix filenames: ['resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-9800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-9600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-9400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-9200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-9000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-8800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-8600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-8400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-8200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-8000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-7800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-7600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-7400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-7200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-7000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-6800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-6600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-6400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-6200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-6000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-5800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-5600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-5400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-5200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-5000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-4800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-4600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-4400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-4200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-4000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-3800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-3600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-3400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-3200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-3000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-2000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1200.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-1000.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-800.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-600.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-400.pkl', 'resources\\validation_split=0.2\\w_matrix\\x_normalization\\eta=0.01,lambda=0.01\\w_matrix-200.pkl']
+Saving complete
+-----------------------------------
+-----------------------------------
+Checking accuracy of training...
+x matrix type: XMatrixType.TRAINING
+prediction vector shape: (9600,)
+Y_vector shape: (9600,)
+training accuracy: 0.9948958333333333
+-----------------------------------
+-----------------------------------
+Checking validation...
+x matrix type: XMatrixType.VALIDATION
+prediction vector shape: (2400,)
+Y_vector shape: (2400,)
+validation accuracy: 0.7195833333333334
+-----------------------------------
+-----------------------------------
+Training complete
+-----------------------------------
+total time: 1527.244223356247
+------------------------------------------------------------
+TESTING PREDICTION FILE
+------------------------------------------------------------
+Getting testing prediction vector...
+Saving testing prediction into file...
+Converting ID column to dense...
+id column: dask.array<getitem, shape=(6774,), dtype=int32, chunksize=(5792,), chunktype=sparse.COO>
+Densification complete...
+Saving complete
+save location: resources\validation_split=0.2\testing_prediction\testing_prediction_eta=0.01-lambda=0.01-iter_num=10000.csv
+-----------------------------------
+-----------------------------------
+Checking accuracy of training...
+x matrix type: XMatrixType.TRAINING
+prediction vector shape: (9600,)
+Y_vector shape: (9600,)
+training accuracy: 0.9948958333333333
+-----------------------------------
+
+Process finished with exit code 0

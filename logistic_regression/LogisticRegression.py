@@ -17,8 +17,9 @@ from dask.diagnostics import ProgressBar
 import pandas as pd
 
 from utilities.ParseUtilities import save_da_array_pickle, get_data_from_file
-from utilities.DataFile import DataFileEnum, DataOptionEnum, WMatrixOptionEnum, XMatrixType
-from utilities.ArrayUtilities import normalize_column_vector
+from utilities.DataFile import DataFileEnum, DataOptionEnum, WMatrixOptionEnum, XMatrixType, ClassVectorType
+from utilities.ArrayUtilities import normalize_column_vector, calculate_entropy_column_vector, \
+    calculate_gini_index_column_vector
 
 from Constants import DELTA_MATRIX_FILEPATH, W_MATRIX_FILENAME_WITHOUT_EXTENSION, \
     W_MATRIX_FILENAME_EXTENSION, OUTPUT_DIR, DIR_UP, W_MATRIX_TOP_DIR, W_MATRIX_SUB_DIR_DICT, PATH_SEP, \
@@ -26,7 +27,9 @@ from Constants import DELTA_MATRIX_FILEPATH, W_MATRIX_FILENAME_WITHOUT_EXTENSION
     X_MATRIX_FILEPATH_X_NORMALIZATION_VALIDATION, X_MATRIX_FILEPATH_NO_NORMALIZATION_VALIDATION, \
     INPUT_ARRAY_FILEPATH_TRAINING, INPUT_ARRAY_FILEPATH_VALIDATION, X_MATRIX_FILEPATH_NO_NORMALIZATION_TESTING, \
     X_MATRIX_FILEPATH_X_NORMALIZATION_TESTING, INPUT_DATA_FILEPATH_TESTING, INPUT_ARRAY_FILEPATH_TESTING, \
-    ID_COLUMN_NAME, CLASS_COLUMN_NAME, TESTING_PREDICTION_FILEPATH, TESTING_PREDICTION_PARENT_DIR
+    ID_COLUMN_NAME, CLASS_COLUMN_NAME, TESTING_PREDICTION_FILEPATH, TESTING_PREDICTION_PARENT_DIR, \
+    CONFUSION_MATRIX_FILENAME_TRAINING, CONFUSION_MATRIX_FILEPATH_VALIDATION, CONFUSION_MATRIX_FILEPATH_TRAINING, \
+    PROGRAM_OUTPUT_DIR
 
 from utilities.DebugFlags import LOGISTIC_REGRESSION_DELTA_DEBUG, LOGISTIC_REGRESSION_X_MATRIX_DEBUG, \
     LOGISTIC_REGRESSION_NORMALIZE_W_MATRIX_DEBUG, LOGISTIC_REGRESSION_PROBABILITY_MATRIX_DEBUG, \
@@ -38,6 +41,7 @@ import sparse
 from math import exp
 import numpy as np
 from scipy.special import softmax
+import math
 
 import time
 import glob
@@ -45,6 +49,9 @@ import re
 import os
 from pathlib import Path
 
+# for confusion matrix
+import matplotlib.pyplot as plt
+import seaborn
 
 class LogisticRegression:
     def __init__(self,
@@ -426,7 +433,6 @@ class LogisticRegression:
         training_lambda = hyperparameters.penalty_term
 
         return f"eta={training_eta},lambda={training_lambda}"
-
 
     def get_filepath_iter_num_key_W_matrix(self, filepath: str):
         """
@@ -884,6 +890,12 @@ class LogisticRegression:
             # Simple validation
             if (i + 1) % num_iter_validation == 0:
                 print(f"-----------------------------------")
+                print(f"Checking accuracy of training...")
+                training_accuracy = self.get_accuracy(X_matrix_type=XMatrixType.TRAINING)
+                print(f"training accuracy: {training_accuracy}")
+                print(f"-----------------------------------")
+
+                print(f"-----------------------------------")
                 print(f"Checking validation...")
                 validation_accuracy = self.get_accuracy(X_matrix_type=XMatrixType.VALIDATION)
                 print(f"validation accuracy: {validation_accuracy}")
@@ -918,6 +930,12 @@ class LogisticRegression:
         # complete validation for 0 iterations (DEBUG stuff)
         if current_num_iter_execution == 0:
             print(f"-----------------------------------")
+            print(f"Checking accuracy of training...")
+            training_accuracy = self.get_accuracy(X_matrix_type=XMatrixType.TRAINING)
+            print(f"training accuracy: {training_accuracy}")
+            print(f"-----------------------------------")
+
+            print(f"-----------------------------------")
             print(f"Checking validation...")
             validation_accuracy = self.get_accuracy(X_matrix_type=XMatrixType.VALIDATION)
             print(f"validation accuracy: {validation_accuracy}")
@@ -943,9 +961,6 @@ class LogisticRegression:
         print(f"-----------------------------------")
 
     def create_testing_file(self, custom_num_iter=None):
-        print(f"-----------------------------------")
-        print(f"TESTING PREDICTION FILE")
-        print(f"-----------------------------------")
         print(f"Getting testing prediction vector...")
 
         # TODO: save the hyperparameters and iter num for each prediction...
@@ -1013,6 +1028,296 @@ class LogisticRegression:
 
     def set_initial_parameters(self):
         pass
+
+    def get_word_rank_list(self):
+        """
+        For information gain, entropy was used where each p_i used is just the probability for each document
+        classification (class) for i = 1, 2,..., 20
+
+        :return:
+        """
+
+        # find entropy for each word
+        probability_matrix = self.compute_probability_matrix(X_matrix_type=XMatrixType.TESTING)
+
+        print(f"probability shape: {probability_matrix.shape}")
+        first_row = probability_matrix[0, :].compute()
+        print(f"probability: {first_row}")
+        print(f"probability check: {-sum(p * math.log2(p) for p in first_row)}")
+
+        # entropy_word_vector = da.apply_along_axis(calculate_entropy_column_vector,
+        #                                           0,
+        #                                           probability_matrix)
+        entropy_word_vector = da.apply_along_axis(calculate_gini_index_column_vector,
+                                                  0,
+                                                  probability_matrix)
+
+        print(f"shape: {entropy_word_vector.shape}")
+
+        dtype = [("index", int), ("entropy", float)]
+        # new_entropy_word_vector = np.zeros_like(entropy_word_vector, dtype=dtype)
+        # entropy_word_vector.astype(dtype)
+
+        # entropy_index_list = []
+        #
+        # print(f"BEFORE")
+        #
+        # for i, entropy in enumerate(entropy_word_vector):
+        #     # new_entropy_word_vector[i] = (i, entropy)
+        #     entropy_index_list.append((i, entropy))
+        #
+        # print(f"AFTER")
+        #
+        # # FIXME: long time...
+        # new_entropy_word_vector = da.asarray(entropy_index_list, dtype=dtype)
+
+        print(f"SORT BEFORE")
+        arg_sort = da.argtopk(entropy_word_vector, 100).compute()
+        entropy_sort = da.topk(entropy_word_vector, 100).compute()
+        # entropy_word_vector_sorted = np.sort(new_entropy_word_vector, order="entropy")
+
+        print(f"SORT AFTER")
+
+        print(f"arg sort: {arg_sort}")
+        print(f"entropy/gini index sort: {entropy_sort}")
+
+        # return top 100 words
+        return arg_sort, entropy_sort
+
+    def generate_confusion_matrix(self):
+        """
+        Create confusion matrix for both training and validation data sets
+
+        :return:
+        """
+
+        # get actual class vector for both training, validation
+        class_vector_training_actual = self.Y_vector_training
+        class_vector_validation_actual = self.Y_vector_validation
+
+        # prediction for training
+        class_vector_training_prediction = self.get_prediction_vector(X_matrix_type=XMatrixType.TRAINING)
+
+        # prediction for validation
+        class_vector_validation_prediction = self.get_prediction_vector(X_matrix_type=XMatrixType.VALIDATION)
+
+        # get counts for the different classes
+        class_labels_dict = self.data_parameters.class_labels_dict
+        num_classes = len(class_labels_dict)
+
+        # confusion matrix for training
+        confusion_matrix_da_training = da.zeros((num_classes, num_classes))
+
+        # columns are ground truth (actual) and rows are the observed (prediction) for the corresponding actual class
+        # find the counts for each class along the columns
+        for i in range(num_classes):
+            confusion_matrix_da_training[:, i] = \
+                self.get_class_count_column_vector(confusion_matrix_da_training[:, i],
+                                                   class_vector_type=ClassVectorType.TRAINING,
+                                                   class_index=i,
+                                                   num_classes=num_classes)
+
+        # confusion matrix for validation
+        confusion_matrix_da_validation = da.zeros((num_classes, num_classes))
+
+        # columns are ground truth (actual) and rows are the observed (prediction) for the corresponding actual class
+        # find the counts for each class along the columns
+        for i in range(num_classes):
+            confusion_matrix_da_validation[:, i] = \
+                self.get_class_count_column_vector(confusion_matrix_da_validation[:, i],
+                                                   class_vector_type=ClassVectorType.VALIDATION,
+                                                   class_index=i,
+                                                   num_classes=num_classes)
+
+        # FIXME: no way to access index with apply_along_axis...
+        # da.where(class_vector_training_prediction == )
+        # confusion_matrix_da_training = da.apply_along_axis(self.get_class_count_column_vector,
+        #                                           0,
+        #                                           confusion_matrix_da_training,
+        #                                                    class_vector_type=ClassVectorType.TRAINING, class_index)
+
+        hyperparameters = self.hyperparameters
+        eta_training = hyperparameters.learning_rate
+        lambda_training = hyperparameters.penalty_term
+        current_num_iter = self.current_num_iter
+
+        confusion_matrix_filename_training = \
+            f"confusion_matrix_training_eta={eta_training}-lambda={lambda_training}-iter_num={current_num_iter}.pkl"
+
+        confusion_matrix_filepath_training = os.path.join(PROGRAM_OUTPUT_DIR, confusion_matrix_filename_training)
+
+        confusion_matrix_filename_validation = \
+            f"confusion_matrix_validation_eta={eta_training}-lambda={lambda_training}-iter_num={current_num_iter}.pkl"
+
+        confusion_matrix_filepath_validation = os.path.join(PROGRAM_OUTPUT_DIR, confusion_matrix_filename_validation)
+
+        # save to file
+        save_da_array_pickle(confusion_matrix_da_training, confusion_matrix_filepath_training)
+        save_da_array_pickle(confusion_matrix_da_validation, confusion_matrix_filepath_validation)
+
+        return confusion_matrix_da_training.compute(), confusion_matrix_da_validation.compute()
+
+    def create_confusion_matrix(self):
+        """
+        Little tricky since generate_training_validation_array() will return 2 objects instead of the usual one --
+        conflicts with fetching only 1 object from a file
+
+        Use isinstance() to check for tuple
+
+        :return:
+        """
+
+        hyperparameters = self.hyperparameters
+        eta_training = hyperparameters.learning_rate
+        lambda_training = hyperparameters.penalty_term
+        current_num_iter = self.current_num_iter
+
+        confusion_matrix_filename_training = \
+            f"confusion_matrix_training_eta={eta_training}-lambda={lambda_training}-iter_num={current_num_iter}.pkl"
+
+        confusion_matrix_filepath_training = os.path.join(PROGRAM_OUTPUT_DIR, confusion_matrix_filename_training)
+
+        confusion_matrix_filename_validation = \
+            f"confusion_matrix_validation_eta={eta_training}-lambda={lambda_training}-iter_num={current_num_iter}.pkl"
+
+        confusion_matrix_filepath_validation = os.path.join(PROGRAM_OUTPUT_DIR, confusion_matrix_filename_validation)
+
+        confusion_matrix_da_training_validation = \
+            get_data_from_file(DataFileEnum.CONFUSION_MATRIX_TRAINING,
+                               self.generate_confusion_matrix,
+                               custom_filepath=confusion_matrix_filepath_training)
+
+        print(f"training, validation: {confusion_matrix_da_training_validation}")
+
+        if not isinstance(confusion_matrix_da_training_validation, tuple):
+            confusion_matrix_da_training = confusion_matrix_da_training_validation
+            confusion_matrix_da_validation = \
+                get_data_from_file(DataFileEnum.CONFUSION_MATRIX_VALIDATION,
+                                   self.generate_confusion_matrix,
+                                   custom_filepath=confusion_matrix_filepath_validation)
+
+            assert not isinstance(confusion_matrix_da_validation, tuple)
+        else:
+            confusion_matrix_da_training, confusion_matrix_da_validation = confusion_matrix_da_training_validation
+
+        return confusion_matrix_da_training, confusion_matrix_da_validation
+
+    def get_class_count_column_vector(self, count_vector, **kwargs):
+        args = kwargs
+        class_vector_type = args["class_vector_type"]
+        class_index = args["class_index"]
+        num_classes = args["num_classes"]
+
+        if class_vector_type == ClassVectorType.TRAINING:
+            class_vector_actual = self.Y_vector_training
+            class_vector_prediction = self.get_prediction_vector(X_matrix_type=XMatrixType.TRAINING)
+        elif class_vector_type == ClassVectorType.VALIDATION:
+            class_vector_actual = self.Y_vector_validation
+            class_vector_prediction = self.get_prediction_vector(X_matrix_type=XMatrixType.VALIDATION)
+        else:
+            raise ValueError("Invalid class vector type...")
+
+        # FIXME: maybe better to do with dask dataframe...
+        # TODO: need to convert sparse to dense...only for actual class vector (prediction vector is already dense)
+        class_vector_actual = class_vector_actual.compute().todense()
+        class_vector_prediction = class_vector_prediction
+
+        # FIXME: use raw DataFrame instead of dask version for indexing issues? (chunk size)
+        # use default indexing from 0
+        class_vector_prediction_ddf = df.from_dask_array(class_vector_prediction).compute()
+
+        # get value counts (need to add one for classes)
+        counts_series = class_vector_prediction_ddf[class_vector_actual == (class_index + 1)].value_counts()
+
+        # get the indices and values
+        counts_index = counts_series.index
+        # need to subtract one for indexing back to 0...
+        counts_index -= 1
+
+        # FIXME: invalid Boolean indexing (maybe due to different chunk sizes?)
+        counts_index = counts_index
+        counts_values = counts_series.values
+
+        # counts_index = counts_index.compute()
+        # counts_values = counts_series.values.compute()
+
+        counts_array_da = da.zeros((num_classes, ))
+        counts_array_da[counts_index] = counts_values
+
+        return counts_array_da
+
+    def plot_confusion_matrix(self):
+        """
+        Adapted from the same function for Naive Bayes
+
+        :return:
+        """
+
+        confusion_matrix_da_training, confusion_matrix_da_validation = self.create_confusion_matrix()
+
+        print(f"confusion_matrix_training: {confusion_matrix_da_training}")
+        print(f"confusion_matrix_validation: {confusion_matrix_da_validation}")
+
+        hyperparameters = self.hyperparameters
+        eta_training = hyperparameters.learning_rate
+        lambda_training = hyperparameters.penalty_term
+        current_num_iter = self.current_num_iter
+
+        class_labels_dict = self.data_parameters.class_labels_dict
+        news_groups = [news + f" ({index})" for index, news in class_labels_dict.items()]
+
+        # save the plots
+        confusion_matrix_plot_filename_training = \
+            f"confusion_matrix_plot_training_eta={eta_training}-lambda={lambda_training}-iter_num" \
+            f"={current_num_iter}.png"
+
+        confusion_matrix_plot_filepath_training = \
+            os.path.join(PROGRAM_OUTPUT_DIR, confusion_matrix_plot_filename_training)
+
+        confusion_matrix_plot_filename_validation = \
+            f"confusion_matrix_plot_validation_eta={eta_training}-lambda={lambda_training}-iter_num" \
+            f"={current_num_iter}.png"
+
+        confusion_matrix_plot_filepath_validation = \
+            os.path.join(PROGRAM_OUTPUT_DIR, confusion_matrix_plot_filename_validation)
+
+        f = plt.figure(1, figsize=(16, 10))
+
+        plt.rc('axes', titlesize=20)
+        plt.rc('axes', labelsize=15)
+        plt.rc('xtick', labelsize=12)
+        plt.rc('ytick', labelsize=12)
+        plt.rc('legend', fontsize=12)
+        # fig = plt.figure(figsize=(16, 10))
+        ax = f.add_subplot(1, 1, 1)
+        ax.set_title(f"Confusion Matrix Training "
+                     f"(eta={eta_training},lambda={lambda_training},num iter={current_num_iter})")
+
+        seaborn.heatmap(confusion_matrix_da_training,
+                        annot=True, fmt=".0f", xticklabels=news_groups, yticklabels=news_groups)  # plot
+        ax.set_xticklabels(news_groups, rotation=60)
+
+        f.savefig(confusion_matrix_plot_filepath_training, format='png')
+        f.show()
+
+        g = plt.figure(2, figsize=(16, 10))
+
+        plt.rc('axes', titlesize=20)
+        plt.rc('axes', labelsize=15)
+        plt.rc('xtick', labelsize=12)
+        plt.rc('ytick', labelsize=12)
+        plt.rc('legend', fontsize=12)
+        # fig = plt.figure(figsize=(16, 10))
+        ax = g.add_subplot(1, 1, 1)
+        ax.set_title(f"Confusion Matrix Validation "
+                     f"(eta={eta_training},lambda={lambda_training},num iter={current_num_iter})")
+
+        seaborn.heatmap(confusion_matrix_da_validation,
+                        annot=True, fmt=".0f", xticklabels=news_groups, yticklabels=news_groups)  # plot
+        ax.set_xticklabels(news_groups, rotation=60)
+
+        g.savefig(confusion_matrix_plot_filepath_validation, format='png')
+        g.show()
 
 
 if __name__ == "__main__":

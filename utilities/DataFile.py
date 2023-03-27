@@ -16,6 +16,8 @@ class DataFileEnum(Enum):
     X_MATRIX_VALIDATION = auto()
     X_MATRIX_TESTING = auto()
     W_MATRIX = auto()
+    CONFUSION_MATRIX_TRAINING = auto()
+    CONFUSION_MATRIX_VALIDATION = auto()
 
 
 class DataOptionEnum(Enum):
@@ -39,6 +41,11 @@ class XMatrixType(Enum):
     TRAINING = auto()
     VALIDATION = auto()
     TESTING = auto()
+
+
+class ClassVectorType(Enum):
+    TRAINING = auto()
+    VALIDATION = auto()
 
 
 # def test(a, b, *args, **kwargs):
@@ -113,4 +120,10 @@ if __name__ == "__main__":
     print(np.where(a == b, True, False))
 
     print(f"{a[0:None]}")
+
+    print(a * b)
+
+    c = np.array([("a", 2), ("b", 2)])
+
+    print(c.dtype)
 

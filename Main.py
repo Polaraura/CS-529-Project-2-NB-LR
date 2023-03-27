@@ -35,9 +35,11 @@ PARALLEL_CLUSTER_CLIENT = False
 MAIN_DEBUG = False
 MAIN_PRINT = True
 
+MAIN_CUSTOM_TESTING = True
+
 
 def logistic_regression_training():
-    test_logistic_regression.complete_training()
+    final_logistic_regression.complete_training()
 
 
 if __name__ == "__main__":
@@ -54,11 +56,17 @@ if __name__ == "__main__":
 
     data_parameters = DataParameters(class_labels_dict)
 
+    if MAIN_CUSTOM_TESTING:
+        num_iter = 0
+        custom_num_iter = 10000
+    else:
+        num_iter = 10000
+
     # tested learning rate = 0.01 and penalty term = 0.01 and the weights exploded...NaN popped up within a few
     # iterations
-    hyperparameters = LogisticRegressionHyperparameters(0.005,
+    hyperparameters = LogisticRegressionHyperparameters(0.01,
                                                         0.005,
-                                                        10000,
+                                                        num_iter,
                                                         100,
                                                         200,
                                                         200)
@@ -68,12 +76,12 @@ if __name__ == "__main__":
     sparse_da_training = get_data_from_file(DataFileEnum.INPUT_DATA_TRAINING, generate_input_training_data)
     sparse_da_testing = get_data_from_file(DataFileEnum.INPUT_DATA_TESTING, generate_input_testing_array)
 
-    test_logistic_regression = LogisticRegression(sparse_da_training,
-                                                  sparse_da_testing,
-                                                  data_parameters,
-                                                  hyperparameters,
-                                                  normalize_W=False,
-                                                  normalize_X=True)
+    final_logistic_regression = LogisticRegression(sparse_da_training,
+                                                   sparse_da_testing,
+                                                   data_parameters,
+                                                   hyperparameters,
+                                                   normalize_W=False,
+                                                   normalize_X=True)
 
     start_time = time.time()
 
@@ -113,22 +121,45 @@ if __name__ == "__main__":
 
     ##############################################################
 
-    # training accuracy
-
-    print(f"-----------------------------------")
-    print(f"Checking accuracy of training...")
-    training_accuracy = test_logistic_regression.get_accuracy(X_matrix_type=XMatrixType.TRAINING)
-    print(f"training accuracy: {training_accuracy}")
-    print(f"-----------------------------------")
-
-    ##############################################################
-
     # testing prediction
 
     print(f"------------------------------------------------------------")
     print(f"TESTING PREDICTION FILE")
     print(f"------------------------------------------------------------")
 
-    # test_logistic_regression.create_testing_file(custom_num_iter=401)
-    test_logistic_regression.create_testing_file()
+    if MAIN_CUSTOM_TESTING:
+        final_logistic_regression.create_testing_file(custom_num_iter=custom_num_iter)
+    else:
+        final_logistic_regression.create_testing_file()
 
+    ##############################################################
+
+    # training accuracy
+
+    print(f"-----------------------------------")
+    print(f"Checking accuracy of training...")
+    training_accuracy = final_logistic_regression.get_accuracy(X_matrix_type=XMatrixType.TRAINING)
+    print(f"training accuracy: {training_accuracy}")
+    print(f"-----------------------------------")
+
+    ##############################################################
+
+    # FIXME: only for Naive Bayes...
+    # word rank list
+
+    # print(f"{test_logistic_regression.get_word_rank_list()}")
+
+    ##############################################################
+
+    # confusion matrix
+
+    confusion_start_time = time.time()
+
+    # confusion_matrix_training, confusion_matrix_validation = final_logistic_regression.create_confusion_matrix()
+    final_logistic_regression.plot_confusion_matrix()
+    # print(f"confusion_matrix_training: {confusion_matrix_training}")
+    # print(f"confusion_matrix_validation: {confusion_matrix_validation}")
+
+    confusion_end_time = time.time()
+
+    print(f"confusion matrix total time: {confusion_end_time - confusion_start_time}")
